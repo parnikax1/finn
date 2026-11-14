@@ -1,15 +1,15 @@
 <section id="feed" aria-live="polite">
 <div class="result-line"><span>{{ total }} matching filings{% if total %} · page {{ page }}{% endif %}</span><span>{{ window_start ~ ' to ' ~ latest_day ~ ' IST' if window_start else 'All cached filing dates' }}</span></div>
-{% if featured %}<p class="filing-order">Highest-ranked filing featured above{% if related_release %} with its related press release{% endif %}. Remaining filings follow priority order.</p>{% endif %}
+
 {% if not events %}
 <div class="empty"><h3>No cached filings match.</h3><p>Clear the filters, or import an existing check_data.py cache. Nothing is generated to fill this view.</p><a href="/">Clear filters</a></div>
 {% endif %}
 {% if main_events %}{% with event=main_events[0], next_priority=featured and main_events[0].priority >= 70 %}{% include 'event_card.html' %}{% endwith %}{% endif %}
 {% include 'market_signals.html' %}
 {% for event in main_events[1:] %}{% include 'event_card.html' %}{% endfor %}
-{% if routine %}
-<details class="routine" {% if priority=='routine' %}open{% endif %}><summary><span>Routine disclosures <b>{{ routine|length }}</b></span><span class="muted">On this page · expand to inspect</span></summary><div class="routine-items">{% for event in routine %}{% include 'event_card.html' %}{% endfor %}</div></details>
-{% endif %}
+<details id="routine-disclosures" class="routine" {% if priority=='routine' %}open{% endif %}><summary><span>Routine disclosures <b>{{ routine|length }}</b></span><span class="muted">On this page · expand to inspect</span></summary><div class="routine-items">{% for event in routine %}{% include 'event_card.html' %}{% else %}<p class="annotation">No routine disclosures match this page.</p>{% endfor %}</div></details>
+
+
 {% if events %}<nav class="pagination" aria-label="Feed pages">{% if previous %}<a href="{{ previous }}">← Previous</a>{% else %}<span></span>{% endif %}{% if next %}<a href="{{ next }}">Next →</a>{% endif %}</nav>{% endif %}
 </section>
 {% if partial %}{% include 'featured_wipro.html' %}{% endif %}

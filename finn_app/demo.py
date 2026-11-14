@@ -36,7 +36,7 @@ def wipro_brief(db, event_id, demo):
         appointment=f'President and CEO of Americas 2 from {effective_date}.',
         context='He previously led the unit. That makes continuity in client delivery a useful question for the first quarter.',
         pages=[dict(page=2, label='Appointment and effective date'), dict(page=3, label='Previous Americas 2 role')],
-        contact=contact, source_url=event['source_url'], release_url=release['source_url'] if release else None,
+        contact=contact, source_url=event['source_url'], release_id=demo['wipro_release'], release_url=release['source_url'] if release else None,
     )
 
 

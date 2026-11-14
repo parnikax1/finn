@@ -1,19 +1,14 @@
 {% extends 'base.html' %}
 {% block content %}
 <header class="feed-header">
-  <h1>Portfolio feed</h1>
+  <h1>Brief</h1>
   {% if demo %}
   <p class="date-line">Demo snapshot · {{ demo.date }} IST</p>
   {% endif %}
 </header>
 {% include 'featured_wipro.html' %}
-{% if demo %}
-  <nav class="review-links" aria-label="Reviewer walkthrough">
-    <a href="{{ demo_research_url }}">MARUTI research</a>
-    <a href="#market-heading">Market signals</a>
-  </nav>
-{% endif %}
-<form class="filters" method="get" action="/" hx-get="/" hx-target="#feed" hx-swap="outerHTML" hx-push-url="true" hx-trigger="submit, change from:select[name='window'], change from:select[name='company'], change from:select[name='priority'], change from:input[type='checkbox']" hx-indicator="#loading">
+<nav class="brief-shortcuts" aria-label="Brief sections"><a href="#market-heading">Market signals</a><a href="#routine-disclosures">Routine disclosures</a></nav>
+<form id="filing-filters" class="filters" hx-sync="#app-nav:replace" method="get" action="/" hx-get="/" hx-target="#feed" hx-swap="outerHTML" hx-push-url="true" hx-trigger="submit, change from:select[name='window'], change from:select[name='company'], change from:select[name='priority'], change from:input[type='checkbox']" hx-indicator="#loading">
   <label>Filing window<select name="window">{% for value, title in [('1','Latest day'),('7','Last 7 days'),('30','Last 30 days'),('all','All dates')] %}<option value="{{ value }}" {% if window==value %}selected{% endif %}>{{ title }}</option>{% endfor %}</select></label>
   <details class="filing-filters" {% if company or priority or evidence or q %}open{% endif %}><summary>More filters</summary><div class="filing-filter-fields">
   <label>Company<select name="company" aria-label="Company"><option value="">All portfolio companies</option>{% for c in companies %}<option value="{{ c.symbol }}" {% if company==c.symbol %}selected{% endif %}>{{ c.symbol }} · {{ c.events }} filings</option>{% endfor %}</select></label>

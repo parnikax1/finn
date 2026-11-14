@@ -27,6 +27,17 @@ templates = Jinja2Templates(directory=ROOT / 'finn_app' / 'templates')
 templates.env.globals['event_url'] = event_url
 
 
+def screen(request, name, context):
+    headers = {'Vary': 'HX-Request, HX-History-Restore-Request, X-FINN-Destination'}
+    destination = (request.headers.get('HX-Request') == 'true'
+                   and request.headers.get('X-FINN-Destination') == 'true'
+                   and not request.headers.get('HX-History-Restore-Request'))
+    if destination:
+        context['destination_fragment'] = True
+        headers['HX-Push-Url'] = request.url.path + (f'?{request.url.query}' if request.url.query else '')
+    return templates.TemplateResponse(request=request, name=name, context=context, headers=headers)
+
+
 def format_date(value):
     if not value:
         return 'Filing date unavailable'
@@ -113,10 +124,19 @@ def feed(request: Request, company: str = Query('', max_length=32, pattern=r'^[A
     def state(number):
         return urlencode(dict(company=company, priority=priority, q=q,
                               evidence=int(evidence), window=window, page=number))
-    partial = request.headers.get('HX-Request') == 'true'
+    partial = (request.headers.get('HX-Request') == 'true'
+               and request.headers.get('X-FINN-Destination') != 'true'
+               and not request.headers.get('HX-History-Restore-Request'))
+    alert_dates = [
+        (item['symbol'], signal['rows'][0]['date']) for item in market
+        for signal in item['snapshot'].values() if signal and signal['triggered']
+    ]
+    trading_dates = {date for _, date in alert_dates}
     context = dict(events=events, routine=[e for e in events if e['priority'] < 30],
                    main_events=main_events, featured=featured, related_release=related_release,
-                   partial=partial, total=total,
+                   partial=partial, total=total, signal_count=len({symbol for symbol, _ in alert_dates}),
+                   signal_date=datetime.fromisoformat(max(trading_dates)).strftime('%d %b').lstrip('0') if trading_dates else '',
+                   mixed_signal_dates=len(trading_dates) > 1,
                    companies=companies, stats=stats, company=company, priority=priority,
                    q=q, evidence=evidence, page=page, back=state(page), active='brief',
                    previous='/?' + state(page-1) if page > 1 else None,
@@ -126,7 +146,7 @@ def feed(request: Request, company: str = Query('', max_length=32, pattern=r'^[A
                    window=window, latest_day=latest_day, window_start=window_start,
                    demo_research_url=research_urls('MARUTI', MARUTI_QUESTION)['search'] if demo else '')
     template = 'feed_items.html' if partial else 'feed.html'
-    return templates.TemplateResponse(request=request, name=template, context=context)
+    return screen(request, template, context)
 
 
 def same_origin(request):
@@ -176,7 +196,7 @@ def research(request: Request, symbol: str = Query('', max_length=35),
                 status = status_for(storage_for(db), normalized)
                 missing = missing_kinds(db, normalized)
                 contacts, walkthrough = research_context(db, normalized, question)
-    return templates.TemplateResponse(request=request, name='research.html', context=dict(
+    return screen(request, 'research.html', dict(
         symbol=normalized or symbol, question=question, groups=groups, error=error,
         urls=urls, status=status, missing=missing, busy=busy,
         has_evidence=bool(groups and evidence_from(groups)), answer_enabled=bool(api_key()),
@@ -309,7 +329,10 @@ def download_brief(event_id: str):
 
 
 @app.get('/network', response_class=HTMLResponse)
-def network(request: Request, company: str = Query('', max_length=80), sector: str = Query('', max_length=80)):
+def network(request: Request, company: str = Query('', max_length=80), sector: str = Query('', max_length=80),
+            kind: Literal['company', 'sector'] = 'company', term: str = Query('', max_length=80)):
+    if term:
+        company, sector = (term, '') if kind == 'company' else ('', term)
     with closing(connect()) as db:
         companies = db.execute('SELECT symbol, name, sector FROM companies ORDER BY name').fetchall()
     sectors = sorted({tag for contact in contact_profiles() for tag in contact['sectors']}
@@ -322,8 +345,8 @@ def network(request: Request, company: str = Query('', max_length=80), sector: s
                 or row['name'].casefold() == company.casefold()), None)
     contacts = matching_contacts(row['symbol'], row['sector']) if company and row else (
         matching_contacts('', known_sector) if not company and known_sector else [])
-    return templates.TemplateResponse(request=request, name='network.html', context=dict(
-        active='network', companies=companies, sectors=sectors, company=company, sector=sector,
+    return screen(request, 'network.html', dict(
+        active='network', companies=companies, sectors=sectors, lookup_kind='sector' if sector else kind,
         contacts=contacts, searched=bool(company or sector), lookup_label=company or sector))
 
 

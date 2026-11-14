@@ -3,22 +3,19 @@
 {% block content %}
 <section class="event-heading">
   <h1>Network</h1>
-  <p class="lede">Find a synthetic contact by company or sector. The profiles and work histories are fictional.</p>
+  <p class="lede">Find contacts by company or sector. All profiles are synthetic.</p>
 </section>
-<div class="network-lookups">
-  <form class="filters research-form" method="get" action="/network">
-    <label>Company or ticker<input name="company" value="{{ company }}" list="network-companies" maxlength="80" placeholder="MARUTI" required></label>
-    <datalist id="network-companies">{% for row in companies %}<option value="{{ row.symbol }}">{{ row.name }}</option>{% endfor %}</datalist>
-    <button class="apply" type="submit">Find company matches</button>
-  </form>
-  <form class="filters research-form" method="get" action="/network">
-    <label>Sector<select name="sector" aria-label="Sector" required>
-      <option value="">Select a sector</option>
-      {% for tag in sectors %}<option{% if tag|lower == sector|lower %} selected{% endif %}>{{ tag }}</option>{% endfor %}
-    </select></label>
-    <button class="apply" type="submit">Find sector matches</button>
-  </form>
-</div>
+<form class="filters network-lookup" data-tab-draft data-network-form method="get" action="/network">
+  <label>Find by<select name="kind" aria-label="Find by">
+    <option value="company"{% if lookup_kind == 'company' %} selected{% endif %}>Company</option>
+    <option value="sector"{% if lookup_kind == 'sector' %} selected{% endif %}>Sector</option>
+  </select></label>
+  <label class="lookup-term">Company or sector<input name="term" value="{{ lookup_label }}" list="{{ 'network-sectors' if lookup_kind == 'sector' else 'network-companies' }}" maxlength="80" placeholder="{{ 'IT services' if lookup_kind == 'sector' else 'MARUTI' }}" required></label>
+  <datalist id="network-companies">{% for row in companies %}<option value="{{ row.symbol }}">{{ row.name }}</option>{% endfor %}</datalist>
+  <datalist id="network-sectors">{% for tag in sectors %}<option value="{{ tag }}">{% endfor %}</datalist>
+  <button class="apply" type="submit">Find contacts</button>
+</form>
+<p class="lookup-example"><a href="/network?kind=sector&amp;term=IT+services">Example · IT services</a></p>
 {% if searched %}
 <section class="panel contact-panel">
   <h2>Matches for {{ lookup_label }}</h2>

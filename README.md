@@ -168,3 +168,12 @@ verified, and page coverage. Missing metadata is labelled unverified.
   worker is busy.
 
 Market CSV export, scheduled refresh, and model changes are deferred.
+
+### Navigation on phones
+
+Use the bottom Brief, Research, and Network bar to switch destinations. Each
+tab reopens its last URL for the browser session. Within the current page
+shell, returning to a tab also restores its draft fields and scroll position.
+Direct URLs and ordinary links work without HTMX. On Brief, expand Market
+signals for rows and CSVs. On WIPRO detail, expand Sources and export for
+the exchange PDFs and the FINN Markdown brief.

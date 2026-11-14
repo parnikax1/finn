@@ -43,8 +43,7 @@ class DemoTests(unittest.TestCase):
                 self.assertIn('Featured walkthrough · WIPRO', feed)
                 for page in (2, 3):
                     self.assertRegex(feed, rf'{filing}\?page={page}&amp;back=[^"]+#source-evidence')
-                self.assertRegex(feed, rf'{filing}\?back=[^"]+#related-contact')
-                self.assertRegex(feed, rf'<a href="{release}\?back=[^"]+">Related press release</a>')
+                self.assertRegex(feed, rf'{filing}\?back=[^"]+">Open Wipro brief</a>')
                 cards = [urlsplit(unescape(href)).path
                          for href in re.findall(r'class="event-card"[^>]* href="([^"]+)"', feed)]
                 self.assertEqual(cards, expected_cards)
@@ -62,6 +61,8 @@ class DemoTests(unittest.TestCase):
                 self.assertIn('physical PDF page 3', profile)
                 self.assertIn('including CEO of the Americas 2 Business Unit', profile)
                 self.assertIn('#page=3', profile)
+                self.assertIn('Sources and export', profile)
+                self.assertRegex(profile, rf'<a href="{release}">Press release filing</a>')
                 research = client.get('/research', params={'symbol': 'MARUTI', 'question': MARUTI_QUESTION}).text
                 for value in ('Prepared walkthrough', '500,000 units/year', '4 million units/year',
                               '1.1 million units/year', '#page=3', '#page=68', 'Who could add context'):

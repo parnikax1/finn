@@ -3,9 +3,10 @@
 {% block content %}
 <section class="event-heading">
   <h1>Company research</h1>
-  <p class="lede">Search annual reports and earnings-call transcripts by ticker and question.</p>
+  <p class="lede">Search annual reports and earnings calls.</p>
 </section>
-<form class="filters research-form" method="get" action="/research">
+<div class="research-entry">
+<form class="filters research-form" data-tab-draft method="get" action="/research">
   <label>Ticker<input type="text" name="symbol" value="{{ symbol }}" maxlength="35" placeholder="MARUTI" required></label>
   <label class="search">Question<textarea name="question" rows="2" maxlength="300" required>{{ question }}</textarea></label>
   <button class="apply" type="submit">Search excerpts</button>
@@ -13,6 +14,7 @@
 <nav class="review-links research-starters" aria-label="Starter questions">
   {% for label, href in research_starters %}<a href="{{ href }}">{{ label }}</a>{% endfor %}
 </nav>
+</div>
 {% if walkthrough %}{% include 'maruti_walkthrough.html' %}{% endif %}
 {% if error %}<p class="validation-alert" role="alert">{{ error }}</p>{% endif %}
 {% if groups %}

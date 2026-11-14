@@ -28,6 +28,21 @@ class ReviewerFlowTests(unittest.TestCase):
             self.wipro = '/events/' + demo_links(db)['wipro']
         self.client = self.enterContext(TestClient(app))
 
+    def test_destination_fragment_and_feed_filter_are_distinct(self):
+        hx = {'HX-Request': 'true'}
+        tab = hx | {'X-FINN-Destination': 'true'}
+        for path in ('/?window=1', '/research', '/network'):
+            response = self.client.get(path, headers=tab)
+            self.assertTrue(response.text.lstrip().startswith('<main'))
+            self.assertEqual(response.headers['HX-Push-Url'], path)
+            self.assertIn('X-FINN-Destination', response.headers['Vary'])
+            self.assertNotIn('id="app-nav"', response.text)
+            self.assertIn('id="app-nav"', self.client.get(path).text)
+        filtered = self.client.get('/?window=1', headers=hx)
+        self.assertTrue(filtered.text.lstrip().startswith('<section id="feed"'))
+        restored = self.client.get('/?window=1', headers=hx | {'HX-History-Restore-Request': 'true'})
+        self.assertIn('id="app-nav"', restored.text)
+
     def test_latest_day_return_and_validation(self):
         latest = self.client.get('/?window=1', headers={'HX-Request': 'true'}).text
         self.assertIn('11 matching filings', latest)

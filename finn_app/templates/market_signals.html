@@ -1,6 +1,8 @@
 {% set alerts = namespace(count=0) %}
 <section class="market-signals" aria-labelledby="market-heading">
-  <div class="section-line"><h2 id="market-heading">End-of-day market signals</h2><span>NSE cash market · EQ</span></div>
+  <details class="market-summary">
+    <summary id="market-heading"><strong>Market signals</strong><span>{% if signal_count %}{{ signal_count }} {{ 'signal' if signal_count == 1 else 'signals' }} {% if mixed_signal_dates %}through{% else %}on{% endif %} {{ signal_date }}{% else %}{{ 'No triggered signals' if market else 'No refresh recorded' }}{% endif %}</span></summary>
+    <p class="annotation">NSE cash market · EQ{% if mixed_signal_dates %} · Selected signals span multiple trading dates{% endif %}</p>
   {% for item in market %}
     {% set price = item.snapshot.get('price') %}
     {% set volume = item.snapshot.get('volume') %}
@@ -56,4 +58,5 @@
   {% else %}
     <p class="annotation">No market refresh recorded{% if company %} for {{ company }}{% endif %}.</p>
   {% endif %}
+  </details>
 </section>
