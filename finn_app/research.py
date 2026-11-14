@@ -156,6 +156,7 @@ def index_report(db, symbol, report_path, *, kinds=KINDS, prefer_cached_text=Fal
                 document_date=excluded.document_date, run_date=excluded.run_date
                 WHERE excluded.run_date>=research_sources.run_date''',
                 (symbol, kind, sha, url, provenance, label, day, run_date))
+            db.execute('INSERT OR IGNORE INTO research_coverage VALUES (?,?,NULL)', (sha, doc['pages']))
             accepted += 1
         detail = 'Indexed readable PDF evidence. ' if accepted else ''
         detail += ' · '.join(failures) if failures else (
@@ -252,26 +253,32 @@ def lookup(db, symbol, question):
     terms, heads, phrases = query_features(question, symbol)
     groups = []
     for kind, (title, _) in KINDS.items():
-        doc = db.execute('''SELECT * FROM research_sources WHERE symbol=? AND kind=?
+        doc = db.execute('''SELECT r.*, c.total_pages, c.publisher
+            FROM research_sources r LEFT JOIN research_coverage c ON c.sha=r.sha
+            WHERE symbol=? AND kind=?
             ORDER BY document_date DESC,
                      CASE WHEN provenance LIKE 'automatic:%' THEN 0 ELSE 1 END,
-                     run_date DESC, sha LIMIT 1''', (symbol, kind)).fetchone()
+                     run_date DESC, r.sha LIMIT 1''', (symbol, kind)).fetchone()
         status = db.execute('SELECT detail FROM research_status WHERE symbol=? AND kind=?',
                             (symbol, kind)).fetchone()
         hits = []
         omitted_tables = 0
-        if doc and terms:
+        indexed_pages = searched_pages = 0
+        if doc:
             pages = db.execute('SELECT page,text FROM pages WHERE sha=? AND page>0 ORDER BY page',
                                (doc['sha'],)).fetchall()
+            indexed_pages = len(pages)
             if symbol == 'CUMMINSIND' and kind == 'annual':
                 # Extracted highlights interleave figures, labels and variances.
                 prose_pages = [row for row in pages if len(re.findall(r'%\s*Var', row['text'], re.I)) < 2]
                 omitted_tables = len(pages) - len(prose_pages)
                 pages = prose_pages
-            hits = passages(pages, terms, heads, phrases)
-        groups.append(dict(title=title, doc=doc, hits=hits, status=status['detail'] if status else None,
-                           omitted_tables=omitted_tables,
-                           unknown_date='Period unverified' if kind == 'annual' else 'Document date unavailable'))
+            if terms:
+                searched_pages = len(pages)
+                hits = passages(pages, terms, heads, phrases)
+        groups.append(dict(kind=kind, title=title, doc=doc, hits=hits, status=status['detail'] if status else None,
+                           omitted_tables=omitted_tables, indexed_pages=indexed_pages, searched_pages=searched_pages,
+                           unknown_date='Period unverified' if kind == 'annual' else 'Call date unverified'))
     if symbol == 'CUMMINSIND' and groups[0]['omitted_tables'] and groups[1]['hits']:
         groups.reverse()
     return groups

@@ -90,6 +90,8 @@ class ResearchFetchTests(unittest.TestCase):
         self.assertIn('No candidate PDF was discovered', page.text)
         self.assertIn('Export volumes rose', page.text)
         self.assertIn('Call held 2026-08-06', page.text)
+        self.assertIn('2 of 3 PDF pages indexed', page.text)
+        self.assertIn('Publisher unverified', page.text)
         self.assertIn('DEMO_Transcript.pdf#page=3', page.text)
         self.assertIn('Fetch missing source', page.text)
         poll = self.client.get('/research/fetch/progress', params=self.params, headers={'HX-Request': 'true'})

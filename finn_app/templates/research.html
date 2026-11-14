@@ -1,17 +1,19 @@
 {% extends 'base.html' %}
 {% block title %}Company research · FINN{% endblock %}
 {% block content %}
-<a class="back" href="/">← Portfolio feed</a>
 <section class="event-heading">
   <h1>Company research</h1>
   <p class="lede">Search annual reports and earnings-call transcripts by ticker and question.</p>
 </section>
-{% if walkthrough %}{% include 'maruti_walkthrough.html' %}{% endif %}
 <form class="filters research-form" method="get" action="/research">
   <label>Ticker<input type="text" name="symbol" value="{{ symbol }}" maxlength="35" placeholder="MARUTI" required></label>
-  <label class="search">Question<input type="text" name="question" value="{{ question }}" maxlength="300" required></label>
+  <label class="search">Question<textarea name="question" rows="2" maxlength="300" required>{{ question }}</textarea></label>
   <button class="apply" type="submit">Search excerpts</button>
 </form>
+<nav class="review-links research-starters" aria-label="Starter questions">
+  {% for label, href in research_starters %}<a href="{{ href }}">{{ label }}</a>{% endfor %}
+</nav>
+{% if walkthrough %}{% include 'maruti_walkthrough.html' %}{% endif %}
 {% if error %}<p class="validation-alert" role="alert">{{ error }}</p>{% endif %}
 {% if groups %}
 {% if status %}{% include 'research_fetch_status.html' %}{% endif %}
@@ -39,17 +41,46 @@
   {% endfor %}
 </section>
 {% endif %}
-<p class="date-line">Cached sources for {{ symbol }} · Ranked by keyword and phrase matches</p>
+<div class="research-evidence-layout">
+<aside class="panel research-source-list" aria-labelledby="source-list-heading">
+  <h2 id="source-list-heading">Sources searched</h2>
+  <ul>
+    {% for group in groups %}
+    <li>
+      <a href="#research-{{ group.kind }}"><strong>{{ group.title }}</strong></a>
+      {% if group.doc %}
+      <span>{{ group.doc.publisher or 'Publisher unverified' }} · {{ group.doc.date_label or group.unknown_date }}</span>
+      {% if group.doc.provenance == 'Bundled demo snapshot' %}
+      <span>Selected snapshot pages · {{ group.indexed_pages }}{% if group.doc.total_pages %} of {{ group.doc.total_pages }}{% endif %} PDF pages indexed</span>
+      {% elif group.doc.total_pages == group.indexed_pages and group.indexed_pages %}
+      <span>Fully indexed document · {{ group.indexed_pages }} of {{ group.doc.total_pages }} PDF pages indexed</span>
+      {% elif group.doc.total_pages %}
+      <span>{{ group.indexed_pages }} of {{ group.doc.total_pages }} PDF pages indexed</span>
+      {% else %}
+      <span>{{ group.indexed_pages }} indexed PDF pages · Full coverage unverified</span>
+      {% endif %}
+      <span>{{ group.searched_pages }} pages searched{% if group.omitted_tables %} · {{ group.omitted_tables }} mixed table pages skipped{% endif %}</span>
+      <a class="source-link" href="{{ group.doc.url }}" target="_blank" rel="noopener noreferrer">Open original PDF ↗</a>
+      {% else %}
+      <span>No searchable document · {{ group.unknown_date }}</span>
+      {% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+</aside>
+<div class="research-results">
+<p class="date-line">Excerpts for {{ symbol }} · Ranked by keyword and phrase matches</p>
 {% for group in groups %}
-<section class="panel research-source">
+<section class="panel research-source" id="research-{{ group.kind }}">
   <h2>{{ group.title }}</h2>
   {% if group.omitted_tables %}<p class="annotation">Table-like pages with mixed row labels and values were excluded from excerpt search. Use the original annual report for those figures.</p>{% endif %}
   {% if group.doc %}
     <p class="date-line">{{ group.doc.date_label or group.unknown_date }} · {{ group.doc.provenance }}</p>
     {% for hit in group.hits %}
     <article>
+      <p class="small-label">Excerpt · PDF p. {{ hit.page }}</p>
       <blockquote>{{ hit.text }}</blockquote>
-      <p class="source-actions"><a href="{{ group.doc.url }}#page={{ hit.page }}" target="_blank" rel="noopener noreferrer">Original PDF · page {{ hit.page }} ↗</a><span class="annotation">Matched terms: {{ hit.terms }}</span></p>
+      <p class="source-actions"><a href="{{ group.doc.url }}#page={{ hit.page }}" target="_blank" rel="noopener noreferrer">Open original PDF · p. {{ hit.page }} ↗</a><span class="annotation">Matched terms: {{ hit.terms }}</span></p>
     </article>
     {% else %}
     <p class="missing">This document is searchable. No excerpt matched the question keywords.</p>
@@ -61,5 +92,7 @@
   <p class="annotation">{% if group.doc and group.doc.provenance == "Bundled demo snapshot" %}Search covers selected PDF pages from the dated demo snapshot.{% elif group.status %}<strong>Latest indexed run</strong> · {{ group.status }}{% else %}No discovery run has been indexed for this source.{% endif %}</p>
 </section>
 {% endfor %}
+</div>
+</div>
 {% endif %}
 {% endblock %}

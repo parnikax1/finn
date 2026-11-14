@@ -39,10 +39,13 @@ def classify(subject, description):
                 reason='No specific priority rule matched. Significance has not been established.')
 
 
+def contact_profiles():
+    return json.loads((ROOT / 'finn_app' / 'data' / 'contacts.json').read_text())
+
+
 def matching_contacts(symbol, sector):
-    contacts = json.loads((ROOT / 'finn_app' / 'data' / 'contacts.json').read_text())
     matches = []
-    for contact in contacts:
+    for contact in contact_profiles():
         exact = symbol in contact['companies']
         sector_match = sector and sector in contact['sectors']
         if not (exact or sector_match):

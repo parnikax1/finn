@@ -30,7 +30,7 @@ after dependencies are installed. Original PDFs and CSVs are linked at their sou
 | Time | What to try |
 | --- | --- |
 | 0–20s | Open the feed and read the featured WIPRO walkthrough. Tap **Next priority filing** to skip to the next ranked card. Switch to **Latest day**, then back to **Last 7 days**. Both windows end on the latest cached filing date in IST. |
-| 20–45s | Open the WIPRO evidence on PDF pages 2 and 3. Tap **Synthetic contact question** for the suggested delivery question. The appointment and press release each have their own filing link. |
+| 20–45s | Use **Read excerpt** for WIPRO PDF pages 2 and 3. Open the original PDF separately. Tap **Synthetic contact question** to copy the suggested question or download the FINN brief. |
 | 45–70s | Tap **MARUTI research**. The prepared walkthrough puts the H1 FY 2026–27 addition of 500,000 units/year beside the 4 million unit/year medium-term objective, with their respective PDF pages. The lookup below also shows synthetic contacts and source excerpts. |
 | 70–90s | Open **End-of-day market signals** on the unfiltered feed. Expand **Market refresh status** to see all 15 results, including companies with no threshold crossing. |
 
@@ -148,3 +148,23 @@ python -m unittest discover -s tests
 
 For submission, include the Render URL, public GitHub URL, AI build-history links
 or export, and the short architecture writeup in the covering email.
+
+## Reviewer flow and backend follow-ups
+
+Use **Brief**, **Research**, and **Network** to switch between the feed, source
+search, and fictional contact lookup. Filing links preserve the active filters
+and page. From WIPRO, open the cited excerpt or the original PDF, copy the
+synthetic contact’s question, and download the offline FINN Markdown brief.
+In Research, **Sources searched** identifies the PDFs, dates, publisher where
+verified, and page coverage. Missing metadata is labelled unverified.
+
+- Bundled MARUTI excerpt pages currently satisfy fetch eligibility for their
+  document types. Prioritize fetching full documents when only sample pages exist.
+- Research chooses one document per type before ranking excerpts. Evaluate
+  ranking across more than one document of each type.
+- Mixed-table exclusion is specific to CUMMINSIND. Prioritize evidence quality
+  checks across tickers, including annual-report tables.
+- The hosted fetch runs one job at a time. The current UI reports when the
+  worker is busy.
+
+Market CSV export, scheduled refresh, and model changes are deferred.

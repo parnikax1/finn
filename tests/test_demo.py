@@ -1,7 +1,9 @@
 from contextlib import closing
 import json
 from pathlib import Path
+from html import unescape
 import re
+from urllib.parse import urlsplit
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -39,16 +41,17 @@ class DemoTests(unittest.TestCase):
                 first_card = feed.split('<a class="event-card"', 1)[1].split('</a>', 1)[0]
                 self.assertIn('RBI approves reappointment', first_card)
                 self.assertIn('Featured walkthrough · WIPRO', feed)
-                self.assertIn(f'{filing}?page=2#source-evidence', feed)
-                self.assertIn(f'{filing}?page=3#source-evidence', feed)
-                self.assertIn(f'{filing}#related-contact', feed)
-                self.assertIn(f'<a href="{release}">Related press release</a>', feed)
-                self.assertNotIn(f'class="event-card" href="{release}"', feed)
-                self.assertEqual(re.findall(r'class="event-card"[^>]* href="([^"]+)"', feed), expected_cards)
+                for page in (2, 3):
+                    self.assertRegex(feed, rf'{filing}\?page={page}&amp;back=[^"]+#source-evidence')
+                self.assertRegex(feed, rf'{filing}\?back=[^"]+#related-contact')
+                self.assertRegex(feed, rf'<a href="{release}\?back=[^"]+">Related press release</a>')
+                cards = [urlsplit(unescape(href)).path
+                         for href in re.findall(r'class="event-card"[^>]* href="([^"]+)"', feed)]
+                self.assertEqual(cards, expected_cards)
                 self.assertIn('PressRelease06112026.pdf', client.get(release).text)
                 release_only = client.get('/', params={'q': 'press release dated'}).text
                 self.assertNotIn('Featured walkthrough · WIPRO', release_only)
-                self.assertIn(f'class="event-card" href="{release}"', release_only)
+                self.assertIn(f'class="event-card" href="{release}?back=', release_only)
                 evidence_only = client.get('/', params={'evidence': '1'}).text
                 self.assertIn('Featured walkthrough · WIPRO', evidence_only)
                 self.assertNotIn('Related press release', evidence_only)

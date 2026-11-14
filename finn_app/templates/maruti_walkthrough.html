@@ -6,13 +6,27 @@
       <h3>Reported addition</h3>
       <strong>500,000 units/year</strong>
       <p>Capacity added in H1 FY 2026–27. Management reported two additions of 250,000 units/year at Kharkhoda and Hansalpur.</p>
-      <a href="{{ walkthrough.transcript.url }}#page=3" target="_blank" rel="noopener noreferrer">27 Oct 2026 earnings call · PDF page 3</a>
+      <p class="date-line">27 Oct 2026 earnings call</p>
+      {% if walkthrough.transcript.excerpt %}
+      <details class="walkthrough-excerpt">
+        <summary>Read excerpt · PDF p. {{ walkthrough.transcript.page }}</summary>
+        <blockquote>{{ walkthrough.transcript.excerpt }}</blockquote>
+      </details>
+      {% endif %}
+      <a class="source-link" href="{{ walkthrough.transcript.url }}#page={{ walkthrough.transcript.page }}" target="_blank" rel="noopener noreferrer">Open original PDF ↗</a>
     </div>
     <div>
       <h3>Medium-term target</h3>
       <strong>4 million units/year</strong>
       <p>Total annual capacity objective. The report separately puts capacity at approximately 2.9 million units/year after the increase.</p>
-      <a href="{{ walkthrough.annual.url }}#page=68" target="_blank" rel="noopener noreferrer">FY 2025–26 annual report · PDF page 68</a>
+      <p class="date-line">FY 2025–26 annual report</p>
+      {% if walkthrough.annual.excerpt %}
+      <details class="walkthrough-excerpt">
+        <summary>Read excerpt · PDF p. {{ walkthrough.annual.page }}</summary>
+        <blockquote>{{ walkthrough.annual.excerpt }}</blockquote>
+      </details>
+      {% endif %}
+      <a class="source-link" href="{{ walkthrough.annual.url }}#page={{ walkthrough.annual.page }}" target="_blank" rel="noopener noreferrer">Open original PDF ↗</a>
     </div>
   </div>
   <p><strong>Remaining gap:</strong> about 1.1 million units/year from the approximately 2.9 million reported capacity to the target. The two sources distinguish additions already made from a future objective.</p>

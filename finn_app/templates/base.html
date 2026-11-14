@@ -6,9 +6,17 @@
   <title>{% block title %}FINN · Portfolio brief{% endblock %}</title>
   <link rel="stylesheet" href="/static/app.css">
   <script src="/static/htmx.min.js" defer></script>
+  {% if brief %}<script src="/static/brief.js" defer></script>{% endif %}
 </head>
 <body>
-  <header class="topbar"><a href="/" class="brand"><span class="brand-mark">f</span> FINN<span class="brand-small"> / your daily brief</span></a><a class="research-link" href="/research">Company research</a></header>
+  <header class="topbar">
+    <a href="{{ brief_url|default('/') }}" class="brand"><span class="brand-mark" aria-hidden="true">f</span> FINN</a>
+    <nav class="site-nav" aria-label="Main navigation">
+      {% for key, label, url in [('brief', 'Brief', brief_url|default('/')), ('research', 'Research', '/research'), ('network', 'Network', '/network')] %}
+      <a href="{{ url }}"{% if active == key %} aria-current="page"{% endif %}>{{ label }}</a>
+      {% endfor %}
+    </nav>
+  </header>
   <main class="shell">{% block content %}{% endblock %}</main>
   <footer class="footer">Real exchange filings · Explicit rules · Synthetic network</footer>
 </body>

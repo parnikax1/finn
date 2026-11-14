@@ -32,6 +32,8 @@ def connect():
     CREATE TABLE IF NOT EXISTS research_status (
       symbol TEXT NOT NULL, kind TEXT NOT NULL, detail TEXT NOT NULL, run_date TEXT NOT NULL,
       PRIMARY KEY (symbol, kind));
+    CREATE TABLE IF NOT EXISTS research_coverage (
+      sha TEXT PRIMARY KEY REFERENCES documents(sha), total_pages INTEGER, publisher TEXT);
     CREATE TABLE IF NOT EXISTS events (
       id TEXT PRIMARY KEY, symbol TEXT REFERENCES companies(symbol), exchange_id TEXT,
       source_url TEXT NOT NULL, subject TEXT NOT NULL, description TEXT NOT NULL,
