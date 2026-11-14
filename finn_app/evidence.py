@@ -1,4 +1,4 @@
-"""Choose source text for appointments described in exchange metadata."""
+"""Derive filing headlines and choose source text for appointments."""
 from datetime import datetime
 import re
 
@@ -13,6 +13,7 @@ APPOINTMENT = re.compile(
 EFFECTIVE = r'\b(?:with effect from|effective(?:\s+from)?|w\s*\.?\s*e\s*\.?\s*f\.?)\s*[:,]?\s*'
 MONTH = r'(?:January|February|March|April|May|June|July|August|September|October|November|December|Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sep|Oct|Nov|Dec)'
 DATE = rf'(?:{MONTH}\.?\s+\d{{1,2}},?\s+\d{{4}}|\d{{1,2}}[\s-]+{MONTH}\.?[\s,-]+\d{{4}}|\d{{4}}-\d{{2}}-\d{{2}})'
+EXCHANGE_PREFIX = re.compile(r'^.+? has informed the exchange (?:about|regarding)\s+', re.I)
 
 
 def calendar_date(value):
@@ -43,11 +44,57 @@ def appointment_details(event):
 def event_title(event):
     appointment = appointment_details(event)
     if appointment is None:
-        return event['subject']
+        return metadata_headline(event['description']) or event['subject']
     name, role, _ = appointment
     role = re.sub(r'\bChief Executive Officer\b', 'CEO', role, flags=re.I)
     title = f"{event['name']} appoints {name} as {role}"
     return title if len(title) <= 135 else f"{event['name']} appoints {name}"
+
+
+def metadata_headline(description):
+    """Use only subjects, quantities and titles explicitly stated in the description."""
+    body, count = EXCHANGE_PREFIX.subn('', ' '.join(description.split()), count=1)
+    if not count:
+        return None
+
+    body = body.removesuffix('.')
+    results = re.fullmatch(
+        r'(?:reference to (?:the )?)?financial results issued by ([\w &(),.-]{3,90})',
+        body, re.I,
+    )
+    if results:
+        return f'Financial results from {results[1]}'
+
+    figures = re.fullmatch(
+        rf'(?:the )?production, sales and export figures of the company for the month of ({MONTH} \d{{4}})',
+        body, re.I,
+    )
+    if figures:
+        return f'{figures[1]} production, sales and export figures'
+
+    shares = re.fullmatch(r'allotment of ([\d,]+) equity shares', body, re.I)
+    if shares:
+        return f'Allotment of {shares[1]} equity shares'
+
+    approval = re.fullmatch(
+        r'approval from the Reserve Bank of India for re-appointment of (.{3,70}?) '
+        r'as\s*(?:the )?Whole-time Director(?: \(designated as Executive Director\))?(?: of .+)?',
+        body, re.I,
+    )
+    if approval:
+        return f'RBI approves reappointment of {approval[1]} as Whole-time Director'
+
+    transcript = re.fullmatch(r'transcript of (.{4,90} analyst meet .{2,24})', body, re.I)
+    if transcript:
+        return f'{transcript[1]} transcript'
+
+    # An explicitly quoted title may contain apostrophes or multiple clauses.
+    quoted = re.fullmatch(r"""(?:a press release dated [^"']+, titled )?(["'])(.+)\1""", body, re.I)
+    if quoted:
+        title = re.sub(r'^release\s*[-–:]\s*', '', quoted[2], flags=re.I).strip()
+        if 16 <= len(title) <= 135 and len(title.split()) >= 4:
+            return title
+    return None
 
 
 def source_phrase(phrase):

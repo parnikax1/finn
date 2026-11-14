@@ -43,6 +43,21 @@ class DemoTests(unittest.TestCase):
                 market = client.get('/', params={'company': 'MARUTI'}).text
                 self.assertIn('+1.99%', market)
                 self.assertIn('1.88×', market)
+                self.assertIn('<time datetime="2026-11-11">2026-11-11</time>', market)
+                self.assertIn('<details class="market-alert">', market)
+                self.assertIn('Previous-session CSV', market)
+                self.assertIn('2026-11-08 CSV', market)
+                self.assertIn('Financial results from Suzuki Motor Corporation', market)
+                with closing(connect()) as db:
+                    maruti_event = db.execute(
+                        "SELECT id, description FROM events WHERE symbol='MARUTI' AND subject='General Updates'"
+                    ).fetchone()
+                maruti_detail = client.get('/events/' + maruti_event['id']).text
+                self.assertIn(maruti_event['description'], maruti_detail)
+                self.assertIn('Exchange title:</strong> General Updates', maruti_detail)
+                self.assertIn('<h3>Acquisition</h3>', feed)
+                self.assertIn('<h3>October 2026 production, sales and export figures</h3>', feed)
+                self.assertIn('<h3>Allotment of 52,771 equity shares</h3>', feed)
                 latest = client.get('/', params={'window': '1'}, headers={'HX-Request': 'true'}).text
                 self.assertIn('2026-11-12 to 2026-11-12 IST', latest)
                 self.assertNotIn('Angan Guha', latest)

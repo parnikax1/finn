@@ -76,7 +76,9 @@ class MarketTests(unittest.TestCase):
             with patch('finn_app.market.fetch') as network:
                 response = TestClient(app).get('/', params={'company': 'MARUTI'}, headers={'HX-Request': 'true'})
                 self.assertEqual(response.status_code, 200)
-                self.assertIn('Price move -9.52%', response.text)
+                self.assertIn('Move <strong>-9.52%</strong>', response.text)
+                self.assertIn('<time datetime="2026-11-12">2026-11-12</time>', response.text)
+                self.assertIn('<time datetime="2026-11-11">2026-11-11</time>', response.text)
                 self.assertIn('prior 2-session mean 75.00 shares', response.text)
                 self.assertIn('Latest refresh failed', response.text)
                 self.assertIn('sec_bhavdata_full_09112026.csv', response.text)
