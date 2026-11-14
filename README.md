@@ -22,19 +22,32 @@ The seed runs once per snapshot version and database.
 
 ## Reviewer walkthrough
 
-The **12 November 2026 IST** demo snapshot contains 30 real NSE filings from
-6–12 November across 12 companies in the 15-company demo portfolio. It includes
-selected WIPRO and MARUTI PDF text with physical page numbers and canonical source
-links. The MARUTI market example covers the 11 November 2026 trading session.
-The source files themselves are external. Search and the evidence text in this
-walkthrough remain available if those sites are down.
+The **12 November 2026 IST** snapshot contains 32 NSE filings from 6–12 November
+across 13 names in the 15-company portfolio. It includes selected WIPRO and MARUTI
+PDF text and the 11 November market refresh. The core walkthrough can run offline
+after dependencies are installed. Original PDFs and CSVs are linked at their sources.
 
-| Step | What to try |
+| Time | What to try |
 | --- | --- |
-| Push and Network | On the feed, tap **WIPRO appointment**. Confirm the appointment excerpt cites physical PDF page 2. Check the **Synthetic contact** badge, the sector match and the suggested question. |
-| Pull | Tap **MARUTI research**. The prefilled search asks about exports and production capacity. The FY 2025–26 annual report, PDF page 68, reports the increase from approximately 2.4 million to 2.9 million annual units during FY 2026–27 and separately describes 4 million units as an objective. Review the cited excerpts and the 27 October 2026 call results. |
-| Market signals | Tap **MARUTI market signals**. Check **+1.99%** and **1.88×** for 11 November, the prior close, and the three dated volume-baseline rows. |
-| Live discovery | On Company research, enter `CUMMINSIND` and `How did domestic sales and exports change?`. Tap **Search excerpts** and then **Fetch documents**. The page reports progress and any source failures. This optional step needs upstream access. |
+| 0–20s | Open the feed. The WIPRO appointment is the first filing in the default window. Switch to **Latest day** to see the date range change, then return to **Last 7 days**. Both windows end on the latest cached filing date in IST. |
+| 20–45s | Tap **WIPRO appointment**. Open the page 2 source link and jump to the synthetic contact’s suggested question. |
+| 45–70s | Tap **MARUTI research**. The prepared walkthrough puts the H1 FY 2026–27 addition of 500,000 units/year beside the 4 million unit/year medium-term objective, with their respective PDF pages. The lookup below also shows synthetic contacts and source excerpts. |
+| 70–90s | Open **End-of-day market signals** on the unfiltered feed. Expand **Market refresh status** to see all 15 results, including companies with no threshold crossing. |
+
+After the walkthrough, try `CUMMINSIND` with **How did domestic sales and exports change?**
+Select **Search excerpts**, then **Fetch documents** if needed. The transcript is shown
+first when the report index includes table-like pages with mixed figures and labels.
+The report’s original link remains available.
+
+The raw refresh was verified against NSE on 15 November 2026 IST, using the
+11 November session and 9, 8 and 6 November baselines. All 15 symbols returned usable
+rows after updating `TATAMOTORS` to `TMPV` per NSE circular 70875.
+`demo/market-verification.json` contains source URL, date, close and volume for each
+input row. To repeat the same command, use:
+
+```bash
+python -m finn_app.market --as-of 2026-11-11 --price-pct 1.5 --volume-multiple 1.5 --volume-window 3
+```
 
 ## Publish to GitHub and deploy on Render
 
@@ -78,14 +91,11 @@ NSE access and may fail or time out on a hosting network.
 
 ### Phone checklist
 
-- Open the HTTPS URL in a private browser tab. Check that the snapshot date and
-  three walkthrough links fit without horizontal scrolling.
-- Open WIPRO. Check for the page 2 excerpt, original filing link and synthetic
-  contact. Return to the feed.
-- Open MARUTI research. Confirm the capacity excerpt and PDF page link. The
-  search works without credentials and **Answer from excerpts** is hidden.
-- Check the dated market signals. Try the unseen ticker last and confirm either
-  cited results or a clear source failure.
+- Check the opening viewport and the filing window in a private phone tab.
+- Follow WIPRO → page 2 → contact question, then MARUTI → capacity comparison.
+- Expand the 15-company market status on the unfiltered feed.
+- Try the live CUMMINSIND fetch separately. Confirm the transcript leads when
+  mixed table pages are excluded and that unavailable sources show a useful status.
 
 ## Optional answers for local use
 
@@ -113,14 +123,14 @@ was used in release verification.
   and the mean of prior session volumes. The sample uses 1.5% and 1.5× thresholds
   and three prior sessions, including the 8 November Muhurat session. The market
   command rejects mismatched CSV dates and keeps earlier results when inputs fail.
-- **Pull:** SQLite stores page text for keyword and phrase search. The bundled
+- **Pull:** SQLite stores page text for keyword and phrase search. The MARUTI comparison is a prepared walkthrough. The bundled
   MARUTI sample is limited to selected pages; extracted tables can lose layout.
   Browser discovery validates each symbol and uses bounded fetch and extraction.
 - **Network:** contact profiles are fictional. Company or sector tags explain
   matches. A real private network would require authentication, access control
   and consent before storing any contacts.
 - **Storage:** `demo/snapshot.json` contains curated public filing fields, selected
-  source excerpts and market observations. The repository omits original PDFs,
+  source excerpts. `demo/market-verification.json` contains curated market observations. The repository omits original PDFs,
   raw responses, local databases, runtime logs and credentials. Local app state
   defaults to `.finn/`. Startup reconstructs the packaged snapshot
   from the bundled JSON.

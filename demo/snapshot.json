@@ -1,5 +1,5 @@
 {
-  "version": "2026-11-12-v1",
+  "version": "2026-11-12-v2",
   "from_date": "2026-11-06",
   "to_date": "2026-11-12",
   "filings": [
@@ -166,9 +166,26 @@
       ]
     },
     {
-      "ticker": "TATAMOTORS",
+      "ticker": "TMPV",
       "as_of": "2026-11-12",
-      "filings": []
+      "filings": [
+        {
+          "symbol": "TMPV",
+          "seq_id": "106856923",
+          "desc": "ESOP/ESOS/ESPS",
+          "an_dt": "12-Nov-2026 17:01:53",
+          "attchmntFile": "https://nsearchives.nseindia.in/corporate/TATAMOTORSSJS_12112026170143_NSEBSEESOP.pdf",
+          "attchmntText": "Tata Motors Passenger Vehicles Limited has informed the Exchange regarding Allotment of 52,771  Equity Shares."
+        },
+        {
+          "symbol": "TMPV",
+          "seq_id": "106855352",
+          "desc": "Analysts/Institutional Investor Meet/Con. Call Updates",
+          "an_dt": "11-Nov-2026 17:08:43",
+          "attchmntFile": "https://nsearchives.nseindia.in/corporate/TATAMOTORSSJS_11112026170823_LetterNSEBSEAnalystMeet.pdf",
+          "attchmntText": "Tata Motors Passenger Vehicles Limited has informed the Exchange about Schedule of meet"
+        }
+      ]
     },
     {
       "ticker": "M&M",
@@ -372,53 +389,5 @@
       }
     }
   ],
-  "market": {
-    "price": {
-      "threshold": "1.5",
-      "rows": [
-        {
-          "date": "2026-11-11",
-          "close": "13185.00",
-          "volume": 963516,
-          "source_url": "https://nsearchives.nseindia.com/products/content/sec_bhavdata_full_11112026.csv"
-        },
-        {
-          "date": "2026-11-09",
-          "close": "12928.00",
-          "volume": 558028,
-          "source_url": "https://nsearchives.nseindia.com/products/content/sec_bhavdata_full_09112026.csv"
-        }
-      ]
-    },
-    "volume": {
-      "threshold": "1.5",
-      "rows": [
-        {
-          "date": "2026-11-11",
-          "close": "13185.00",
-          "volume": 963516,
-          "source_url": "https://nsearchives.nseindia.com/products/content/sec_bhavdata_full_11112026.csv"
-        },
-        {
-          "date": "2026-11-09",
-          "close": "12928.00",
-          "volume": 558028,
-          "source_url": "https://nsearchives.nseindia.com/products/content/sec_bhavdata_full_09112026.csv"
-        },
-        {
-          "date": "2026-11-08",
-          "close": "12815.00",
-          "volume": 55320,
-          "source_url": "https://nsearchives.nseindia.com/products/content/sec_bhavdata_full_08112026.csv"
-        },
-        {
-          "date": "2026-11-06",
-          "close": "12750.00",
-          "volume": 923719,
-          "source_url": "https://nsearchives.nseindia.com/products/content/sec_bhavdata_full_06112026.csv"
-        }
-      ]
-    }
-  },
   "captured_at": "2026-11-14T18:10:00+00:00"
 }

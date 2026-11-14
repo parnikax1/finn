@@ -114,6 +114,8 @@ def store_snapshot(db, symbol, results, fetched_at):
 
 
 def read_market(db, company):
+    symbols = [item['symbol'] for item in portfolio()]
+    placeholders = ','.join('?' for _ in symbols)
     return [dict(row) | {'snapshot': json.loads(row['payload']) if row['payload'] else {}}
             for row in db.execute('''
                 SELECT c.symbol, c.name, s.trading_date, s.fetched_at, s.payload,
@@ -121,9 +123,9 @@ def read_market(db, company):
                 FROM companies c
                 LEFT JOIN market_snapshots s ON s.symbol=c.symbol
                 LEFT JOIN market_attempts a ON a.symbol=c.symbol
-                WHERE (s.symbol IS NOT NULL OR a.symbol IS NOT NULL) AND (?='' OR c.symbol=?)
-                ORDER BY s.trading_date DESC, c.symbol
-            ''', (company, company))]
+                WHERE c.symbol IN (%s) AND (?='' OR c.symbol=?)
+                ORDER BY s.trading_date DESC, c.symbol='MARUTI' DESC, c.symbol
+            ''' % placeholders, (*symbols, company, company))]
 
 
 def refresh_market(db, symbols, as_of, price_pct, volume_multiple, window, timeout):
@@ -193,6 +195,8 @@ def refresh_market(db, symbols, as_of, price_pct, volume_multiple, window, timeo
             print(f"{symbol}: {sessions[0]} · " + ' · '.join(metrics))
         if entry['status'] != 'succeeded':
             print(f"{symbol}: {entry['status'].capitalize()}. {entry['detail']}")
+    succeeded = sum(entry['status'] == 'succeeded' for entry in report['symbols'].values())
+    print(f'{succeeded}/{len(symbols)} market refreshes succeeded.')
     print(f'REPORT: {report_path}')
     return int(any(entry['status'] != 'succeeded' for entry in report['symbols'].values()))
 

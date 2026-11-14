@@ -1,0 +1,467 @@
+{
+  "verified_at": "2026-11-14T18:57:01+00:00",
+  "source": "NSE security-wise daily archive (EQ)",
+  "sessions": [
+    "2026-11-11",
+    "2026-11-09",
+    "2026-11-08",
+    "2026-11-06"
+  ],
+  "settings": {
+    "price_pct": "1.5",
+    "volume_multiple": "1.5",
+    "volume_window": 3
+  },
+  "symbols": {
+    "INFY": {
+      "status": "succeeded",
+      "detail": "Checked session 2026-11-11.",
+      "rows": [
+        {
+          "date": "2026-11-11",
+          "close": "1155.00",
+          "volume": 9148933,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_11112026.csv"
+        },
+        {
+          "date": "2026-11-09",
+          "close": "1154.10",
+          "volume": 10099639,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_09112026.csv"
+        },
+        {
+          "date": "2026-11-08",
+          "close": "1171.60",
+          "volume": 1003958,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_08112026.csv"
+        },
+        {
+          "date": "2026-11-06",
+          "close": "1181.40",
+          "volume": 15301109,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_06112026.csv"
+        }
+      ]
+    },
+    "TCS": {
+      "status": "succeeded",
+      "detail": "Checked session 2026-11-11.",
+      "rows": [
+        {
+          "date": "2026-11-11",
+          "close": "2472.10",
+          "volume": 4013371,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_11112026.csv"
+        },
+        {
+          "date": "2026-11-09",
+          "close": "2475.40",
+          "volume": 2897701,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_09112026.csv"
+        },
+        {
+          "date": "2026-11-08",
+          "close": "2498.80",
+          "volume": 301811,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_08112026.csv"
+        },
+        {
+          "date": "2026-11-06",
+          "close": "2498.50",
+          "volume": 4922308,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_06112026.csv"
+        }
+      ]
+    },
+    "HCLTECH": {
+      "status": "succeeded",
+      "detail": "Checked session 2026-11-11.",
+      "rows": [
+        {
+          "date": "2026-11-11",
+          "close": "1395.00",
+          "volume": 3607726,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_11112026.csv"
+        },
+        {
+          "date": "2026-11-09",
+          "close": "1407.00",
+          "volume": 3949445,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_09112026.csv"
+        },
+        {
+          "date": "2026-11-08",
+          "close": "1442.00",
+          "volume": 197422,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_08112026.csv"
+        },
+        {
+          "date": "2026-11-06",
+          "close": "1440.00",
+          "volume": 4185868,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_06112026.csv"
+        }
+      ]
+    },
+    "WIPRO": {
+      "status": "succeeded",
+      "detail": "Checked session 2026-11-11.",
+      "rows": [
+        {
+          "date": "2026-11-11",
+          "close": "197.99",
+          "volume": 14637613,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_11112026.csv"
+        },
+        {
+          "date": "2026-11-09",
+          "close": "199.00",
+          "volume": 11759251,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_09112026.csv"
+        },
+        {
+          "date": "2026-11-08",
+          "close": "197.55",
+          "volume": 842259,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_08112026.csv"
+        },
+        {
+          "date": "2026-11-06",
+          "close": "198.00",
+          "volume": 14698313,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_06112026.csv"
+        }
+      ]
+    },
+    "ASIANPAINT": {
+      "status": "succeeded",
+      "detail": "Checked session 2026-11-11.",
+      "rows": [
+        {
+          "date": "2026-11-11",
+          "close": "2550.30",
+          "volume": 1260836,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_11112026.csv"
+        },
+        {
+          "date": "2026-11-09",
+          "close": "2509.30",
+          "volume": 1001985,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_09112026.csv"
+        },
+        {
+          "date": "2026-11-08",
+          "close": "2529.00",
+          "volume": 57733,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_08112026.csv"
+        },
+        {
+          "date": "2026-11-06",
+          "close": "2546.00",
+          "volume": 969158,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_06112026.csv"
+        }
+      ]
+    },
+    "PIDILITIND": {
+      "status": "succeeded",
+      "detail": "Checked session 2026-11-11.",
+      "rows": [
+        {
+          "date": "2026-11-11",
+          "close": "1574.40",
+          "volume": 1253407,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_11112026.csv"
+        },
+        {
+          "date": "2026-11-09",
+          "close": "1587.50",
+          "volume": 714984,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_09112026.csv"
+        },
+        {
+          "date": "2026-11-08",
+          "close": "1578.20",
+          "volume": 75902,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_08112026.csv"
+        },
+        {
+          "date": "2026-11-06",
+          "close": "1579.00",
+          "volume": 625427,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_06112026.csv"
+        }
+      ]
+    },
+    "MARUTI": {
+      "status": "succeeded",
+      "detail": "Checked session 2026-11-11.",
+      "rows": [
+        {
+          "date": "2026-11-11",
+          "close": "13185.00",
+          "volume": 963516,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_11112026.csv"
+        },
+        {
+          "date": "2026-11-09",
+          "close": "12928.00",
+          "volume": 558028,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_09112026.csv"
+        },
+        {
+          "date": "2026-11-08",
+          "close": "12815.00",
+          "volume": 55320,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_08112026.csv"
+        },
+        {
+          "date": "2026-11-06",
+          "close": "12750.00",
+          "volume": 923719,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_06112026.csv"
+        }
+      ]
+    },
+    "TMPV": {
+      "status": "succeeded",
+      "detail": "Checked session 2026-11-11.",
+      "rows": [
+        {
+          "date": "2026-11-11",
+          "close": "299.25",
+          "volume": 7993192,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_11112026.csv"
+        },
+        {
+          "date": "2026-11-09",
+          "close": "295.00",
+          "volume": 6787416,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_09112026.csv"
+        },
+        {
+          "date": "2026-11-08",
+          "close": "295.30",
+          "volume": 1831112,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_08112026.csv"
+        },
+        {
+          "date": "2026-11-06",
+          "close": "292.00",
+          "volume": 7506108,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_06112026.csv"
+        }
+      ]
+    },
+    "M&M": {
+      "status": "succeeded",
+      "detail": "Checked session 2026-11-11.",
+      "rows": [
+        {
+          "date": "2026-11-11",
+          "close": "3465.00",
+          "volume": 5574796,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_11112026.csv"
+        },
+        {
+          "date": "2026-11-09",
+          "close": "3290.60",
+          "volume": 2293597,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_09112026.csv"
+        },
+        {
+          "date": "2026-11-08",
+          "close": "3267.80",
+          "volume": 423511,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_08112026.csv"
+        },
+        {
+          "date": "2026-11-06",
+          "close": "3287.20",
+          "volume": 8520444,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_06112026.csv"
+        }
+      ]
+    },
+    "RELIANCE": {
+      "status": "succeeded",
+      "detail": "Checked session 2026-11-11.",
+      "rows": [
+        {
+          "date": "2026-11-11",
+          "close": "1335.40",
+          "volume": 17554310,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_11112026.csv"
+        },
+        {
+          "date": "2026-11-09",
+          "close": "1324.40",
+          "volume": 19734153,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_09112026.csv"
+        },
+        {
+          "date": "2026-11-08",
+          "close": "1324.00",
+          "volume": 4174389,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_08112026.csv"
+        },
+        {
+          "date": "2026-11-06",
+          "close": "1320.00",
+          "volume": 22768301,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_06112026.csv"
+        }
+      ]
+    },
+    "HDFCBANK": {
+      "status": "succeeded",
+      "detail": "Checked session 2026-11-11.",
+      "rows": [
+        {
+          "date": "2026-11-11",
+          "close": "806.60",
+          "volume": 56398940,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_11112026.csv"
+        },
+        {
+          "date": "2026-11-09",
+          "close": "798.15",
+          "volume": 64826814,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_09112026.csv"
+        },
+        {
+          "date": "2026-11-08",
+          "close": "784.10",
+          "volume": 7207078,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_08112026.csv"
+        },
+        {
+          "date": "2026-11-06",
+          "close": "788.25",
+          "volume": 73482878,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_06112026.csv"
+        }
+      ]
+    },
+    "ICICIBANK": {
+      "status": "succeeded",
+      "detail": "Checked session 2026-11-11.",
+      "rows": [
+        {
+          "date": "2026-11-11",
+          "close": "1571.60",
+          "volume": 29190011,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_11112026.csv"
+        },
+        {
+          "date": "2026-11-09",
+          "close": "1589.00",
+          "volume": 27542158,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_09112026.csv"
+        },
+        {
+          "date": "2026-11-08",
+          "close": "1565.00",
+          "volume": 1999869,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_08112026.csv"
+        },
+        {
+          "date": "2026-11-06",
+          "close": "1571.20",
+          "volume": 40383259,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_06112026.csv"
+        }
+      ]
+    },
+    "ITC": {
+      "status": "succeeded",
+      "detail": "Checked session 2026-11-11.",
+      "rows": [
+        {
+          "date": "2026-11-11",
+          "close": "285.00",
+          "volume": 23473983,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_11112026.csv"
+        },
+        {
+          "date": "2026-11-09",
+          "close": "278.80",
+          "volume": 18577205,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_09112026.csv"
+        },
+        {
+          "date": "2026-11-08",
+          "close": "283.45",
+          "volume": 2941827,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_08112026.csv"
+        },
+        {
+          "date": "2026-11-06",
+          "close": "283.15",
+          "volume": 17144523,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_06112026.csv"
+        }
+      ]
+    },
+    "HINDUNILVR": {
+      "status": "succeeded",
+      "detail": "Checked session 2026-11-11.",
+      "rows": [
+        {
+          "date": "2026-11-11",
+          "close": "2022.40",
+          "volume": 1701295,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_11112026.csv"
+        },
+        {
+          "date": "2026-11-09",
+          "close": "1990.30",
+          "volume": 1457165,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_09112026.csv"
+        },
+        {
+          "date": "2026-11-08",
+          "close": "1997.00",
+          "volume": 143356,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_08112026.csv"
+        },
+        {
+          "date": "2026-11-06",
+          "close": "1998.40",
+          "volume": 1058803,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_06112026.csv"
+        }
+      ]
+    },
+    "SUNPHARMA": {
+      "status": "succeeded",
+      "detail": "Checked session 2026-11-11.",
+      "rows": [
+        {
+          "date": "2026-11-11",
+          "close": "1902.30",
+          "volume": 2262492,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_11112026.csv"
+        },
+        {
+          "date": "2026-11-09",
+          "close": "1904.50",
+          "volume": 3127099,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_09112026.csv"
+        },
+        {
+          "date": "2026-11-08",
+          "close": "1915.00",
+          "volume": 971660,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_08112026.csv"
+        },
+        {
+          "date": "2026-11-06",
+          "close": "1860.00",
+          "volume": 2348251,
+          "source_url": "https://nsearchives.nseindia.in/products/content/sec_bhavdata_full_06112026.csv"
+        }
+      ]
+    }
+  }
+}

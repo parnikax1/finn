@@ -6,6 +6,7 @@
   <h1>Company research</h1>
   <p class="lede">Search annual reports and earnings-call transcripts by ticker and question.</p>
 </section>
+{% if walkthrough %}{% include 'maruti_walkthrough.html' %}{% endif %}
 <form class="filters research-form" method="get" action="/research">
   <label>Ticker<input type="text" name="symbol" value="{{ symbol }}" maxlength="35" placeholder="MARUTI" required></label>
   <label class="search">Question<input type="text" name="question" value="{{ question }}" maxlength="300" required></label>
@@ -30,10 +31,19 @@
 </form>
 {% endif %}
 {% include 'research_answer_result.html' %}
+{% if contacts %}
+<section class="panel contact-panel pull-contacts">
+  <h2>Who could add context</h2>
+  {% for contact in contacts %}
+  <p><strong>{{ contact.name }}</strong> · Synthetic contact · {{ contact.basis }}<br>{{ contact.reason }}</p>
+  {% endfor %}
+</section>
+{% endif %}
 <p class="date-line">Cached sources for {{ symbol }} · Ranked by keyword and phrase matches</p>
 {% for group in groups %}
 <section class="panel research-source">
   <h2>{{ group.title }}</h2>
+  {% if group.omitted_tables %}<p class="annotation">Table-like pages with mixed row labels and values were excluded from excerpt search. Use the original annual report for those figures.</p>{% endif %}
   {% if group.doc %}
     <p class="date-line">{{ group.doc.date_label or group.unknown_date }} · {{ group.doc.provenance }}</p>
     {% for hit in group.hits %}

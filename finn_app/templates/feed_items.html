@@ -1,10 +1,11 @@
 <section id="feed" aria-live="polite">
-{% include 'market_signals.html' %}
-<div class="result-line"><span>{{ total }} matching filings{% if total %} · page {{ page }}{% endif %}</span><span>Rule priority, then filing date</span></div>
+<div class="result-line"><span>{{ total }} matching filings{% if total %} · page {{ page }}{% endif %}</span><span>{{ window_start ~ ' to ' ~ latest_day ~ ' IST' if window_start else 'All cached filing dates' }}</span></div>
 {% if not events %}
 <div class="empty"><h3>No cached filings match.</h3><p>Clear the filters, or import an existing check_data.py cache. Nothing is generated to fill this view.</p><a href="/">Clear filters</a></div>
 {% endif %}
-{% for event in main_events %}{% include 'event_card.html' %}{% endfor %}
+{% if main_events %}{% with event=main_events[0] %}{% include 'event_card.html' %}{% endwith %}{% endif %}
+{% include 'market_signals.html' %}
+{% for event in main_events[1:] %}{% include 'event_card.html' %}{% endfor %}
 {% if routine %}
 <details class="routine" {% if priority=='routine' %}open{% endif %}><summary><span>Routine disclosures <b>{{ routine|length }}</b></span><span class="muted">On this page · expand to inspect</span></summary><div class="routine-items">{% for event in routine %}{% include 'event_card.html' %}{% endfor %}</div></details>
 {% endif %}

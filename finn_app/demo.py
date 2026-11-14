@@ -14,7 +14,7 @@ WIPRO_FILE = 'Wipro_Secretarial_06112026190358_SEintimation06112026.pdf'
 MARUTI_QUESTION = 'What did Maruti say about exports and production capacity?'
 
 
-def seed(db, snapshot):
+def seed(db, snapshot, market=None):
     version = snapshot['version']
     marker = 'demo:' + version
     source_note = 'Bundled demo excerpt from the original PDF. Only selected pages are included.'
@@ -31,7 +31,7 @@ def seed(db, snapshot):
         for document in snapshot['documents']:
             # Use a separate identity for selected pages. A later full PDF
             # import must not mistake the demo excerpts for complete text.
-            key = hashlib.sha256(f"{marker}:{document['sha']}".encode()).hexdigest()
+            key = hashlib.sha256(f"demo:2026-11-12-v1:{document['sha']}".encode()).hexdigest()
             db.execute('INSERT OR IGNORE INTO documents VALUES (?,NULL,?,?)',
                        (key, 'ready', source_note))
             db.executemany('INSERT OR IGNORE INTO pages VALUES (?,?,?)',
@@ -45,11 +45,17 @@ def seed(db, snapshot):
                            (document['symbol'], document['kind'], key, document['url'],
                             'Bundled demo snapshot', document['date_label'], document['document_date'],
                             snapshot_time))
-        market = snapshot['market']
-        if not db.execute('SELECT 1 FROM market_snapshots WHERE symbol=?', ('MARUTI',)).fetchone():
-            signals = calculate(market['volume']['rows'], Decimal(market['price']['threshold']),
-                                Decimal(market['volume']['threshold']))
-            store_snapshot(db, 'MARUTI', signals, snapshot_time)
+        if market:
+            settings = market['settings']
+            verified_at = market['verified_at']
+            for symbol, report in market['symbols'].items():
+                if not db.execute('SELECT 1 FROM market_snapshots WHERE symbol=?', (symbol,)).fetchone():
+                    signals = calculate(report['rows'], Decimal(settings['price_pct']),
+                                        Decimal(settings['volume_multiple']))
+                    store_snapshot(db, symbol, signals, verified_at)
+                db.execute('INSERT OR IGNORE INTO market_attempts VALUES (?,?,?,?)',
+                           (symbol, verified_at, report['status'],
+                            'Bundled verified refresh. ' + report['detail']))
     return True
 
 
@@ -62,10 +68,23 @@ def demo_links(db):
     return dict(date=marker['as_of'], wipro=wipro['id'] if wipro else None)
 
 
+def capacity_walkthrough(db):
+    rows = db.execute(
+        "SELECT kind, url, date_label FROM research_sources "
+        "WHERE symbol='MARUTI' AND provenance='Bundled demo snapshot' ORDER BY run_date DESC"
+    )
+    sources = {}
+    for row in rows:
+        sources.setdefault(row['kind'], dict(row))
+    return sources if {'annual', 'transcript'} <= sources.keys() else None
+
+
+
 def main():
     snapshot = json.loads(SNAPSHOT.read_text(encoding='utf-8'))
+    market = json.loads(SNAPSHOT.with_name('market-verification.json').read_text(encoding='utf-8'))
     with closing(connect()) as db:
-        loaded = seed(db, snapshot)
+        loaded = seed(db, snapshot, market)
     print(f"Demo snapshot {snapshot['version']} {'loaded' if loaded else 'already present'}.")
 
 

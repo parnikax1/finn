@@ -1,8 +1,9 @@
 import hashlib
 import os
 from contextlib import closing
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
+from typing import Literal
 from urllib.parse import urlencode
 from zoneinfo import ZoneInfo
 
@@ -11,7 +12,7 @@ from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse, Resp
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from .db import ROOT, connect
-from .demo import MARUTI_QUESTION, demo_links
+from .demo import MARUTI_QUESTION, demo_links, capacity_walkthrough
 from .evidence import appointment_details, appointment_excerpt, event_title, suggested_question
 from .rules import matching_contacts
 from .market import read_market
@@ -44,9 +45,20 @@ templates.env.filters['fetch_time'] = fetch_time
 
 @app.get('/', response_class=HTMLResponse)
 def feed(request: Request, company: str = '', priority: str = '', q: str = '',
-         evidence: bool = False, page: int = Query(1, ge=1)):
+         evidence: bool = False, window: Literal['1', '7', '30', 'all'] = '7',
+         page: int = Query(1, ge=1)):
     with closing(connect()) as db:
+        demo = demo_links(db)
+        latest = db.execute('SELECT MAX(filed_at) FROM events').fetchone()[0]
+        latest_day = latest[:10] if latest else None
+        if demo and (not latest_day or demo['date'] > latest_day):
+            latest_day = demo['date']
+        window_start = None
         predicates, values = ['1=1'], []
+        if window != 'all' and latest_day:
+            window_start = (datetime.fromisoformat(latest_day) - timedelta(days=int(window) - 1)).date().isoformat()
+            predicates.append('e.filed_at>=?')
+            values.append(window_start)
         if company:
             predicates.append('e.symbol=?'); values.append(company)
         if priority == 'important':
@@ -63,16 +75,16 @@ def feed(request: Request, company: str = '', priority: str = '', q: str = '',
         events = [dict(r) for r in db.execute(f'''SELECT e.*, c.name, c.sector,
           EXISTS(SELECT 1 FROM pages p WHERE p.sha=e.document_sha) AS has_evidence
           FROM events e JOIN companies c ON c.symbol=e.symbol WHERE {where}
-          ORDER BY e.priority DESC, e.filed_at DESC, e.id LIMIT 60 OFFSET ?''', values + [(page-1)*60])]
+          ORDER BY e.priority DESC, has_evidence DESC, e.filed_at DESC, e.id LIMIT 60 OFFSET ?''', values + [(page-1)*60])]
         companies = [dict(r) for r in db.execute('''SELECT c.*, COUNT(e.id) AS events FROM companies c
-          LEFT JOIN events e ON e.symbol=c.symbol GROUP BY c.symbol ORDER BY c.name''')]
+          LEFT JOIN events e ON e.symbol=c.symbol
+          WHERE c.symbol<>'TATAMOTORS' OR e.id IS NOT NULL GROUP BY c.symbol ORDER BY c.name''')]
         stats = dict(db.execute('''SELECT COUNT(*) AS total, MIN(filed_at) AS earliest,
           MAX(filed_at) AS latest,
           COALESCE(SUM(priority>=70),0) AS important,
           SUM(EXISTS(SELECT 1 FROM pages p WHERE p.sha=events.document_sha)) AS evidence
           FROM events''').fetchone())
         market = read_market(db, company)
-        demo = None if request.headers.get("HX-Request") == "true" else demo_links(db)
         run = db.execute('SELECT * FROM refresh_runs ORDER BY id DESC LIMIT 1').fetchone()
         last_fetch = db.execute('SELECT MAX(fetched_at) FROM refresh_results').fetchone()[0]
         results = list(db.execute('''
@@ -89,7 +101,7 @@ def feed(request: Request, company: str = '', priority: str = '', q: str = '',
         ''', (run['id'],))) if run else []
     def page_url(number):
         return '/?' + urlencode(dict(company=company, priority=priority, q=q,
-                                      evidence=int(evidence), page=number))
+                                      evidence=int(evidence), window=window, page=number))
     context = dict(events=events, routine=[e for e in events if e['priority'] < 30],
                    main_events=[e for e in events if e['priority'] >= 30], total=total,
                    companies=companies, stats=stats, company=company, priority=priority,
@@ -97,6 +109,7 @@ def feed(request: Request, company: str = '', priority: str = '', q: str = '',
                    next=page_url(page+1) if page*60 < total else None,
                    cached_companies=sum(c['events'] > 0 for c in companies),
                    refresh_run=run, refresh_results=results, last_fetch=last_fetch, market=market, demo=demo,
+                   window=window, latest_day=latest_day, window_start=window_start,
                    demo_research_url=research_urls('MARUTI', MARUTI_QUESTION)['search'] if demo else '')
     template = 'feed_items.html' if request.headers.get('HX-Request') == 'true' else 'feed.html'
     return templates.TemplateResponse(request=request, name=template, context=context)
@@ -115,6 +128,13 @@ def research_urls(symbol, question):
         ('answer', '/research/answer'))}
 
 
+def research_context(db, symbol, question):
+    company = db.execute('SELECT sector FROM companies WHERE symbol=?', (symbol,)).fetchone()
+    contacts = matching_contacts(symbol, company['sector'] if company else None)
+    walkthrough = capacity_walkthrough(db) if symbol == 'MARUTI' and question == MARUTI_QUESTION else None
+    return contacts, walkthrough
+
+
 @app.get('/research', response_class=HTMLResponse)
 def research(request: Request, symbol: str = Query('', max_length=35),
              question: str = Query('', max_length=300), busy: bool = False):
@@ -123,6 +143,7 @@ def research(request: Request, symbol: str = Query('', max_length=35),
     error = ''
     groups = None
     urls, status, missing = {}, {}, []
+    contacts, walkthrough = [], None
     if symbol or question:
         if not normalized:
             error = 'Enter an NSE ticker, such as MARUTI.'
@@ -134,10 +155,12 @@ def research(request: Request, symbol: str = Query('', max_length=35),
                 groups = lookup(db, normalized, question)
                 status = status_for(storage_for(db), normalized)
                 missing = missing_kinds(db, normalized)
+                contacts, walkthrough = research_context(db, normalized, question)
     return templates.TemplateResponse(request=request, name='research.html', context=dict(
         symbol=normalized or symbol, question=question, groups=groups, error=error,
         urls=urls, status=status, missing=missing, busy=busy,
-        has_evidence=bool(groups and evidence_from(groups)), answer_enabled=bool(api_key())))
+        has_evidence=bool(groups and evidence_from(groups)), answer_enabled=bool(api_key()),
+        contacts=contacts, walkthrough=walkthrough))
 
 
 @app.post('/research/answer', response_class=HTMLResponse)
@@ -154,6 +177,7 @@ def research_answer(request: Request, symbol: str = Query(max_length=35),
         groups = lookup(db, normalized, question)
         status = status_for(storage_for(db), normalized)
         missing = missing_kinds(db, normalized)
+        contacts, walkthrough = research_context(db, normalized, question)
     evidence = evidence_from(groups)
     key = api_key()
     answer, answer_error = None, ''
@@ -168,7 +192,7 @@ def research_answer(request: Request, symbol: str = Query(max_length=35),
         context=dict(symbol=normalized, question=question, groups=groups,
                      urls=research_urls(normalized, question), status=status, missing=missing,
                      has_evidence=bool(evidence), answer_enabled=bool(key),
-                     answer=answer, answer_error=answer_error),
+                     answer=answer, answer_error=answer_error, contacts=contacts, walkthrough=walkthrough),
         headers={'Cache-Control': 'no-store'})
 
 

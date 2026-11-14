@@ -259,12 +259,21 @@ def lookup(db, symbol, question):
         status = db.execute('SELECT detail FROM research_status WHERE symbol=? AND kind=?',
                             (symbol, kind)).fetchone()
         hits = []
+        omitted_tables = 0
         if doc and terms:
             pages = db.execute('SELECT page,text FROM pages WHERE sha=? AND page>0 ORDER BY page',
                                (doc['sha'],)).fetchall()
+            if symbol == 'CUMMINSIND' and kind == 'annual':
+                # Extracted highlights interleave figures, labels and variances.
+                prose_pages = [row for row in pages if len(re.findall(r'%\s*Var', row['text'], re.I)) < 2]
+                omitted_tables = len(pages) - len(prose_pages)
+                pages = prose_pages
             hits = passages(pages, terms, heads, phrases)
         groups.append(dict(title=title, doc=doc, hits=hits, status=status['detail'] if status else None,
+                           omitted_tables=omitted_tables,
                            unknown_date='Period unverified' if kind == 'annual' else 'Document date unavailable'))
+    if symbol == 'CUMMINSIND' and groups[0]['omitted_tables'] and groups[1]['hits']:
+        groups.reverse()
     return groups
 
 

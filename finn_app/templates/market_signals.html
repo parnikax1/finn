@@ -1,6 +1,15 @@
 {% set alerts = namespace(count=0) %}
 <section class="market-signals" aria-labelledby="market-heading">
   <div class="section-line"><h2 id="market-heading">End-of-day market signals</h2><span>NSE cash market · EQ</span></div>
+  {% if market %}
+    <details class="data-notes">
+      <summary>Market refresh status · {{ market|selectattr('status', 'equalto', 'succeeded')|list|length }}/{{ market|length }} succeeded</summary>
+      <ul>{% for item in market %}
+        <li><strong>{{ item.symbol }}</strong> · {% if item.attempted_at %}{{ item.attempted_at|fetch_time }} · {{ item.status|capitalize }}. {{ item.detail }}{% else %}No market refresh recorded.{% endif %}
+          {% if item.snapshot %} Latest cached trading date {{ item.trading_date }}.{% endif %}</li>
+      {% endfor %}</ul>
+    </details>
+  {% endif %}
   {% for item in market %}
     {% set price = item.snapshot.get('price') %}
     {% set volume = item.snapshot.get('volume') %}
@@ -31,12 +40,6 @@
     <p class="annotation">No market refresh recorded{% if company %} for {{ company }}{% endif %}.</p>
   {% else %}
     {% if not alerts.count %}<p class="annotation">No triggered signals in the available cache.</p>{% endif %}
-    <details class="data-notes">
-      <summary>Market refresh status</summary>
-      <ul>{% for item in market %}
-        <li><strong>{{ item.symbol }}</strong> · {% if item.attempted_at %}{{ item.attempted_at|fetch_time }} · {{ item.status|capitalize }}. {{ item.detail }}{% else %}Bundled demo snapshot.{% endif %}
-          {% if item.snapshot %} Latest cached trading date {{ item.trading_date }}.{% endif %}</li>
-      {% endfor %}</ul>
-    </details>
+
   {% endif %}
 </section>
