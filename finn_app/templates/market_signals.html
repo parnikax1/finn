@@ -1,0 +1,42 @@
+{% set alerts = namespace(count=0) %}
+<section class="market-signals" aria-labelledby="market-heading">
+  <div class="section-line"><h2 id="market-heading">End-of-day market signals</h2><span>NSE cash market · EQ</span></div>
+  {% for item in market %}
+    {% set price = item.snapshot.get('price') %}
+    {% set volume = item.snapshot.get('volume') %}
+    {% if (price and price.triggered) or (volume and volume.triggered) %}
+      {% set alerts.count = alerts.count + 1 %}
+      <article class="panel">
+        <h3>{{ item.symbol }} · {{ item.name }}</h3>
+        {% if price and price.triggered %}
+          {% set observed = price.rows[0] %}{% set prior = price.rows[1] %}
+          <p><strong>Price move {{ '%+.2f'|format(price.move|float) }}%</strong> · {{ observed.date }} IST · absolute move threshold {{ price.threshold }}%</p>
+          <p>Close ₹{{ '{:,.2f}'.format(observed.close|float) }} · previous session {{ prior.date }} closed at ₹{{ '{:,.2f}'.format(prior.close|float) }}.</p>
+          <p class="annotation">NSE daily archive · <a href="{{ observed.source_url }}">observed CSV</a> · <a href="{{ prior.source_url }}">previous-session CSV</a></p>
+        {% endif %}
+        {% if volume and volume.triggered %}
+          {% set observed = volume.rows[0] %}{% set priors = volume.rows[1:] %}
+          <p><strong>Volume {{ '%.2f'|format(volume.multiple|float) }}×</strong> · {{ observed.date }} IST · threshold {{ volume.threshold }}×</p>
+          <p>{{ '{:,}'.format(observed.volume) }} shares traded · prior {{ priors|length }}-session mean {{ '{:,.2f}'.format(volume.mean|float) }} shares ({{ priors[-1].date }} through {{ priors[0].date }}).</p>
+          <p class="annotation">NSE daily archive · <a href="{{ observed.source_url }}">observed CSV</a></p>
+          <details class="source-info"><summary>Volume baseline rows</summary>
+            <ul>{% for row in priors %}<li><a href="{{ row.source_url }}">{{ row.date }}</a> · {{ '{:,}'.format(row.volume) }} shares</li>{% endfor %}</ul>
+          </details>
+        {% endif %}
+        {% if item.status and item.status != 'succeeded' %}<p class="annotation">{{ 'Latest refresh was partial.' if item.status == 'partial' else 'Latest refresh failed.' }} Earlier results remain visible where available.</p>{% endif %}
+      </article>
+    {% endif %}
+  {% endfor %}
+  {% if not market %}
+    <p class="annotation">No market refresh recorded{% if company %} for {{ company }}{% endif %}.</p>
+  {% else %}
+    {% if not alerts.count %}<p class="annotation">No triggered signals in the available cache.</p>{% endif %}
+    <details class="data-notes">
+      <summary>Market refresh status</summary>
+      <ul>{% for item in market %}
+        <li><strong>{{ item.symbol }}</strong> · {% if item.attempted_at %}{{ item.attempted_at|fetch_time }} · {{ item.status|capitalize }}. {{ item.detail }}{% else %}Bundled demo snapshot.{% endif %}
+          {% if item.snapshot %} Latest cached trading date {{ item.trading_date }}.{% endif %}</li>
+      {% endfor %}</ul>
+    </details>
+  {% endif %}
+</section>

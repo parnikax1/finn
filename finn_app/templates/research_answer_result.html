@@ -1,0 +1,21 @@
+<div id="research-answer-result" aria-live="polite">
+{% if answer_error %}<p class="validation-alert" role="alert">{{ answer_error }} Excerpts remain available below.</p>{% endif %}
+{% if answer %}
+<section class="panel research-source" aria-labelledby="pull-answer-heading">
+  <h2 id="pull-answer-heading">Answer from excerpts</h2>
+  {% if answer.claims %}
+  <ul>
+    {% for claim in answer.claims %}
+    <li>“{{ claim.quote }}”
+      <a href="{{ claim.source.url }}" target="_blank" rel="noopener noreferrer">{{ claim.source.document }}{% if claim.source.period %} · {{ claim.source.period }}{% endif %} · PDF page {{ claim.source.page }}</a>
+    </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  {% if answer.gaps %}
+  <h3>Insufficient evidence in the retrieved excerpts</h3>
+  <ul>{% for gap in answer.gaps %}<li>{{ gap }}</li>{% endfor %}</ul>
+  {% endif %}
+</section>
+{% endif %}
+</div>

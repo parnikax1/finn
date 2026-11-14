@@ -1,0 +1,424 @@
+{
+  "version": "2026-11-12-v1",
+  "from_date": "2026-11-06",
+  "to_date": "2026-11-12",
+  "filings": [
+    {
+      "ticker": "INFY",
+      "as_of": "2026-11-12",
+      "filings": [
+        {
+          "symbol": "INFY",
+          "seq_id": "106856189",
+          "desc": "Updates",
+          "an_dt": "12-Nov-2026 11:19:58",
+          "attchmntFile": "https://nsearchives.nseindia.in/corporate/Infosys_12112026111940_PR_12112026.pdf",
+          "attchmntText": "Infosys Limited has informed the Exchange regarding 'Six Promising Researchers Win the Infosys Prize 2026 Awarded by the Infosys Science Foundation'."
+        }
+      ]
+    },
+    {
+      "ticker": "TCS",
+      "as_of": "2026-11-12",
+      "filings": [
+        {
+          "symbol": "TCS",
+          "seq_id": "106853516",
+          "desc": "Analysts/Institutional Investor Meet/Con. Call Updates",
+          "an_dt": "09-Nov-2026 17:12:15",
+          "attchmntFile": "https://nsearchives.nseindia.in/corporate/TCS_CORPCS_09112026171125_SEIntimation_signed.pdf",
+          "attchmntText": "Tata Consultancy Services Limited has informed the Exchange about Schedule of meet"
+        }
+      ]
+    },
+    {
+      "ticker": "HCLTECH",
+      "as_of": "2026-11-12",
+      "filings": [
+        {
+          "symbol": "HCLTECH",
+          "seq_id": "106857553",
+          "desc": "Updates",
+          "an_dt": "12-Nov-2026 19:35:14",
+          "attchmntFile": "https://nsearchives.nseindia.in/corporate/HCLTECH_12112026193455_Release12November2026.pdf",
+          "attchmntText": "HCL Technologies Limited has informed the Exchange regarding 'Release-  HCLTech featured among the top 50 global companies in Forbes World s Top Companies for Women 2026  '."
+        },
+        {
+          "symbol": "HCLTECH",
+          "seq_id": "106854531",
+          "desc": "Updates",
+          "an_dt": "10-Nov-2026 22:46:15",
+          "attchmntFile": "https://nsearchives.nseindia.in/corporate/HCLTECH_10112026224547_Release10Nov2026.pdf",
+          "attchmntText": "HCL Technologies Limited has informed the Exchange regarding 'Release-  HCLTech and PTC collaborate to accelerate semiconductor product lifecycle management '."
+        }
+      ]
+    },
+    {
+      "ticker": "WIPRO",
+      "as_of": "2026-11-12",
+      "filings": [
+        {
+          "symbol": "WIPRO",
+          "seq_id": "106856975",
+          "desc": "Copy of Newspaper Publication",
+          "an_dt": "12-Nov-2026 17:16:15",
+          "attchmntFile": "https://nsearchives.nseindia.in/corporate/Wipro_Secretarial_12112026171122_Newspaper_Ad_Nov_12.pdf",
+          "attchmntText": "Wipro Limited has informed the Exchange about newspaper publication regarding special window for transfer and dematerialization of physical shares"
+        },
+        {
+          "symbol": "WIPRO",
+          "seq_id": "106851504",
+          "desc": "Press Release",
+          "an_dt": "06-Nov-2026 19:15:02",
+          "attchmntFile": "https://nsearchives.nseindia.in/corporate/Wipro_Secretarial_06112026191442_PressRelease06112026.pdf",
+          "attchmntText": "Wipro Limited has informed the Exchange regarding a press release dated November 06, 2026, titled \"Wipro Appoints Angan Guha as President and Chief Executive Officer forAmericas 2 Strategic Market Unit\"."
+        },
+        {
+          "symbol": "WIPRO",
+          "seq_id": "106851464",
+          "desc": "Appointment",
+          "an_dt": "06-Nov-2026 19:05:22",
+          "attchmntFile": "https://nsearchives.nseindia.in/corporate/Wipro_Secretarial_06112026190358_SEintimation06112026.pdf",
+          "attchmntText": "Wipro Limited has informed the Exchange regarding Appointment of Mr. Angan Guha as President and Chief Executive Officer for Americas 2 Strategic Market Unit of the company w.e.f. December 08, 2026."
+        },
+        {
+          "symbol": "WIPRO",
+          "seq_id": "106851021",
+          "desc": "Analysts/Institutional Investor Meet/Con. Call Updates",
+          "an_dt": "06-Nov-2026 17:38:24",
+          "attchmntFile": "https://nsearchives.nseindia.in/corporate/Wipro_Secretarial_06112026172340_Reg_30_Investor_Meet_Nov_6.pdf",
+          "attchmntText": "Wipro Limited has informed the Exchange about Schedule of Analyst / Institutional Investor Meetings under the SEBI (Listing Obligations and Disclosure Requirements), Regulations, 2015."
+        }
+      ]
+    },
+    {
+      "ticker": "ASIANPAINT",
+      "as_of": "2026-11-12",
+      "filings": [
+        {
+          "symbol": "ASIANPAINT",
+          "seq_id": "106853629",
+          "desc": "Analysts/Institutional Investor Meet/Con. Call Updates",
+          "an_dt": "09-Nov-2026 18:11:20",
+          "attchmntFile": "https://nsearchives.nseindia.in/corporate/ASIANPAINT_09112026175712_SEINTIMATIONANALYSTMEETSNOV2026.pdf",
+          "attchmntText": "The Company will be participating in the analyst/institutional investor conferences/meetings on 18th and 19th November 2026 as per enclosed schedule."
+        },
+        {
+          "symbol": "ASIANPAINT",
+          "seq_id": "106851770",
+          "desc": "Appointment",
+          "an_dt": "06-Nov-2026 22:06:58",
+          "attchmntFile": "https://nsearchives.nseindia.in/corporate/ASIANPAINT_06112026220521_SE_intimation_-_Appointment_of_ID.pdf",
+          "attchmntText": "Asian Paints Limited has informed the Exchange regarding Appointment of Mr Leo Puri as Independent Director of the company w.e.f. September 07, 2026."
+        },
+        {
+          "symbol": "ASIANPAINT",
+          "seq_id": "106851762",
+          "desc": "Change in Director(s)",
+          "an_dt": "06-Nov-2026 22:02:45",
+          "attchmntFile": "https://nsearchives.nseindia.in/corporate/ASIANPAINT_06112026220150_SE_intimation_-_Appointment_of_ID.pdf",
+          "attchmntText": "Asian Paints Limited has informed the Exchange regarding Change in Director(s) of the company."
+        },
+        {
+          "symbol": "ASIANPAINT",
+          "seq_id": "106851750",
+          "desc": "Shareholders meeting",
+          "an_dt": "06-Nov-2026 21:46:25",
+          "attchmntFile": "https://nsearchives.nseindia.in/corporate/ASIANPAINT_06112026214436_SE_intimation_Result_of_Postal_ballot.pdf",
+          "attchmntText": "Please find enclosed the following: 1. Voting results of postal ballot pursuant to Regulation 44(3) of the SEBI (Listing Obligations and Disclosure Requirements) Regulations, 2015 and 2. Scrutinizer s Report dated 6th November 2026 on remote e-Voting pursuant to Section 108 of the Companies Act, 2013 read with the Companies (Management and Administration) Rules, 2014"
+        }
+      ]
+    },
+    {
+      "ticker": "PIDILITIND",
+      "as_of": "2026-11-12",
+      "filings": [
+        {
+          "symbol": "PIDILITIND",
+          "seq_id": "106855369",
+          "desc": "Analysts/Institutional Investor Meet/Con. Call Updates",
+          "an_dt": "11-Nov-2026 17:19:52",
+          "attchmntFile": "https://nsearchives.nseindia.in/corporate/Nisha_11112026171642_SEIntimationanalystmeet11Nov2026.pdf",
+          "attchmntText": "Pidilite Industries Limited has informed the Exchange about Schedule of meet"
+        }
+      ]
+    },
+    {
+      "ticker": "MARUTI",
+      "as_of": "2026-11-12",
+      "filings": [
+        {
+          "symbol": "MARUTI",
+          "seq_id": "106856325",
+          "desc": "Analysts/Institutional Investor Meet/Con. Call Updates",
+          "an_dt": "12-Nov-2026 11:57:20",
+          "attchmntFile": "https://nsearchives.nseindia.in/corporate/MARUTIASHISH_12112026115520_Investor_Meeting_17_18_19Nov2026.pdf",
+          "attchmntText": "Maruti Suzuki India Limited has informed the Exchange about Schedule of meet"
+        },
+        {
+          "symbol": "MARUTI",
+          "seq_id": "106854012",
+          "desc": "General Updates",
+          "an_dt": "10-Nov-2026 11:56:00",
+          "attchmntFile": "https://nsearchives.nseindia.in/corporate/MARUTIASHISH_10112026115416_STxIntimation_SMCResults_FirstHalfYr_10Nov2026.pdf",
+          "attchmntText": "Maruti Suzuki India Limited has informed the Exchange about Reference to the Financial Results issued by Suzuki Motor Corporation"
+        }
+      ]
+    },
+    {
+      "ticker": "TATAMOTORS",
+      "as_of": "2026-11-12",
+      "filings": []
+    },
+    {
+      "ticker": "M&M",
+      "as_of": "2026-11-12",
+      "filings": [
+        {
+          "symbol": "M&M",
+          "seq_id": "106857034",
+          "desc": "Analysts/Institutional Investor Meet/Con. Call Updates",
+          "an_dt": "12-Nov-2026 17:30:41",
+          "attchmntFile": "https://nsearchives.nseindia.in/corporate/AmitDodani_12112026173022_ConclusionofAnalystMeet12112026.pdf",
+          "attchmntText": "Mahindra & Mahindra Limited has informed the Exchange about Participation in Investor Meeting"
+        },
+        {
+          "symbol": "M&M",
+          "seq_id": "106856962",
+          "desc": "General Updates",
+          "an_dt": "12-Nov-2026 17:13:06",
+          "attchmntFile": "https://nsearchives.nseindia.in/corporate/AmitDodani_12112026171250_MonthlyReportOct2026.pdf",
+          "attchmntText": "Mahindra & Mahindra Limited has informed the Exchange about the Production, Sales and Export figures of the Company for the Month of October 2026"
+        },
+        {
+          "symbol": "M&M",
+          "seq_id": "106855618",
+          "desc": "Analysts/Institutional Investor Meet/Con. Call Updates",
+          "an_dt": "11-Nov-2026 18:59:05",
+          "attchmntFile": "https://nsearchives.nseindia.in/corporate/AmitDodani_11112026185839_Intimation_Transcript_Q2F27_Earningscall_05112026.pdf",
+          "attchmntText": "Mahindra & Mahindra Limited has informed the Exchange about Transcript of M&M Analyst Meet Q2F27"
+        },
+        {
+          "symbol": "M&M",
+          "seq_id": "106855096",
+          "desc": "Analysts/Institutional Investor Meet/Con. Call Updates",
+          "an_dt": "11-Nov-2026 14:55:45",
+          "attchmntFile": "https://nsearchives.nseindia.in/corporate/AmitDodani_11112026145521_UpcomingAnalystMeet16112026.pdf",
+          "attchmntText": "Mahindra & Mahindra Limited has informed the Exchange about Schedule of meet"
+        },
+        {
+          "symbol": "M&M",
+          "seq_id": "106850437",
+          "desc": "Acquisition",
+          "an_dt": "06-Nov-2026 15:36:06",
+          "attchmntFile": "https://nsearchives.nseindia.in/corporate/AmitDodani_06112026153559_SEIntimationSMLRightsIssue.pdf",
+          "attchmntText": "Mahindra & Mahindra Limited has informed the Exchange about Acquisition"
+        },
+        {
+          "symbol": "M&M",
+          "seq_id": "106849410",
+          "desc": "Copy of Newspaper Publication",
+          "an_dt": "06-Nov-2026 10:54:47",
+          "attchmntFile": "https://nsearchives.nseindia.in/corporate/ferozebaria_06112026105344_IntimationofNewspaperPublication06112026.pdf",
+          "attchmntText": "Mahindra & Mahindra Limited has informed the Exchange about Copy of Newspaper Publication"
+        }
+      ]
+    },
+    {
+      "ticker": "RELIANCE",
+      "as_of": "2026-11-12",
+      "filings": [
+        {
+          "symbol": "RELIANCE",
+          "seq_id": "106857662",
+          "desc": "Analysts/Institutional Investor Meet/Con. Call Updates",
+          "an_dt": "12-Nov-2026 20:23:38",
+          "attchmntFile": "https://nsearchives.nseindia.in/corporate/kavinavora_12112026202324_SE_12112026.pdf",
+          "attchmntText": "Please note that the Company executives will be participating in the Institutional Investors' Meeting - JM Financial India Conference, scheduled to be held on November 17, 2026 at Mumbai. It is expected that the meeting with the investors will be on one-on-one basis."
+        },
+        {
+          "symbol": "RELIANCE",
+          "seq_id": "106851483",
+          "desc": "Analysts/Institutional Investor Meet/Con. Call Updates",
+          "an_dt": "06-Nov-2026 19:10:58",
+          "attchmntFile": "https://nsearchives.nseindia.in/corporate/kavinavora_06112026191022_Pre_CLSA_SE_06112026.pdf",
+          "attchmntText": "Please note that the Company executives will be participating in the Institutional Investors' Meeting - CLSA India Forum, scheduled to be held on November 16, 2026 at Mumbai. It is expected that the meeting with the investors will be on one-on-one basis."
+        }
+      ]
+    },
+    {
+      "ticker": "HDFCBANK",
+      "as_of": "2026-11-12",
+      "filings": [
+        {
+          "symbol": "HDFCBANK",
+          "seq_id": "106857049",
+          "desc": "General Updates",
+          "an_dt": "12-Nov-2026 17:33:25",
+          "attchmntFile": "https://nsearchives.nseindia.in/corporate/HDFCBANK3_12112026173223_SE_Intimation-_VSR.pdf",
+          "attchmntText": "HDFC Bank Limited has informed the Exchange about Approval from the Reserve Bank of India for re-appointment of Mr. V. Srinivasa Rangan asthe Whole-time Director (designated as Executive Director) of HDFC Bank Limited"
+        },
+        {
+          "symbol": "HDFCBANK",
+          "seq_id": "106856600",
+          "desc": "Analysts/Institutional Investor Meet/Con. Call Updates",
+          "an_dt": "12-Nov-2026 14:27:53",
+          "attchmntFile": "https://nsearchives.nseindia.in/corporate/HDFCBANK3_12112026142725_Analystmeetintimation12112026.pdf",
+          "attchmntText": "HDFC Bank Limited has informed the Exchange about Schedule of meet"
+        },
+        {
+          "symbol": "HDFCBANK",
+          "seq_id": "106851783",
+          "desc": "Shareholders meeting",
+          "an_dt": "06-Nov-2026 22:27:43",
+          "attchmntFile": "https://nsearchives.nseindia.in/corporate/HDFCBANK_06112026222722_SEIntimation_PBResults_06112026.pdf",
+          "attchmntText": "HDFC Bank Limited has submitted the Exchange a copy Srutinizers report of  Postal Ballot. Further, the company has informed the Exchange regarding voting results."
+        },
+        {
+          "symbol": "HDFCBANK",
+          "seq_id": "106850382",
+          "desc": "Change in Management",
+          "an_dt": "06-Nov-2026 15:21:56",
+          "attchmntFile": "https://nsearchives.nseindia.in/corporate/HDFCBANK3_06112026152141_SE_Intimation-Srivatsan.pdf",
+          "attchmntText": "HDFC Bank Limited has informed the Exchange about change in Management"
+        }
+      ]
+    },
+    {
+      "ticker": "ICICIBANK",
+      "as_of": "2026-11-12",
+      "filings": [
+        {
+          "symbol": "ICICIBANK",
+          "seq_id": "106857193",
+          "desc": "General Updates",
+          "an_dt": "12-Nov-2026 18:08:20",
+          "attchmntFile": "https://nsearchives.nseindia.in/corporate/ICICI2022_12112026180755_BSENSE12112026.pdf",
+          "attchmntText": "ICICI Bank Limited has informed the Exchange about Disclosure under Regulation 30 read with para A of Schedule III and Regulation 46(2) of the Securities and Exchange Board of India (Listing Obligations and Disclosure Requirements) Regulations, 2015"
+        },
+        {
+          "symbol": "ICICIBANK",
+          "seq_id": "106853322",
+          "desc": "General Updates",
+          "an_dt": "09-Nov-2026 13:44:24",
+          "attchmntFile": "https://nsearchives.nseindia.in/corporate/ICICI2022_09112026134356_BSENSE_09112026.pdf",
+          "attchmntText": "ICICI Bank Limited has informed the Exchange about Disclosure under Regulation 30 read with para A of Schedule III and Regulation 46(2) of the Securities and Exchange Board of India (Listing Obligations and Disclosure Requirements) Regulations, 2015"
+        }
+      ]
+    },
+    {
+      "ticker": "ITC",
+      "as_of": "2026-11-12",
+      "filings": []
+    },
+    {
+      "ticker": "HINDUNILVR",
+      "as_of": "2026-11-12",
+      "filings": [
+        {
+          "symbol": "HINDUNILVR",
+          "seq_id": "106853645",
+          "desc": "Analysts/Institutional Investor Meet/Con. Call Updates",
+          "an_dt": "09-Nov-2026 18:28:35",
+          "attchmntFile": "https://nsearchives.nseindia.in/corporate/HINDUNILVR_09112026182822_09112026InvestorMeetIntimationFinalsigned.pdf",
+          "attchmntText": "Schedule of Analyst/Investor Meet - 16.11.2026"
+        }
+      ]
+    },
+    {
+      "ticker": "SUNPHARMA",
+      "as_of": "2026-11-12",
+      "filings": []
+    }
+  ],
+  "documents": [
+    {
+      "symbol": "WIPRO",
+      "kind": "filing",
+      "url": "https://nsearchives.nseindia.in/corporate/Wipro_Secretarial_06112026190358_SEintimation06112026.pdf",
+      "sha": "f1210825dce97bc59fae74d6d2b2754e23c45d938f9f6b976588ca91ee7e5bca",
+      "pages": {
+        "2": "Mr. Angan Guha will take over as President and Chief Executive Officer for Americas 2 Strategic Market Unit with effect from December 8, 2026."
+      }
+    },
+    {
+      "symbol": "MARUTI",
+      "kind": "annual",
+      "url": "https://nsearchives.nseindia.com/annual_reports/AR_30271_MARUTI_2025_2026_A_19335803_08082026213212.pdf",
+      "sha": "74978030488f55657d1d6e8dd8a23d3f4002d4d73aff21b89afd5044673d2c0e",
+      "document_date": "2026",
+      "date_label": "Reporting period 2025–2026",
+      "pages": {
+        "22": "Company Profile\nMaruti Suzuki India Limited was established in 1981. A joint venture agreement was signed between the Government of India and \nSuzuki Motor Corporation (SMC), Japan in 1982. The Company became a subsidiary of SMC in 2002. In terms of production volume \nand sales, the Company is now SMC's largest subsidiary. As of 31st March 2026, SMC holds 58.53% of its equity stake. It is a public \nlimited Company, and its shares are traded on the National Stock Exchange (NSE) and the Bombay Stock Exchange (BSE). The \nCompany is the market leader of Passenger Vehicles (PVs) in India and is also the country’s largest exporter of PVs. In FY 2025-26, \nthe Company posted its highest-ever total sales, surpassing the milestone of 2 million units for the third year in a row. The Company \nis the first among PV manufacturers in India to achieve this milestone.\nGurugram \n(Haryana)\nManesar \n(Haryana)\nKharkhoda \n(Haryana)\nHansalpur \n(Gujarat)\nRohtak\n(Haryana)\nGurugram\n(Haryana)\nSiliguri\n(West Bengal)\nBengaluru\n(Karnataka)\nNagpur\n(Maharashtra)\nNew Delhi\nHead Office\nNexa\nArea Offices19Zonal Offices06 19 Regional Offices\nArea Offices19Zonal Offices06 19 Regional Offices\nArena\nManufacturing \nSites\nResearch and \nDevelopment Centres\nRegional Parts \nDistribution Centres\nOur Journey Since 1982\n•\t Strengthening the SUV Portfolio\n − Launched Grand Vitara, Fronx, Jimny, Victoris and \nfirst Battery Electric SUV, e VITARA supported by a \ncomprehensive customer-centric ecosystem\n•\t Expanding Multi-powertrain Technology\n − Introduced Battery Electric Vehicle, e VITARA\n − Launched Flex Fuel Vehicle WagonR\n − Introduced Strong Hybrid Electric Vehicles, Grand \nVitara and Invicto\n• Toshiba Denso Suzuki Gujarat achieved deep localisation of \nhybrid batteries with electrode level localisation.\n• Established India’s first automobile in-plant railway siding \nat the Hansalpur facility, and India’s largest in-plant railway \nsiding at the Manesar facility.\n• In-house solar power plant capacity increased to 79.1 MWp.\n•\t Scaling Up Capacity\n − Commenced commercial production at the new \ngreenfield facility in Kharkhoda\n − Expanded capacity at Hansalpur with the \ncommencement of commercial production at the \nfourth plant\n − Site identified for setting up a  new greenfield facility at \nKhoraj, Gujarat, with an annual capacity of  \n1 million vehicles.\n• Completed the amalgamation of Suzuki Motor  \nGujarat Private Limited with MSIL\n• Maruti Suzuki’s cumulative sales exceeded 30 million units.\n• Cumulative export sales exceeded 3 million units, with \nMaruti Suzuki retaining its position as India’s top passenger \nvehicle exporter for the fifth consecutive year contributing \nto nearly 50% of passenger vehicles exported from India in \nFY'26.\n2023-2026\nExpanding Horizons\nMaruti Suzuki India Limited | Annual Integrated Report 2025-26 Maruti Suzuki India Limited | Annual Integrated Report 2025-26\n14 15\nFinancial StatementsStatutory ReportsESG PerformanceValue Creation Approach Company Overview",
+        "68": "External EnvironmentExternal Environment\nStrategic Response\nThe Company continues to pursue a multi-powertrain \nstrategy comprising BEVs, SHEVs, CNG, Compressed \nBiogas (CBG) and ethanol-compatible vehicles. The \nCompany believes a multi-pathway decarbonisation \napproach will maximise carbon reduction, enable \ncustomers to choose solutions best suited to their needs, \ndiversify technology risks and support long-term business \nresilience and financial health.\nRecognising that product use accounts for the majority \nof a vehicle's lifecycle emissions, the Company remains \nfocused on reducing emissions through multiple powertrain \ntechnologies. At the same time, it is pursuing greenhouse \ngas reduction opportunities across the value chain, \nincluding manufacturing operations, energy consumption, \nlogistics and the supplier ecosystem. \nIndia's economy remained resilient during FY 2025-26, \ndespite geopolitical uncertainty, trade disruptions and \ncommodity volatility.  GST reduction on cars improved \naffordability and revived participation from first-time \nbuyers, particularly in the small car segment, a key driver \nof sustained industry growth.\nGeopolitical developments continue to create uncertainty \naround commodity prices, energy costs, logistics networks \nand supply chain stability. Besides, geopolitical tensions \nand the emergence of tariff barriers pose risks to global \ntrade and market access. \nIncreasing acceptance of India-manufactured vehicles \nand recently concluded Free Trade Agreements (FTAs) \nwith key markets such as the UK and EU are creating new \nopportunities for automotive exports. These developments \nare strengthening India's position as a global automotive \nmanufacturing hub and expanding the growth potential of \nthe automotive industry. \nIndia's low passenger vehicle penetration, rising incomes \nand increasing aspirations for personal mobility continue \nto provide substantial growth opportunities for the industry. \nClimate change continues to reshape the automotive \nindustry globally. The pace and nature of the mobility \ntransition is expected to vary across markets depending \non economic conditions, infrastructure readiness and \nresource availability.\nSeveral emerging powertrain technologies are yet to \nachieve the level of cost competitiveness required for \nwidespread adoption in a price-sensitive market such \nas India. In addition, supply chains for certain critical \nmaterials remain concentrated, creating potential cost and \navailability risks.\nFor India, balancing carbon reduction with affordability, \naccessibility and suitability to local resource conditions \nremains critical. Consequently, Battery Electric Vehicles \n(BEVs), Strong Hybrid Electric Vehicles (SHEVs), CNG, \nbiofuels and other low-carbon technologies are expected \nto complement one another in reducing emissions. \nThe global automotive industry is undergoing a once-in-\na-century transformation, resulting in a rapidly evolving \nregulatory landscape. Accordingly, the regulatory \nenvironment in India is shaping up.\nGiven the breadth of the Company's product portfolio and \npowertrain offerings, regulatory compliance is resource-\nintensive. The sudden regulatory changes and non-tariff \nbarriers have the potential to influence market access and \nexport competitiveness. \nIndia's growing importance as the world's third-largest \npassenger vehicle market is expected to intensify competition \nand accelerate innovation across the industry.\nWith annual passenger vehicle sales approaching 5 million \nunits, India has emerged as one of the world's most important \nautomotive markets. Continued economic growth, rising \nincomes and favourable demographic trends are expected \nto further enhance its attractiveness for both domestic and \nglobal automotive players. \nImportantly, the Company believes that a changing \ncompetitive landscape ultimately benefits customers \nby driving innovation, improving product offerings and \nenhancing overall value. \nStrategic Response\nTo mitigate near-term risks, the Company continues to \nfocus on cost optimisation, localisation, strengthening \nsupply chain resilience, developing alternate sources of \nsupply and expanding its supplier base.\nReflecting confidence in long-term domestic and \nexport opportunities, the Company increased its annual \nproduction capacity from approximately 2.4 million units \nto 2.9 million units during FY 2026-27 and remains on \ncourse to achieve its medium-term objective of expanding \nannual production capacity to 4 million units. Supported by \nSuzuki Motor Corporation's global network and diversified \npresence across international markets, exports are \nexpected to remain an important pillar of the Company's \nlong-term growth strategy. \nStrategic Response\nAccess to Suzuki Motor Corporation's technological \ncapabilities remains a critical enabler for timely regulatory \ncompliance across domestic and international markets. \nSimultaneously, the Company continues to strengthen \nits engineering, testing and regulatory preparedness \ncapabilities through investments in advanced infrastructure \nand the Rohtak R&D facility. These efforts enhance its \nability to meet evolving regulations while continuing \nto deliver safe, efficient and technologically advanced \nmobility solutions.\nStrategic Response\nThe Company continues to strengthen its competitiveness \nthrough product portfolio expansion, localisation, \nmanufacturing excellence and access to advanced \ntechnologies through Suzuki Motor Corporation. Ongoing \ninvestments in product development, safety, quality and \ncustomer experience are aimed at sustaining long-term \ncompetitiveness in an evolving market environment.\nEconomic Conditions Climate Change\nRegulatory Landscape Competitive Landscape\nThe Indian passenger vehicle market is simultaneously \nwitnessing the revival of affordable mobility and \ncontinued premiumisation. While demand for small \ncars has improved, SUVs continue to account for \na significant share of industry volumes. In today’s \ndigitally connected world, customer expectations \nare evolving rapidly. New-age buyers seek premium \nstyling, advanced technology, enhanced comfort and \nconvenience, and connected features. \nGrowing preference for CNG, hybrid and electric \nvehicles, rising demand for Advanced Driver Assistance \nSystems (ADAS), and increasing expectations around \nconnected features and digital experiences are \nreshaping product development priorities across the \nindustry.\nStrategic Response\nThe Company continues to broaden its portfolio across vehicle \nsegments and powertrain technologies. The Company has \nplans to launch 7 SUVs in the next 5 years. Investments in safety, \nconnectivity, convenience features and multiple powertrain \noptions are aimed at meeting evolving customer expectations. \nThe Company is also expanding the availability of advanced \ntechnologies such as ADAS, connected vehicle solutions and \ndigital interfaces across its portfolio while maintaining a strong \nfocus on affordability and customer value.\nTo improve the affordability and scalability of emerging \ntechnologies, the Company is accelerating localisation through \nadvanced development initiatives and undertaking focused \nvalue engineering and value analysis activities. These efforts \nsupport wider adoption of advanced technologies while \npreserving customer value.\nChanging Customer Preferences\nMaruti Suzuki India Limited | Annual Integrated Report 2025-26 Maruti Suzuki India Limited | Annual Integrated Report 2025-26\n106 107\nFinancial StatementsStatutory ReportsESG PerformanceValue Creation Approach Company Overview",
+        "149": "Financial StatementsStatutory ReportsESG PerformanceValue Creation Approach Company Overview\nMaruti Suzuki India Limited | Annual Integrated Report 2025-26 Maruti Suzuki India Limited | Annual Integrated Report 2025-26\n268 269\nA view of the New Greenfield Manufacturing Facility at Kharkhoda, Haryana\nManagement Discussion and Analysis\nDelivering this performance required the seamless integration \nof agile manufacturing systems, efficient production planning \nprocesses and close coordination across the value chain. These \ncapabilities enabled rapid realignment of production in response \nto changing demand patterns, expanding product and powertrain \nportfolio and supply-chain challenges, while maintaining operational \nefficiency, supply continuity and consistent quality standards. \nThis flexibility became increasingly important as market conditions \nimproved significantly following GST reform, leading to a broad-based \nrecovery in demand, including a revival in the small car segment. As \ndemand strengthened, the Company rapidly scaled up production \nacross its facilities. During the second half of the year, manufacturing \nplants were running at near full capacity. This achievement was \nmade possible by the commitment and dedication of the Company's \nworkforce. Production excellence at MSIL continues to be anchored \nin its people-centric manufacturing philosophy, enabling high levels \nof productivity, quality and responsiveness.\nand customer requirements across markets. Manufacturing quality \nis further strengthened by integrating customer feedback from \nboth domestic and international markets into production systems \nand processes, enabling continuous improvements in reliability, \ndurability and customer satisfaction.\nThe Company also continued to advance sustainable \nmanufacturing through greater use of renewable energy, \nresource-efficient processes and initiatives aimed at reducing \nthe environmental footprint of its operations.\nConsidering India's long-term growth potential and the \nexpanding export opportunity, the Company has laid out a \ncapacity expansion roadmap to scale production capacity to \nfour million units per annum over the next few years. During \nthe year, production ramp-up activities at the greenfield \nKharkhoda facility progressed steadily. In FY 2026-27, the \nCompany will commission two new manufacturing plants with \nan annual capacity of 250,000 units each, one at Kharkhoda, \nHaryana and the other at Hansalpur, Gujarat.\nThe planning for subsequent expansion phases continued in \nparallel. All new manufacturing facilities are being designed \nwith multi-powertrain flexibility for responding effectively to \nfuture shifts in technology and customer demand.\nOperations\nIn FY 2025-26, the Company achieved another historic milestone by manufacturing over 2.3 million vehicles, the highest annual \nproduction volume in its history. This achievement is particularly significant considering the rapidly evolving operating environment \nduring the year, which was marked by a sharp recovery in domestic demand following GST reform, expanding exports, launching \nnew products, managing supply challenges, commencing production of its first battery electric vehicle, re-entering Europe through \ne VITARA and scaling up its exports to Japan. Both these markets are among the most demanding automobile markets globally in \nterms of quality, safety and regulatory requirements.\nMSIL - Annual Production Volumes (in units)\n2,347,792 \n1,984,579\n 2,102,808 \nFY'26FY'24 FY'25\nProduction Volume (Units) and Growth YoY \n(%) for FY 2025-26\n 2,347,792 \n 1,050,573 \n1,297,219\nFY'26H1 FY'26H2 FY'26\n4%\n12%\n19%\n Production volumes (Units) \n YoY Growth (%)\nThe growing scale of operations and increasing product complexity \nrequire continuous strengthening of manufacturing systems and \nquality processes. \nTo support these requirements, the Company continued to deploy \nIndustry 4.0 and Industry 5.0 technologies across its manufacturing \noperations. State-of-the-art facilities increasingly leverage advanced \nautomation, digital manufacturing systems, machine vision \ntechnologies, connected equipment and enhanced human-machine \ncollaboration to improve process capability and product quality. \nThe Company also continued to strengthen quality-at-source \npractices by progressively shifting inspection and monitoring systems \ncloser to the point of manufacturing. This enables faster detection \nand prevention of defects, tighter process control and improved \nresource efficiency. Such initiatives are particularly important in \nmanaging the complexity associated with multiple powertrain \ntechnologies, increasing product variants and diverse regulatory \nConservation of Natural Resources and \nEnvironment Protection\nResponsible Consumption of Resources\nOptimisation of resource consumption remains central to the \nCompany's value creation and sustainability strategy. Guided by \nSuzuki's philosophy of Sho-Sho-Kei-Tan-Bi — smaller, lighter, fewer, \nshorter and beauty — the Company focuses on minimising resource \nconsumption across the product lifecycle while maintaining safety, \nquality and customer satisfaction. The Company's vehicles sold \nin India are, on average, about 20% lighter than the industry \naverage. Combined with the use of Ultra and High Tensile steel, \nthis approach helps improve safety performance while reducing \nmaterial consumption, energy use and greenhouse gas emissions \nthroughout the vehicle lifecycle.\nBy adopting a multi-powertrain strategy, the average carbon \nemission of the Company’s fleet is significantly lower than the industry \naverage. Besides, the Company is also consistently outperforming \nits Corporate Average Fuel Economy (CAFE) target. Through a \nmulti-powertrain approach, every vehicle sold by the Company \nparticipates in the carbon reduction journey, while preserving \naffordability and accessibility of mobility for its customers. \nThe Company's commitment to preserving natural resources \nextends across the value chain from product design and \nmanufacturing to distribution and end-of-life management.  The \nCompany is dedicated to supporting India's Net Zero emissions \ntarget by 2070.",
+        "158": "Besides, the Company regularly imparts skill training for the suppliers’ workforce. In FY 2025-26, the Company imparted over \n1,800 training sessions, covering 100% of the Tier-1 suppliers. The training sessions cover topics including cybersecurity, safety, \nenergy optimisation, process optimisation, POSH, etc. \n To know about the capability development programmes undertaken by the Company for the suppliers’ workforce, please refer to \nthe Integrated Report section, page number 80.\nC) Governance in Supply Chain\n  With a focus on continuously strengthening the governance \nin the supply chain, the Company, in collaboration with its \n30 supplier partners, developed a corporate governance \nframework in FY 2024-25. This framework has been \nextended to all the Tier-1 component suppliers across \nIndia. Till March’26, more than 90% of Tier-1 component \nsuppliers in India participated in the assessment, reflecting \nstrong adoption of the framework. \n  The self-assessment framework evaluates performance \nacross four key areas:\n 1. Enhancing transparency and accountability\n 2. Proactive risk management and mitigation\n 3. Promoting sustainable value creation\n 4. Upholding ethical standards\nHuman Safety Fire Safety Human Safety Fire Safety\nTier-1 Suppliers Tier-2 Suppliers (Managed through Tier-1s)\nSelf assessment by Tier 1 suppliers Audit by MACE* Audit by MACE* /\nAuthorised AgenciesVerification/Audits by MSIL/ Nominated \nAgencies / Experts *Centre of Excellence created by MSIL and \nTier-1 suppliers\nCurrent Assessment  \nMechanism\n96%* of Tier-1 suppliers are ISO \n45001 certified\n• Human Safety Audits by MACE: \n~520 suppliers\n• Fire Safety Audits by MSIL authorised \nagencies: ~500 suppliers\n• Human Safety self assessments:  \n~320 suppliers\n• Fire Safety Audits: 281 suppliers\n• Countermeasure Verification Audits: 195\nHuman Safety: 95% of identified \nimprovement opportunities addressed\nOutcome for\n FY 2025-26\n• Safety assessment reporting to MSIL\n• Periodic monitoring of improvements \nby MSIL\nMonitoring & \nReporting  \nMechanism\n• Tier-1s monitor assessment \nand improvements\n• Status is communicated to MSIL\n• Training on Safety by MSIL, MACE and Knowledge Experts\n• Safety training programs for Tier-1 and respective Tier-2 suppliers covering 6,000 members \nof the supplier community\n• Guidance by MSIL to Maruti Suzuki Suppliers Welfare Association (MSSWA) for their \nimprovement activities\nEnablers by \nMSIL\n*% of local buying value\nFinancial StatementsStatutory ReportsESG PerformanceValue Creation Approach Company Overview\nMaruti Suzuki India Limited | Annual Integrated Report 2025-26 Maruti Suzuki India Limited | Annual Integrated Report 2025-26\n286 287\nManagement Discussion and Analysis\nSupply Chain Management\nThe automotive manufacturing supply chain is inherently complex \nand geographically dispersed, with deep interdependencies \nacross multiple tiers of suppliers. The Company's supply \necosystem comprises nearly 450 Tier-1 suppliers and about \n1,500 Tier-2 suppliers, collectively supporting the production \nof nearly 2.5 million vehicles annually. In an increasingly \ninterconnected global environment, supply chains are being \ninfluenced by geopolitical developments and evolving trade \nregulations, creating uncertainties around material availability \nand heightened cost volatility.\nDuring the year, global supply chains experienced disruptions \narising from rare earth export restrictions, highlighting \nvulnerabilities associated with critical materials and globally \nconcentrated supply bases. Towards the close of the financial \nyear, developments in the Middle East further heightened supply \nchain risks as disruptions in critical inputs such as natural gas \nand petroleum, among others, began impacting global supply \nchains, contributing to higher energy and logistics costs. For \nan organisation operating one of India's largest automotive \nsupplier ecosystems, the challenge extended beyond its \nown operations to ensuring stability across the entire value \nchain. Working proactively with suppliers across all tiers, the \nCompany undertook timely interventions to ensure continuity \nof operations.\nAgainst this backdrop, the Company remained focused on \nstrengthening supply chain resilience, enhancing localisation \nand mitigating supply risks. At the same time, it continued to \nwork closely with suppliers across the value chain to build the \ncapacity, capability and competitiveness required to support \nits ambition of scaling production to 4 million units per annum \nby FY 2030-31.\nESG Performance in Supply Chain\nA) Environment Performance\n  Car manufacturing has a wide and long supply chain. \nA substantial portion of value addition occurs within \nthe Company’s supplier ecosystem. Therefore, in the \nCompany’s journey to drive decarbonisation in its entire \nvalue chain, suppliers play a critical role. The Company \nregularly monitors the GHG emissions of its Tier-1 suppliers \nand actively promotes the usage of renewable energy by \nsuppliers. In FY 2024-25, 16.5% of the overall electricity \nrequirement of these suppliers was met using renewable \nsources. The Company expects its domestic Tier-1 \nsuppliers to increase usage of Renewable Electricity and \nattain a minimum of 30% of electricity requirement through \nrenewable sources by FY 2030-31. \nShare of RE in Total Electricity Consumption \nof domestic Tier-1 Suppliers (%)\n30\n16.5\nFY'31 \nTarget\nFY'25\nB) Social Performance\n  The Company, as a part of its supplier assessment \nframework, has done a robust evaluation of the human \nresource systems and processes at Tier-1 suppliers, \nincluding aspects related to human rights. Cumulatively, \nassessments were conducted for suppliers who contribute \nnearly 84% by value of overall component purchase.\n  Besides, the Company actively promotes the culture of \nsafety among its supply chain partners. The efforts of \nthe Company towards continuously improving safety \nperformance in its supply chain are given below.",
+        "161": "Financial StatementsStatutory ReportsESG PerformanceValue Creation Approach Company Overview\nMaruti Suzuki India Limited | Annual Integrated Report 2025-26 Maruti Suzuki India Limited | Annual Integrated Report 2025-26\n292 293\nManagement Discussion and Analysis\nTreasury Operations\nThe Company has efficiently managed its surplus funds through prudent and cautious treasury operations. The guiding principle \nof the company’s treasury investments is to keep the safety and liquidity of investment over and above returns. In view of this, \nthe Company invested its surplus funds in debt schemes of mutual funds and fixed deposits with banks. This has enabled the \ncompany to earn reasonable and stable returns.\nTable 3 lists the investment of surplus funds while Table 4 lists the return on these surplus funds.\nTable 3: Investment of surplus funds (` million)\n31-03-26 31-03-25\nDebt Mutual Fund 717,238 619,339\nFixed Deposits 15,100 29,248\nTotal 732,338 648,587\nTable 4: Income from investment of surplus fund (` million)\nFY’26 FY’25(Restated)\nInterest on fixed deposits 1,557 3,232\nIncome from investment in debt mutual funds 37,406 45,289\nTotal 38,963 48,521\nParticulars FY’26 FY’25  (Restated) Change Remarks where change more than 25%\n(i)  Debtors Turnover (No of Times) 30.9 27.5 12.4%\n(ii)  Inventory Turnover (No of Times) 19.14 23.74 (19.4%)\n(iii)  Interest Coverage Ratio 232.16 410.55 (43.5%) Ratio is lower on account of \nhigher interest cost\n(iv)  Current Ratio 1.07 0.96 10.7%\n(v)  Debt Equity Ratio (0.001) (0.002) (50.0%) There is no net debt during the \nyear resulting in decrease in \ndebt equity ratio\n(vi)  Operating Profit Margin (%)* 8.4% 10.0% (16%)\n(vii)  Net Profit Margin (%)* 8.3% 9.9% (16%)\nReturn on Net Worth 14.5% 16.0% (10%)\n(as a % of Net Sales) \n \nForeign exchange risk management\nThe Company is exposed to the risks associated with \nfluctuations in foreign exchange rates, mainly on the import \nof components, raw materials, services and export of vehicles \nand services. The Company has a well-structured exchange risk \nmanagement policy. The Company manages its exchange risk \nby using appropriate hedge instruments judiciously, depending \non market conditions and the view on currency.\nInternal controls and adequacy\nThe Company has a proper and adequate system of internal \ncontrol to ensure that all assets are safeguarded and protected \nagainst loss from unauthorised use or disposition, and that all \ntransactions are authorised, recorded and reported correctly. \nThe internal control system is designed to ensure that financial \nand other records are reliable for preparing financial information \nand other data, and for maintaining accountability of assets. \nThe internal control system is supplemented by an extensive \nprogram of internal audits, reviews by management, and \ndocumented policies, guidelines and procedures.\nRisk Management\nRisks Associated with Increased Scale of \nOperations\nThe Company aims to scale production to four million units \nannually by FY 2030-31, nearly double its current capacity. \nWhile it took almost 40 years to reach two million units, the \nnext two million will be added in just 7–8 years, a pace nearly \nfive times faster. Achieving this growth will require significantly \nmore human capital, financial investment, and technical know-\nhow, along with faster decision-making. Stakeholder partners \n— suppliers, dealers, and transporters — must also scale in \ntandem. The Company is actively collaborating with them to \nanticipate and address the challenges of rapid expansion.\n Ensuring Continuity in Component Supplies\nWith nearly 450 Tier-1 and about 1,500 Tier-2 suppliers across \nregions, supply disruption remains a major business continuity \nrisk. During the year, developments such as export restrictions \non certain critical materials highlighted the vulnerability of \nglobally concentrated supply chains. Geopolitical tensions, \ntrade restrictions and disruptions in logistics networks may \ncontinue to impact supply availability in the future.\nTo mitigate these risks, the Company continues to strengthen \nlocalisation, develop alternate sources of supply, diversify \nsourcing locations and maintain close engagement with supplier \npartners. Through its Vendor Comprehensive Excellence \nProgramme, the Company also works with suppliers to improve \nbusiness continuity planning, risk management practices, \nsuccession planning, safety, cyber resilience and operational \npreparedness. Localisation remains a key pillar of the Company’s \nlong-term supply chain resilience strategy.\nEnhancing Cost Competitiveness in Emerging \nand Advanced Technologies\nThe automotive industry is undergoing rapid technological \ntransformation driven by electrification, software-defined \nvehicles, advanced electronics, connectivity and new \nmobility solutions.\nCurrently, several emerging and advanced technologies are \nyet to achieve the level of cost competitiveness required for \nwidespread adoption, particularly in a price-sensitive market \nsuch as India. As the Company expands its portfolio of Battery \nElectric Vehicles (BEVs), Strong Hybrid Electric Vehicles \n(SHEVs) and vehicles equipped with advanced technologies \nand features, enhancing cost competitiveness while preserving \naffordability remains a key strategic priority. \nTo address this challenge, the Company is accelerating \nlocalisation through advanced development initiatives, \nundertaking focused value engineering and value analysis \nactivities, developing alternate sources of supply and expanding \nits supplier base. These initiatives are aimed at progressively \nimproving cost competitiveness while preserving product \nquality, performance and customer value.\nManaging Commodity Price Volatility\nCommodity price volatility remains a key risk, particularly in an \nenvironment characterised by geopolitical tensions. Sudden \nand significant increases in the prices of metals, energy and \nother commodities can adversely impact profitability and \nbusiness performance. Recent geopolitical developments and \ndisruptions in key regions have further reinforced the importance \nof managing commodity-related risks proactively. \nThe Company follows a multi-pronged approach to mitigate \ncommodity risks, including consumption optimisation, adoption \nof alternate materials, increasing material circularity and \nimplementation of commodity risk management mechanisms \nsuch as hedging, forward contracts and long-term commercial \narrangements. These initiatives help improve resilience \nagainst commodity price fluctuations and support long-term \ncost competitiveness."
+      }
+    },
+    {
+      "symbol": "MARUTI",
+      "kind": "transcript",
+      "url": "https://www.marutisuzuki.com/content/dam/arena-eds/corporate/pdf/company-reports/2026-2027/Transcript_earnings_call_Maruti_Suzuki_Q2_FY_27.pdf",
+      "sha": "f2e8ffd679536f5de7274bddf44e9a9bc60966e6351b9ec5192a1612c4f9046b",
+      "document_date": "2026-10-27",
+      "date_label": "Call held 2026-10-27",
+      "pages": {
+        "3": "Page | 3  \nMSIL Conference Call Transcript October 27, 2026  \n \n \nnearly 39.6% year-on-year, supported by recently introduced models comprising the VICTORIS \nand the new Brezza. \n In both categories, the Company's growth exceeded that of industry. As a result, the Company's \ndomestic market share increased by 2.2 percentage points year -on-year to 40.8% in the second \nquarter.  \nThe strength of demand was also clearly visible at the retail level.  \nThe second quarter is typically a period when wholesale dispatches exceed retails as the network \nprepares for the festive season. \n However, this year, retail demand kept pace with the strong wholesale performance and \nconsequently, network inventory remained low at around 17 days at the end of September, while \npending customer orders went up to around 2 lakh units. Demand remained healthy across both \nurban and upcountry markets. \n When we look at the export performance in the second quarter, despite the challenging \ngeopolitical situation, the company could achieve sales of 108,119 units in the second quarter, \nalmost flattish, a decline of about 2% year-on-year, and the decline is largely due to the logistics-\nrelated disruptions and volatility in shipping schedules in the context of the West Asia conflict. \n The Company continued to be India's leading passenger vehicle exporter in both second quarter \nand in the first half of fiscal year 26-27, contributing to more than 51% of India's total passenger \nvehicle exports during the first half of the year. This means that  Maruti Suzuki alone exported \nmore cars than all the other 17 car manufacturers of India put together. \n If we combine our domestic and export performance, the company achieved its highest ever \nquarterly total sales volume of 696,654 units, representing growth of 26.5% year -on-year. This \nrecord performance was supported by the capacity expansion undertaken by the company. \n During the first half of this year, we added 500,000 units of annual manufacturing capacity. A \nnew line was operationalized at our Kharkhoda  greenfield manufacturing facility in Haryana \nwith an annual production capacity of 250,000 units. In addition, during the second quarter, the \ncompany operationalized the fourth line at its Hansalpur facility in Gujarat, adding another \n250,000 units of annual capacity. \n These additions have come at an important time. They are enabling us to better serve the strong \ndemand environment while also creating additional headroom for future growth. The company \nis progressively ramping up production from these facilities. The strong demand momentum has \ncontinued into the festive season. We generally take festive season as from start of Onam festival \nto Ganesh Chaturthi to Dussehra and then it concludes in the Diwali season. \n So, retail sales from the beginning of the festive period, that is Onam till Dussehra on 20th \nOctober, grew by around 30% compared with the corresponding period last year. Retail sales \nfrom the period Ganesh Chaturthi through Dussehra grew even faster at a round 35% year -on-",
+        "4": "Page | 4  \nMSIL Conference Call Transcript October 27, 2026  \n \n \nyear. What is particularly encouraging is that the order pipeline continued to strengthen even \nalongside these high retail volumes. \n Pending customer orders actually increased despite these retail sales from around 200,000 units \nat the end of September to approximately 270,000 units by Dussehra, which is 20th October. \nThat gives us the confidence that the underlying demand environment remains robust. Alongside \ndelivering strong  business performance, the company continued to strengthen its long -term \ngrowth drivers through product interventions. \n First, the recently introduced new Brezza has received a very encouraging customer response. \nAbout 35% of the bookings are for the 1-liter turbo petrol variant, while another 35% are for the \nunderbody CNG variant. The new Brezza also incorporates several c ustomer-focused \nenhancements, including ADAS features and a 5 -star Bharat NCAP safety rating. Second, the \ncompany also introduced the new Baleno with class-leading features that redefine the premium \nhatchback segment. \n These include first -in-segment level 2 ADAS, first -in-segment ventilated front seats featuring \nplush leatherette upholstery, premium sound system by Clarion for an incredible acoustic \nexperience, and advanced Z12E powertrain. By Z series, we mean the ultim ate in IC engine \ntechnology. Third, in response to customer demand, we have also expanded the availability of \nAuto Gear Shift technology across some of our popular models, including Swift, Dzire, and \nBaleno. \n These interventions are aimed at strengthening the competitiveness of our portfolio while \nproviding customers a wider choice of products, technologies, and powertrains.  \nBefore we move to the financial s, since investors like some flavor of the business, may I also \nshare some highlights of the company. The Company's popular SUV, Fronx, crossed the \nmilestone of 200,000 exports in under 38 months, making it the fastest SUV from India to \nachieve this milestone. \n While Fronx achieved its first 100,000 exports in under 25 months, the second 100,000 was \nadded in just 13 months. The model is now exported to nearly 90 countries, including Japan. \nThe Company's cumulative exports of the Made in India Jimny 5 -door, Fronx, and e VITARA \nto Japan also surpassed 100,000 units. This milestone is particularly meaningful for us, given \nthat Japan is one of the world's most competitive and most advanced automobile markets with \nthe most discerning consumers. \n During the quarter, the Company also inaugurated its 6,000th service touchpoint in Kozhikode, \nKerala. Our service network now extends across more than 3,000 cities and towns, reflecting \nour continued focus on bringing reliable after -sales support closer to the customers. Together,  \nthese milestones reflect some of the most important dimensions in which we continue to \nstrengthen the business.",
+        "5": "Page | 5  \nMSIL Conference Call Transcript October 27, 2026  \n \n \n The growing global reach of our Made in India portfolio, deeper customer access, and stronger \nlife-cycle support for our expanding customer base. Now, we come to our financial performance. \nDuring the quarter, the Company registered its highest ever Net Sales of over INR  506 billion \nagainst over INR 401 billion in the same period of the previous year. \n The Operating profit (EBIT), in this quarter stood at over INR  28 billion as compared to over \nINR 33.8 billion in Q2 financial year '25-'26, owing to the West Asia conflict-linked commodity \nincreases. Though there was a decline year-on-year, but sequentially, this translates to a growth \nof 10.8% from Q1 of this year to Q2 of this year. However, non -operating income declined \nsharply in Q2, owing to mark-to-market losses on our invested surplus. \n With this, the Net profit for the quarter stood at over INR 24 billion compared to about INR 33 \nbillion the same period previous year. Since investors typically also look at sequential \nperformance, let me provide that perspective. There was a clear improvement in operational \nperformance during the second quarter. \n On a sequential basis, while overall sales volume increased by about 1%, Net Sales remained \nbroadly flat. Operating EBITDA improved to 9.4% of Net Sales compared to 8.6% in the first \nquarter of financial year '26-'27. And the favorable factors were: \n• Higher selling prices of about 80 basis points  \n• Cost reduction efforts of about 20 basis points \n• Favorable Fixed Cost Incidence due to inventory accretion of about 60 basis points \n• Lower employee cost of about 30 basis points. \n These favorable factors were partially offset by some headwinds: \n• Higher commodity prices of about 30 basis points. If you recollect, in Q1, we had \nchanged the commodity price settlement cycle from a quarterly lag basis to a monthly \nlag basis for some of the commodities, and because of this accelerated recognition, the \nadverse impact of commodity prices in Q2 was limited. \n• Adverse foreign exchange fluctuation of about 40 basis points.  \n• Other expenses were higher by about 50 basis points primarily due to increased \nmanufacturing overheads and marketing expenses associated with product refreshes.  \nAt the operating EBIT level, depreciation was higher by around 30 basis points, primarily on \naccount of commissioning of new manufacturing capacity and new model dies and molds. \n So, ladies and gentlemen, stepping back from detailed numbers, we believe the second quarter \nreflects continued strengthening of the business. Demand remains healthy across segments. The \ncompany has gained good market share. Recently introduced models are contributing to growth. \n The 500,000 units of annual manufacturing capacity added during the first half is enabling us to \nbetter service this growing demand. The Company's export franchise remains strong despite",
+        "6": "Page | 6  \nMSIL Conference Call Transcript October 27, 2026  \n \n \ntemporary geopolitical and logistics disruptions. And importantly, Operating profitability \nimproved sequentially despite the continuation of external cost pressures. \n The strong retail performance and further increase in the order book during the festive season \ngives us strong confidence in the underlying demand environment. We therefore remain focused \non meeting this demand while continuing to strengthen our products, our manufacturing \ncapacity, our global presence, and customer reach to support sustainable long-term growth. \n Thank you, and now with that, we are open for your questions, feedback, and observations. \nModerator:  Thank you very much. We will now begin the question -and-answer session. First question is \nfrom the line of Raghunandhan NL from Nuvama Research. Please go ahead. \nRaghunandhan NL: Thank you, sir, for the opportunity. Congratulations on the domestic market share gains. My \nfirst question, there has been strong domestic growth in H1 for Maruti. In H2, how much growth \ndo you expect in domestic sales, considering the high base and also o n the positive side , \nconsidering the low inventory levels? \nRahul Bharti: You are right, Raghu. So, given the confidence, we think at least a 10% growth in H2 should be \npossible in domestic sales. \nRaghunandhan NL: Wonderful, sir. 10% that's a very strong growth considering the double -digit growth in H1 \nalready. Sir, my second question, on Q-o-Q basis, how much is the commodity impact expected \nfor Q3? Are you planning any more price increases? \nRahul Bharti: So, good question. As of now, it's a basket as we all know. So, some commodities will give us \nsome benefit, some commodities may harden. We are slightly concerned on steel and copper, \nand steel is slightly uncertain, but broadly speaking, commodity is in a similar zone as current. \nRaghunandhan NL: Noted, sir. And just the last question, can you indicate Q2 discounts, export revenue, retail sales, \nand dealer inventory? \nRahul Bharti: Export revenue was about INR9,000 crores. Discount was flattish sequentially. And the third \nquestion I missed? \nRaghunandhan NL: Retail sales, sir, for Q2? \nRahul Bharti:  Retail sales were about 537,000 units. \nRaghunandhan NL: Got it, sir. And dealer inventory ended at 17 days? \nRahul Bharti: Yes, 17 days. Network inventory, which includes transit. \nRaghunandhan NL: Thank you very much, sir. Wishing you all the best. I'll call back to the queue. \nRahul Bharti: Thanks, Raghu.",
+        "11": "Page | 11  \nMSIL Conference Call Transcript October 27, 2026  \n \n \nAmyn Pirani:  Yes. Okay. \nRahul Bharti: The assumption is that the market will continue to be strong and with the current momentum, \nwe feel it will continue to be strong. \nAmyn Pirani: Okay. Fair enough. That's good to know. Secondly, just going back on the export bit, we have \nseen, Chinese competition being a big factor in a lot of global markets. So, as you now export \nacross countries, including developed markets like Europe and even  parts of Asia and Latin \nAmerica, are you seeing a significant competition not from the traditional guys but from Chinese \nand how does that position Indian exporters because a lot of capacity addition is happening in \nIndia, not just from your side, but from other players also for exports? \n How do you see that competition? Because what we hear is that pricing competition is very \naggressive in these markets because, Chinese production being shipped out to these countries ? \nSo, any context on that will be very helpful. \nRahul Bharti: So, globally, what you're saying is absolutely true. And in the medium to long term, there is that \nstrong trend. However, as of now, we are not competing directly with Chinese exports in most \nmarkets. So, fortunately, it's a staggered segmentation. I'm not aware of what capacity you're \ntalking about becaus e our share in India's exports is continuously going up.  And we do more \nthan 50% of exports. \nSo, the best part is that if you are able to challenge markets in about 120 countries of the world, \nchances are you'll become invincible in your home market. So, that gives us that platform in \ntechnology, in quality, in cost, that we are able to meet any competition in any part  and in any \nmarket. \nArnab Roy:  Just one point to complement from my side. I think you also have to  factor in our multi -\ndimensionality, which gives us the robustness, both in terms of the powertrain as well as in terms \nof the geography which Rahul just articulated. So, 120 countries, multiple powertrains, that's the \nmulti-dimensionality of Maruti Suzuki's export. \nAmyn Pirani: Sure. Thanks for that. I'll come back in the queue. \nModerator: Thank you. Next question is from the line of Rishi Vora from Kotak Securities. Please go ahead. \nRishi Vora:  Yes, thank you for the opportunity. Sir, you did talk about that this year, obviously the volume \ngrowth has been much ahead of what the industry expectation was and this is despite multiple \nheadwinds which we have faced during the course of the year. I just w anted to get a sense like \nbeyond this year, how should we think about passenger vehicle industry growth rate? \nEarlier you had guided that you do expect 6% kind of a growth CAGR, but is there a thought \nprocess that the growth CAGR for the industry can be higher over a medium term versus what \nwe are seeing at this point in time?"
+      }
+    }
+  ],
+  "market": {
+    "price": {
+      "threshold": "1.5",
+      "rows": [
+        {
+          "date": "2026-11-11",
+          "close": "13185.00",
+          "volume": 963516,
+          "source_url": "https://nsearchives.nseindia.com/products/content/sec_bhavdata_full_11112026.csv"
+        },
+        {
+          "date": "2026-11-09",
+          "close": "12928.00",
+          "volume": 558028,
+          "source_url": "https://nsearchives.nseindia.com/products/content/sec_bhavdata_full_09112026.csv"
+        }
+      ]
+    },
+    "volume": {
+      "threshold": "1.5",
+      "rows": [
+        {
+          "date": "2026-11-11",
+          "close": "13185.00",
+          "volume": 963516,
+          "source_url": "https://nsearchives.nseindia.com/products/content/sec_bhavdata_full_11112026.csv"
+        },
+        {
+          "date": "2026-11-09",
+          "close": "12928.00",
+          "volume": 558028,
+          "source_url": "https://nsearchives.nseindia.com/products/content/sec_bhavdata_full_09112026.csv"
+        },
+        {
+          "date": "2026-11-08",
+          "close": "12815.00",
+          "volume": 55320,
+          "source_url": "https://nsearchives.nseindia.com/products/content/sec_bhavdata_full_08112026.csv"
+        },
+        {
+          "date": "2026-11-06",
+          "close": "12750.00",
+          "volume": 923719,
+          "source_url": "https://nsearchives.nseindia.com/products/content/sec_bhavdata_full_06112026.csv"
+        }
+      ]
+    }
+  },
+  "captured_at": "2026-11-14T18:10:00+00:00"
+}

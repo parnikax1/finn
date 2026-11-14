@@ -1,0 +1,17 @@
+<section id="research-fetch-status" class="panel research-source" aria-live="polite"
+  {% if status.state == 'running' %}hx-get="{{ urls.progress }}" hx-trigger="every 1s" hx-swap="outerHTML"{% endif %}>
+  <h2>{{ 'Fetching documents' if status.state == 'running' else 'Document fetch' }}</h2>
+  <p>{{ status.message }}</p>
+  {% if status.sources %}
+  <ul>
+    {% for source in status.sources.values() %}
+    <li><strong>{{ source.title }}</strong> · {{ source.discovered }} discovered ·
+        {{ source.downloaded }} downloaded · {{ 'Indexed' if source.indexed else 'Not indexed' }}
+    </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  {% if status.state == 'running' %}
+  <p class="annotation">This page updates as the fetch progresses. <a href="{{ urls.search }}">Check status now</a></p>
+  {% endif %}
+</section>

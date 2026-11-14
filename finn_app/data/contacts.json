@@ -1,0 +1,8 @@
+[
+  {"name":"Asha Sen","role":"Fictional former automotive finance manager","companies":["MARUTI"],"sectors":["Automobiles"],"context":"Finance experience could help frame questions about automotive disclosures."},
+  {"name":"Dev Shah","role":"Fictional former coatings procurement lead","companies":["ASIANPAINT"],"sectors":["Paints & materials"],"context":"Procurement experience could help frame questions about input costs and suppliers."},
+  {"name":"Meera Rao","role":"Fictional former IT delivery director","companies":["INFY"],"sectors":["IT services"],"context":"Delivery experience could help frame questions about staffing and customer demand."},
+  {"name":"Kabir Das","role":"Fictional banking operations specialist","companies":[],"sectors":["Banking"],"context":"Operations experience could help frame questions about banking processes."},
+  {"name":"Nina Paul","role":"Fictional consumer distribution specialist","companies":[],"sectors":["Consumer goods","Energy & retail"],"context":"Distribution experience could help frame questions about channels and demand."},
+  {"name":"Ravi Menon","role":"Fictional pharmaceutical manufacturing specialist","companies":[],"sectors":["Pharmaceuticals"],"context":"Manufacturing experience could help frame questions about production processes."}
+]

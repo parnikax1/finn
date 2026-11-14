@@ -1,0 +1,17 @@
+[
+  {"symbol":"INFY","name":"Infosys","sector":"IT services"},
+  {"symbol":"TCS","name":"Tata Consultancy Services","sector":"IT services"},
+  {"symbol":"HCLTECH","name":"HCL Technologies","sector":"IT services"},
+  {"symbol":"WIPRO","name":"Wipro","sector":"IT services"},
+  {"symbol":"ASIANPAINT","name":"Asian Paints","sector":"Paints & materials"},
+  {"symbol":"PIDILITIND","name":"Pidilite Industries","sector":"Paints & materials"},
+  {"symbol":"MARUTI","name":"Maruti Suzuki India","sector":"Automobiles"},
+  {"symbol":"TATAMOTORS","name":"Tata Motors","sector":"Automobiles"},
+  {"symbol":"M&M","name":"Mahindra & Mahindra","sector":"Automobiles"},
+  {"symbol":"RELIANCE","name":"Reliance Industries","sector":"Energy & retail"},
+  {"symbol":"HDFCBANK","name":"HDFC Bank","sector":"Banking"},
+  {"symbol":"ICICIBANK","name":"ICICI Bank","sector":"Banking"},
+  {"symbol":"ITC","name":"ITC","sector":"Consumer goods"},
+  {"symbol":"HINDUNILVR","name":"Hindustan Unilever","sector":"Consumer goods"},
+  {"symbol":"SUNPHARMA","name":"Sun Pharmaceutical Industries","sector":"Pharmaceuticals"}
+]

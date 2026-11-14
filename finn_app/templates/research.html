@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block title %}Company research · FINN{% endblock %}
+{% block content %}
+<a class="back" href="/">← Portfolio feed</a>
+<section class="event-heading">
+  <h1>Company research</h1>
+  <p class="lede">Search annual reports and earnings-call transcripts by ticker and question.</p>
+</section>
+<form class="filters research-form" method="get" action="/research">
+  <label>Ticker<input type="text" name="symbol" value="{{ symbol }}" maxlength="35" placeholder="MARUTI" required></label>
+  <label class="search">Question<input type="text" name="question" value="{{ question }}" maxlength="300" required></label>
+  <button class="apply" type="submit">Search excerpts</button>
+</form>
+{% if error %}<p class="validation-alert" role="alert">{{ error }}</p>{% endif %}
+{% if groups %}
+{% if status %}{% include 'research_fetch_status.html' %}{% endif %}
+{% if busy %}<p class="validation-alert" role="status">Another ticker is being fetched. Try again when it finishes.</p>{% endif %}
+{% if missing and status.state != 'running' %}
+<form class="source-actions" method="post" action="{{ urls.fetch }}">
+  <button class="apply" type="submit">{{ 'Fetch missing source' if missing|length == 1 else 'Fetch documents' }}</button>
+  <span class="annotation">Check NSE and Screener for missing PDFs.</span>
+</form>
+{% endif %}
+{% if answer_enabled and has_evidence %}
+<form class="source-actions" method="post" action="{{ urls.answer }}" hx-post="{{ urls.answer }}"
+      hx-target="#research-answer-result" hx-swap="outerHTML" hx-disabled-elt="find button"
+      hx-indicator="#answer-loading">
+  <button class="apply" type="submit">Answer from excerpts</button>
+  <span class="htmx-indicator annotation" id="answer-loading" role="status">Checking excerpts…</span>
+</form>
+{% endif %}
+{% include 'research_answer_result.html' %}
+<p class="date-line">Cached sources for {{ symbol }} · Ranked by keyword and phrase matches</p>
+{% for group in groups %}
+<section class="panel research-source">
+  <h2>{{ group.title }}</h2>
+  {% if group.doc %}
+    <p class="date-line">{{ group.doc.date_label or group.unknown_date }} · {{ group.doc.provenance }}</p>
+    {% for hit in group.hits %}
+    <article>
+      <blockquote>{{ hit.text }}</blockquote>
+      <p class="source-actions"><a href="{{ group.doc.url }}#page={{ hit.page }}" target="_blank" rel="noopener noreferrer">Original PDF · page {{ hit.page }} ↗</a><span class="annotation">Matched terms: {{ hit.terms }}</span></p>
+    </article>
+    {% else %}
+    <p class="missing">This document is searchable. No excerpt matched the question keywords.</p>
+    <p class="source-actions"><a href="{{ group.doc.url }}" target="_blank" rel="noopener noreferrer">Open original PDF ↗</a></p>
+    {% endfor %}
+  {% else %}
+    <p class="missing">No searchable {{ group.title|lower }} is cached for {{ symbol }}.</p>
+  {% endif %}
+  <p class="annotation">{% if group.doc and group.doc.provenance == "Bundled demo snapshot" %}Search covers selected PDF pages from the dated demo snapshot.{% elif group.status %}<strong>Latest indexed run</strong> · {{ group.status }}{% else %}No discovery run has been indexed for this source.{% endif %}</p>
+</section>
+{% endfor %}
+{% endif %}
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block content %}
+{% if demo %}
+<section class="panel demo-walkthrough" aria-label="Demo snapshot">
+  <h2>Demo snapshot · {{ demo.date }} IST</h2>
+  <p class="annotation">Filings from 6–12 November 2026 · Market session 11 November 2026</p>
+  <div class="source-actions">
+    {% if demo.wipro %}<a href="/events/{{ demo.wipro }}">WIPRO appointment</a>{% endif %}
+    <a href="{{ demo_research_url }}">MARUTI research</a>
+    <a href="/?company=MARUTI#market-heading">MARUTI market signals</a>
+  </div>
+</section>
+{% endif %}
+<section class="intro">
+  <div><p class="eyebrow">YOUR PORTFOLIO / SOURCE FIRST</p><h1>What needs<br>a closer look.</h1><p class="lede">Filings prioritised by explicit rules.<br>Open an event to inspect its evidence and a relevant contact.</p></div>
+  <aside class="cache-panel">
+    <span class="small-label">CACHED FILING COVERAGE</span>
+    <strong>{{ cached_companies }}<span> / {{ companies|length }}</span></strong>
+    <span>portfolio companies with cached filings</span>
+    <hr>
+    <dl class="cache-dates">
+      <dt class="small-label">CACHED FILING DATES · IST</dt>
+      <dd>{% if stats.latest %}{{ stats.earliest[:10] }} through {{ stats.latest[:10] }}{% else %}No dated filings{% endif %}</dd>
+      <dt class="small-label">MOST RECENT SUCCESSFUL COMPANY FETCH</dt>
+      <dd>{% if last_fetch %}{{ last_fetch|fetch_time }}{% else %}No portfolio refresh recorded{% endif %}</dd>
+    </dl>
+  </aside>
+</section>
+{% if refresh_run %}
+<details class="data-notes refresh-status">
+  <summary>Latest refresh · {{ refresh_run.from_date }} through {{ refresh_run.to_date }} IST · {{ refresh_results|selectattr('status', 'equalto', 'succeeded')|list|length }} succeeded, {{ refresh_results|selectattr('status', 'equalto', 'failed')|list|length }} failed out of {{ refresh_run.company_count }} selected</summary>
+  <p>Started {{ refresh_run.started_at|fetch_time }}. {% if refresh_run.completed_at %}Completed {{ refresh_run.completed_at|fetch_time }}.{% else %}Run has no recorded completion.{% endif %}</p>
+  <ul>
+  {% for result in refresh_results %}
+    <li><strong>{{ result.symbol }}</strong> · {% if result.status == 'succeeded' %}{{ result.filing_count }} source rows{% else %}Failed. Earlier cache kept. {{ result.detail }}{% endif %}
+    {% if result.fetched_at %}<br>Last successful fetch {{ result.fetched_at|fetch_time }} · queried {{ result.from_date }} through {{ result.to_date }} IST{% endif %}</li>
+  {% endfor %}
+  </ul>
+</details>
+{% endif %}
+<div class="stats"><div><strong>{{ stats.total }}</strong><span>real filings</span></div><div><strong>{{ stats.important }}</strong><span>flagged by rules</span></div><div><strong>{{ stats.evidence or 0 }}</strong><span>with cached text</span></div><a href="/?evidence=1">Review available evidence <span aria-hidden="true">↗</span></a></div>
+<div class="section-line"><h2>Portfolio feed</h2><span>Historical cache · all filing dates</span></div>
+<form class="filters" method="get" action="/" hx-get="/" hx-target="#feed" hx-swap="outerHTML" hx-push-url="true" hx-trigger="submit, change from:select, change from:input[type='checkbox']" hx-indicator="#loading">
+  <label>Company<select name="company"><option value="">All portfolio companies</option>{% for c in companies %}<option value="{{ c.symbol }}" {% if company==c.symbol %}selected{% endif %}>{{ c.symbol }} · {{ c.events }} filings</option>{% endfor %}</select></label>
+  <label>Priority<select name="priority"><option value="">All priorities</option><option value="important" {% if priority=='important' %}selected{% endif %}>Flagged for review</option><option value="routine" {% if priority=='routine' %}selected{% endif %}>Routine</option></select></label>
+  <label class="search">Find a filing<input name="q" value="{{ q }}" placeholder="Search exchange descriptions" maxlength="200"></label>
+  <label class="check"><input type="checkbox" name="evidence" value="1" {% if evidence %}checked{% endif %}> Cached text only</label>
+  <button class="apply" type="submit">Apply</button><a class="reset" href="/">Reset</a>
+</form>
+<p id="loading" class="htmx-indicator" role="status">Updating feed…</p>
+{% include 'feed_items.html' %}
+<details class="data-notes"><summary>How priorities and evidence work</summary><p>Rules inspect exchange titles and descriptions. A flag requests review; it does not establish financial impact. Meetings, newspaper notices and administrative items stay routine. Source-document publication is not treated as a material event.</p><p>Only PDFs or text already present in your cache can supply excerpts. Missing documents stay missing. Dates are exchange filing timestamps in IST, not event dates inferred from filenames.</p><p>The Asian Paints historical ISIN conflict remains flagged. Market CSV holiday-date behavior, incomplete Yahoo rows, PDF completeness and financial tables remain recorded in the README.</p></details>
+{% endblock %}

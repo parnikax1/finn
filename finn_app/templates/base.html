@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}FINN · Portfolio brief{% endblock %}</title>
+  <link rel="stylesheet" href="/static/app.css">
+  <script src="/static/htmx.min.js" defer></script>
+</head>
+<body>
+  <header class="topbar"><a href="/" class="brand"><span class="brand-mark">f</span> FINN<span class="brand-small"> / your daily brief</span></a><a class="research-link" href="/research">Company research</a></header>
+  <main class="shell">{% block content %}{% endblock %}</main>
+  <footer class="footer">Real exchange filings · Explicit rules · Synthetic network</footer>
+</body>
+</html>
