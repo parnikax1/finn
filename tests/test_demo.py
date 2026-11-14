@@ -1,6 +1,7 @@
 from contextlib import closing
 import json
 from pathlib import Path
+import re
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -25,20 +26,46 @@ class DemoTests(unittest.TestCase):
                 self.assertEqual(db.execute('SELECT COUNT(*) FROM events').fetchone()[0], sum(len(item['filings']) for item in snapshot['filings']))
                 self.assertIsNotNone(demo_links(db)['wipro'])
                 filing = '/events/' + demo_links(db)['wipro']
+                release = '/events/' + demo_links(db)['wipro_release']
+                expected_cards = [
+                    f'/events/{row["id"]}' for row in db.execute(
+                        'SELECT e.id FROM events e ORDER BY e.priority DESC, '
+                        'EXISTS(SELECT 1 FROM pages p WHERE p.sha=e.document_sha) DESC, e.filed_at DESC, e.id'
+                    ) if f'/events/{row["id"]}' not in (filing, release)
+                ]
             with TestClient(app) as client, patch('socket.create_connection', side_effect=AssertionError):
                 feed = client.get('/').text
                 self.assertIn('Demo snapshot · 2026-11-12 IST', feed)
                 first_card = feed.split('<a class="event-card"', 1)[1].split('</a>', 1)[0]
-                self.assertIn('Wipro appoints Angan Guha', first_card)
+                self.assertIn('RBI approves reappointment', first_card)
+                self.assertIn('Featured walkthrough · WIPRO', feed)
+                self.assertIn(f'{filing}?page=2#source-evidence', feed)
+                self.assertIn(f'{filing}?page=3#source-evidence', feed)
+                self.assertIn(f'{filing}#related-contact', feed)
+                self.assertIn(f'<a href="{release}">Related press release</a>', feed)
+                self.assertNotIn(f'class="event-card" href="{release}"', feed)
+                self.assertEqual(re.findall(r'class="event-card"[^>]* href="([^"]+)"', feed), expected_cards)
+                self.assertIn('PressRelease06112026.pdf', client.get(release).text)
+                release_only = client.get('/', params={'q': 'press release dated'}).text
+                self.assertNotIn('Featured walkthrough · WIPRO', release_only)
+                self.assertIn(f'class="event-card" href="{release}"', release_only)
+                evidence_only = client.get('/', params={'evidence': '1'}).text
+                self.assertIn('Featured walkthrough · WIPRO', evidence_only)
+                self.assertNotIn('Related press release', evidence_only)
                 event = client.get(filing).text
                 for expected in ('physical PDF page 2', 'Meera Rao', 'December 8, 2026', '#page=2'):
                     self.assertIn(expected, event)
+                profile = client.get(filing, params={'page': 3}).text
+                self.assertIn('physical PDF page 3', profile)
+                self.assertIn('including CEO of the Americas 2 Business Unit', profile)
+                self.assertIn('#page=3', profile)
                 research = client.get('/research', params={'symbol': 'MARUTI', 'question': MARUTI_QUESTION}).text
                 for value in ('Prepared walkthrough', '500,000 units/year', '4 million units/year',
                               '1.1 million units/year', '#page=3', '#page=68', 'Who could add context'):
                     self.assertIn(value, research)
                 self.assertIn('#page=68', research)
                 self.assertIn('Asha Sen', research)
+                self.assertIn('Which plants could close the remaining capacity gap', research)
                 self.assertNotIn('Answer from excerpts', research)
                 market = client.get('/', params={'company': 'MARUTI'}).text
                 self.assertIn('+1.99%', market)
@@ -61,11 +88,27 @@ class DemoTests(unittest.TestCase):
                 latest = client.get('/', params={'window': '1'}, headers={'HX-Request': 'true'}).text
                 self.assertIn('2026-11-12 to 2026-11-12 IST', latest)
                 self.assertNotIn('Angan Guha', latest)
+                self.assertIn('id="featured-brief" hx-swap-oob="true"', latest)
                 self.assertIn('15/15 succeeded', latest)
                 self.assertIn('TMPV', latest)
                 self.assertIn('Angan Guha', client.get('/', params={'window': 'all'}).text)
                 search = client.get('/research', params={'symbol': 'CUMMINSIND', 'question': 'Exports?'}).text
                 self.assertIn('Fetch documents', search)
+
+    def test_reseeding_adds_page_three_to_existing_demo(self):
+        with tempfile.TemporaryDirectory() as temp, patch.dict(
+            'os.environ', FINN_DB=str(Path(temp) / 'finn.sqlite3')
+        ), closing(connect()) as db:
+            snapshot = json.loads(SNAPSHOT.read_text())
+            older_snapshot = json.loads(SNAPSHOT.read_text())
+            wipro = next(doc for doc in older_snapshot['documents'] if doc['symbol'] == 'WIPRO')
+            del wipro['pages']['3']
+            self.assertTrue(seed(db, older_snapshot))
+            self.assertFalse(demo_links(db)['wipro_ready'])
+            event_count = db.execute('SELECT COUNT(*) FROM events').fetchone()[0]
+            self.assertFalse(seed(db, snapshot))
+            self.assertTrue(demo_links(db)['wipro_ready'])
+            self.assertEqual(db.execute('SELECT COUNT(*) FROM events').fetchone()[0], event_count)
 
     def test_public_render_origin_is_accepted(self):
         params = {'symbol': 'CUMMINSIND', 'question': 'Exports?'}

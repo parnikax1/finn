@@ -1,0 +1,18 @@
+<div id="featured-brief"{% if partial %} hx-swap-oob="true"{% endif %}>
+{% if featured %}
+  <section class="featured-filing" aria-labelledby="featured-heading">
+    <p class="small-label">Featured walkthrough · WIPRO</p>
+    <h2 id="featured-heading">Angan Guha returns to lead Wipro’s Americas 2</h2>
+    <p>President and CEO of Americas 2 from <strong>8 December 2026</strong>. <a href="/events/{{ featured.id }}?page=2#source-evidence">Filing PDF page 2</a></p>
+    <p>He previously led the unit. That makes continuity in client delivery a useful question for the first quarter. <a href="/events/{{ featured.id }}?page=3#source-evidence">Filing PDF page 3</a></p>
+    <nav class="featured-actions" aria-label="Wipro walkthrough actions">
+      <a class="button" href="/events/{{ featured.id }}#related-contact">Synthetic contact question</a>
+      {% if main_events and main_events[0].priority >= 70 %}<a href="#next-priority">Next priority filing ↓</a>{% endif %}
+    </nav>
+    <div class="featured-sources">
+      <a href="/events/{{ featured.id }}">Appointment filing</a>
+      {% if related_release %}<a href="/events/{{ related_release.id }}">Related press release</a>{% endif %}
+    </div>
+  </section>
+{% endif %}
+</div>

@@ -11,6 +11,7 @@ from .market import calculate, store_snapshot
 
 SNAPSHOT = ROOT / 'demo' / 'snapshot.json'
 WIPRO_FILE = 'Wipro_Secretarial_06112026190358_SEintimation06112026.pdf'
+WIPRO_RELEASE = 'Wipro_Secretarial_06112026191442_PressRelease06112026.pdf'
 MARUTI_QUESTION = 'What did Maruti say about exports and production capacity?'
 
 
@@ -21,13 +22,14 @@ def seed(db, snapshot, market=None):
     snapshot_time = snapshot['captured_at']
     # The SQLite write transaction serializes concurrent starts of the same demo.
     with db:
-        if not db.execute(
+        new_snapshot = db.execute(
             'INSERT OR IGNORE INTO imports VALUES (?,?,?,?)',
             (marker, snapshot_time, snapshot['to_date'], 'Bundled demo snapshot'),
-        ).rowcount:
-            return False
-        for report in snapshot['filings']:
-            import_report(db, SNAPSHOT, data=report)
+        ).rowcount
+        if new_snapshot:
+            for report in snapshot['filings']:
+                import_report(db, SNAPSHOT, data=report)
+        # Reapply bundled excerpts on startup to add pages to an existing snapshot.
         for document in snapshot['documents']:
             # Use a separate identity for selected pages. A later full PDF
             # import must not mistake the demo excerpts for complete text.
@@ -45,7 +47,7 @@ def seed(db, snapshot, market=None):
                            (document['symbol'], document['kind'], key, document['url'],
                             'Bundled demo snapshot', document['date_label'], document['document_date'],
                             snapshot_time))
-        if market:
+        if new_snapshot and market:
             settings = market['settings']
             verified_at = market['verified_at']
             for symbol, report in market['symbols'].items():
@@ -56,16 +58,22 @@ def seed(db, snapshot, market=None):
                 db.execute('INSERT OR IGNORE INTO market_attempts VALUES (?,?,?,?)',
                            (symbol, verified_at, report['status'],
                             'Bundled verified refresh. ' + report['detail']))
-    return True
+    return bool(new_snapshot)
 
 
 def demo_links(db):
     marker = db.execute("SELECT as_of FROM imports WHERE path LIKE 'demo:%' ORDER BY as_of DESC LIMIT 1").fetchone()
     if not marker:
         return None
-    wipro = db.execute("SELECT id FROM events WHERE symbol='WIPRO' AND source_url LIKE ?",
-                       ('%/' + WIPRO_FILE,)).fetchone()
-    return dict(date=marker['as_of'], wipro=wipro['id'] if wipro else None)
+    wipro = db.execute("""
+        SELECT id, (SELECT COUNT(*) FROM pages WHERE sha=events.document_sha AND page IN (2, 3)) AS cited_pages
+        FROM events WHERE symbol='WIPRO' AND source_url LIKE ?
+    """, ('%/' + WIPRO_FILE,)).fetchone()
+    release = db.execute("SELECT id FROM events WHERE symbol='WIPRO' AND source_url LIKE ?",
+                         ('%/' + WIPRO_RELEASE,)).fetchone()
+    return dict(date=marker['as_of'], wipro=wipro['id'] if wipro else None,
+                wipro_ready=bool(wipro and wipro['cited_pages'] == 2),
+                wipro_release=release['id'] if release else None)
 
 
 def capacity_walkthrough(db):

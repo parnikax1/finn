@@ -102,8 +102,17 @@ def feed(request: Request, company: str = '', priority: str = '', q: str = '',
     def page_url(number):
         return '/?' + urlencode(dict(company=company, priority=priority, q=q,
                                       evidence=int(evidence), window=window, page=number))
+    main_events = [event for event in events if event['priority'] >= 30]
+    featured = related_release = None
+    if demo and demo['wipro_ready'] and main_events and main_events[0]['id'] == demo['wipro']:
+        featured = main_events.pop(0)
+        related_release = next((event for event in main_events if event['id'] == demo['wipro_release']), None)
+        if related_release:
+            main_events.remove(related_release)
+    partial = request.headers.get('HX-Request') == 'true'
     context = dict(events=events, routine=[e for e in events if e['priority'] < 30],
-                   main_events=[e for e in events if e['priority'] >= 30], total=total,
+                   main_events=main_events, featured=featured, related_release=related_release,
+                   partial=partial, total=total,
                    companies=companies, stats=stats, company=company, priority=priority,
                    q=q, evidence=evidence, page=page, previous=page_url(page-1) if page > 1 else None,
                    next=page_url(page+1) if page*60 < total else None,
@@ -111,7 +120,7 @@ def feed(request: Request, company: str = '', priority: str = '', q: str = '',
                    refresh_run=run, refresh_results=results, last_fetch=last_fetch, market=market, demo=demo,
                    window=window, latest_day=latest_day, window_start=window_start,
                    demo_research_url=research_urls('MARUTI', MARUTI_QUESTION)['search'] if demo else '')
-    template = 'feed_items.html' if request.headers.get('HX-Request') == 'true' else 'feed.html'
+    template = 'feed_items.html' if partial else 'feed.html'
     return templates.TemplateResponse(request=request, name=template, context=context)
 
 

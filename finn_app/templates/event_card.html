@@ -1,4 +1,4 @@
-<a class="event-card" href="/events/{{ event.id }}">
+<a class="event-card"{% if next_priority %} id="next-priority"{% endif %} href="/events/{{ event.id }}">
   <div class="card-top"><span class="ticker">{{ event.symbol }}</span><span class="badge {% if event.priority>=70 %}flagged{% elif event.priority<30 %}quiet{% endif %}">{{ 'Flagged for review' if event.priority>=70 else ('Routine' if event.priority<30 else 'Review') }}</span><span class="card-arrow" aria-hidden="true">↗</span></div>
   <h3>{{ event|event_title }}</h3><p class="description">{{ event.description or 'No exchange description provided.' }}</p>
   <div class="card-bottom"><span>Filed {{ event.filed_at|filing_date }}</span><span class="evidence-status {{ 'ready' if event.has_evidence else '' }}">{{ 'Cached excerpt available' if event.has_evidence else 'Metadata only' }}</span></div>

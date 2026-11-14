@@ -29,8 +29,8 @@ after dependencies are installed. Original PDFs and CSVs are linked at their sou
 
 | Time | What to try |
 | --- | --- |
-| 0–20s | Open the feed. The WIPRO appointment is the first filing in the default window. Switch to **Latest day** to see the date range change, then return to **Last 7 days**. Both windows end on the latest cached filing date in IST. |
-| 20–45s | Tap **WIPRO appointment**. Open the page 2 source link and jump to the synthetic contact’s suggested question. |
+| 0–20s | Open the feed and read the featured WIPRO walkthrough. Tap **Next priority filing** to skip to the next ranked card. Switch to **Latest day**, then back to **Last 7 days**. Both windows end on the latest cached filing date in IST. |
+| 20–45s | Open the WIPRO evidence on PDF pages 2 and 3. Tap **Synthetic contact question** for the suggested delivery question. The appointment and press release each have their own filing link. |
 | 45–70s | Tap **MARUTI research**. The prepared walkthrough puts the H1 FY 2026–27 addition of 500,000 units/year beside the 4 million unit/year medium-term objective, with their respective PDF pages. The lookup below also shows synthetic contacts and source excerpts. |
 | 70–90s | Open **End-of-day market signals** on the unfiltered feed. Expand **Market refresh status** to see all 15 results, including companies with no threshold crossing. |
 
@@ -92,7 +92,7 @@ NSE access and may fail or time out on a hosting network.
 ### Phone checklist
 
 - Check the opening viewport and the filing window in a private phone tab.
-- Follow WIPRO → page 2 → contact question, then MARUTI → capacity comparison.
+- Follow WIPRO → pages 2 and 3 → synthetic contact question, then MARUTI → capacity comparison and follow-up.
 - Expand the 15-company market status on the unfiltered feed.
 - Try the live CUMMINSIND fetch separately. Confirm the transcript leads when
   mixed table pages are excluded and that unavailable sources show a useful status.

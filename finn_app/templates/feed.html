@@ -4,13 +4,15 @@
   <h1>Portfolio feed</h1>
   {% if demo %}
   <p class="date-line">Demo snapshot · {{ demo.date }} IST</p>
-  <nav class="review-links" aria-label="Reviewer walkthrough">
-    {% if demo.wipro %}<a href="/events/{{ demo.wipro }}">WIPRO appointment</a>{% endif %}
-    <a href="{{ demo_research_url }}">MARUTI research</a>
-    <a href="/#market-heading">Market signals</a>
-  </nav>
   {% endif %}
 </header>
+{% include 'featured_wipro.html' %}
+{% if demo %}
+  <nav class="review-links" aria-label="Reviewer walkthrough">
+    <a href="{{ demo_research_url }}">MARUTI research</a>
+    <a href="#market-heading">Market signals</a>
+  </nav>
+{% endif %}
 <form class="filters" method="get" action="/" hx-get="/" hx-target="#feed" hx-swap="outerHTML" hx-push-url="true" hx-trigger="submit, change from:select[name='window'], change from:select[name='company'], change from:select[name='priority'], change from:input[type='checkbox']" hx-indicator="#loading">
   <label>Filing window<select name="window">{% for value, title in [('1','Latest day'),('7','Last 7 days'),('30','Last 30 days'),('all','All dates')] %}<option value="{{ value }}" {% if window==value %}selected{% endif %}>{{ title }}</option>{% endfor %}</select></label>
   <details class="filing-filters" {% if company or priority or evidence or q %}open{% endif %}><summary>More filters</summary><div class="filing-filter-fields">
@@ -37,6 +39,6 @@
 {% endif %}
 <details class="data-notes"><summary>Data coverage and filing priorities</summary>
 <p>{{ cached_companies }} portfolio companies have {{ stats.total }} cached filings, including {{ stats.evidence or 0 }} with source excerpts. {% if last_fetch %}Last successful company fetch {{ last_fetch|fetch_time }}.{% endif %}</p>
-<p>The filing window counts calendar days in IST through the latest cached date. Routine notices are grouped below. Priority rules flag items for review.</p>
+<p>The filing window counts calendar days in IST through the latest cached date. Filings rank by rule score, then evidence availability, then filing time. Routine notices are grouped separately.</p>
 </details>
 {% endblock %}
