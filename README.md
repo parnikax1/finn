@@ -188,3 +188,9 @@ Recently loaded Brief, Network, and static research screens can be reused for
 90 seconds in the same browser session. Live research status and generated answers
 request fresh content. If a tab request fails, the current screen remains readable
 and Retry requests the destination again.
+
+The filing controls and results update as one fragment. Failed filing requests
+restore the last applied filters. Returning to a cached Brief restores the
+applied filter values with the loading message cleared. If Research cannot
+reach the status endpoint, it shows this separately from a worker failure and
+offers a link to check status.

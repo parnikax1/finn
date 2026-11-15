@@ -108,3 +108,4 @@ h2 { font-size: 18px; }
     .navigation-status { top: auto; bottom: calc(62px + env(safe-area-inset-bottom)); right: 10px; }
 }
 .has-shell .window-apply { display: none; }
+.filter-message { margin: 4px 0 8px; font-size: 12px; color: var(--muted); }

@@ -19,4 +19,3 @@
 <a class="browse-filings" href="{{ browse_url }}">{{ 'Browse all ' ~ total ~ ' filings' if total != 1 else 'Browse 1 filing' }} <span aria-hidden="true">→</span></a>
 {% endif %}
 </section>
-{% if partial %}{% if full_list %}{% include 'list_back.html' %}{% else %}{% include 'featured_wipro.html' %}{% endif %}{% endif %}

@@ -1,5 +1,5 @@
 <section id="research-fetch-status" class="panel research-source" aria-live="polite"
-  {% if status.state == 'running' %}hx-get="{{ urls.progress }}" hx-trigger="every 1s" hx-swap="outerHTML"{% endif %}>
+  {% if status.state == 'running' %}hx-get="{{ urls.progress }}" hx-trigger="every 1s" hx-swap="outerHTML" hx-request='{"timeout":15000}'{% endif %}>
   <h2>{{ 'Fetching documents' if status.state == 'running' else 'Document fetch' }}</h2>
   <p>{{ status.message }}</p>
   {% if status.sources %}
@@ -12,6 +12,9 @@
   </ul>
   {% endif %}
   {% if status.state == 'running' %}
-  <p class="annotation">This page updates as the fetch progresses. <a href="{{ urls.search }}">Check status now</a></p>
+  <p class="annotation"><span data-poll-normal>This page updates as the fetch progresses.</span>
+    <span data-poll-error role="status" hidden>Could not refresh the fetch status.</span>
+    <a href="{{ urls.search }}">Check status now</a>
+  </p>
   {% endif %}
 </section>

@@ -145,7 +145,7 @@ def feed(request: Request, company: str = Query('', max_length=32, pattern=r'^[A
     trading_dates = {date for _, date in alert_dates}
     context = dict(events=events, routine=[e for e in events if e['priority'] < 30],
                    main_events=main_events, featured=featured, related_release=related_release,
-                   partial=partial, total=total, full_list=full_list,
+                   total=total, full_list=full_list,
                    browse_url='/?' + urlencode(dict(view='all', window=window)),
                    short_url='/?' + urlencode(dict(window=window)),
                    cacheable=True, signal_count=len({symbol for symbol, _ in alert_dates}),
@@ -159,7 +159,7 @@ def feed(request: Request, company: str = Query('', max_length=32, pattern=r'^[A
                    refresh_run=run, refresh_results=results, last_fetch=last_fetch, market=market, demo=demo,
                    window=window, latest_day=latest_day, window_start=window_start,
                    demo_research_url=research_urls('MARUTI', MARUTI_QUESTION)['search'] if demo else '')
-    template = 'feed_items.html' if partial else 'feed.html'
+    template = 'brief_state.html' if partial else 'feed.html'
     return screen(request, template, context)
 
 

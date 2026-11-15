@@ -94,7 +94,7 @@ class DemoTests(unittest.TestCase):
                 latest = client.get('/', params={'window': '1'}, headers={'HX-Request': 'true'}).text
                 self.assertIn('Browse all 11 filings', latest)
                 self.assertNotIn('Angan Guha', latest)
-                self.assertIn('id="featured-brief" hx-swap-oob="true"', latest)
+                self.assertIn('name="window" id="filter-window"', latest)
                 self.assertIn('15/15 succeeded', latest)
                 self.assertIn('TMPV', latest)
                 self.assertIn('Angan Guha', client.get('/', params={'window': 'all'}).text)

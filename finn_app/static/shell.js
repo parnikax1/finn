@@ -3,11 +3,17 @@ const navStatus = document.getElementById('navigation-status');
 const statusText = navStatus.querySelector('[role="status"]');
 const retryButton = navStatus.querySelector('button');
 const screenCache = new Map();
-const cacheKey = 'finn:recent-screens-v1';
+const cacheKey = 'finn:recent-screens-v2';
 const freshForMs = 90_000;
 try {
     for (const [url, entry] of JSON.parse(sessionStorage.getItem(cacheKey) ?? '[]')) {
         if (Date.now() - entry.at < freshForMs) screenCache.set(url, entry);
+    }
+} catch {}
+try {
+    if (!localStorage.getItem('finn:brief-history-v2')) {
+        localStorage.removeItem('htmx-history-cache');
+        localStorage.setItem('finn:brief-history-v2', '1');
     }
 } catch {}
 let retryTab = null;
@@ -130,11 +136,44 @@ function focusTitle() {
     }
 }
 
+function setFilterMessage(root, busy, failed = false) {
+    const loading = root.querySelector('#loading');
+    const error = root.querySelector('#filter-error');
+    if (loading) loading.hidden = !busy;
+    if (error) error.hidden = !failed;
+}
+
+function restoreAppliedFilters(root = document) {
+    const state = root.querySelector('#brief-state');
+    const form = state?.querySelector('#filing-filters');
+    if (!form) return;
+    const params = new URLSearchParams(state.dataset.applied);
+    for (const name of ['window', 'company', 'priority', 'q']) {
+        if (form.elements[name]) form.elements[name].value = params.get(name) ?? '';
+    }
+    if (form.elements.evidence) form.elements.evidence.checked = params.get('evidence') === '1';
+}
+
+function finishFilter(xhr, failed) {
+    if (filterRequest !== xhr) return;
+    filterRequest = null;
+    restoreAppliedFilters();
+    setFilterMessage(document, false, failed);
+}
+
+function cancelFilter() {
+    if (!filterRequest) return;
+    const xhr = filterRequest;
+    finishFilter(xhr, false);
+    xhr.abort();
+}
+
 function cacheScreen() {
     const tab = screenMarker().dataset.screen;
     if (location.pathname !== destinations[tab] || !screenMarker().hasAttribute('data-cacheable')) return;
     const main = document.getElementById('app-content').cloneNode(true);
     main.removeAttribute('aria-busy');
+    setFilterMessage(main, false);
     const html = main.outerHTML;
     if (html.length > 160_000) return;
     const key = viewKey();
@@ -155,6 +194,8 @@ function restoreCached(key, push) {
         restoringCached = false;
     }
     updateTabs();
+    restoreAppliedFilters();
+    setFilterMessage(document, false);
     restoreDraft();
     restoreView();
     focusTitle();
@@ -195,7 +236,7 @@ function openDestination(link, force = false) {
     const url = new URL(link.href);
     const key = url.pathname + url.search;
     if (key === locationKey()) return;
-    if (filterRequest) filterRequest.abort();
+    cancelFilter();
     if (!force && restoreCached(key, true)) return;
     pendingTab = link;
     link.dataset.pending = 'true';
@@ -220,12 +261,21 @@ retryButton.addEventListener('click', () => {
 
 document.addEventListener('htmx:beforeSend', (event) => {
     if (event.detail.elt === navigation) pendingRequest = event.detail.xhr;
-    if (event.detail.elt.id === 'filing-filters') filterRequest = event.detail.xhr;
+    if (event.detail.elt.id === 'filing-filters') {
+        filterRequest = event.detail.xhr;
+        setFilterMessage(document, true);
+    }
 });
 document.addEventListener('htmx:beforeOnLoad', (event) => {
     const {elt, xhr} = event.detail;
     if (elt.id === 'research-fetch-status' && (pendingTab || !elt.isConnected)) {
         event.preventDefault();
+    } else if (elt.id === 'filing-filters' && (xhr !== filterRequest || !elt.isConnected)) {
+        event.preventDefault();
+    } else if (xhr === filterRequest && xhr.status >= 200 && xhr.status < 300 &&
+        !xhr.responseText.includes('id="brief-state"')) {
+        event.preventDefault();
+        finishFilter(xhr, true);
     } else if (xhr === pendingRequest && xhr.status >= 200 && xhr.status < 300 &&
         !xhr.responseText.includes('data-screen="' + pendingTab.dataset.tab + '"')) {
         event.preventDefault();
@@ -233,26 +283,49 @@ document.addEventListener('htmx:beforeOnLoad', (event) => {
     }
 });
 document.addEventListener('htmx:afterRequest', (event) => {
-    if (event.detail.xhr === filterRequest) filterRequest = null;
+    const {xhr, elt, failed} = event.detail;
+    // A replacement request can abort its predecessor after collecting new form values.
+    if (xhr === filterRequest && xhr.status !== 0) finishFilter(xhr, failed);
+    if (elt?.id === 'research-fetch-status' && failed) showPollError(elt);
     if (event.detail.xhr === pendingRequest && (event.detail.failed || !event.detail.successful)) failNavigation();
 });
+function showPollError(panel) {
+    const message = panel.querySelector('[data-poll-error]');
+    if (panel.isConnected && message) {
+        message.hidden = false;
+        panel.querySelector('[data-poll-normal]').hidden = true;
+    }
+}
 for (const type of ['htmx:sendError', 'htmx:timeout', 'htmx:swapError']) {
     document.addEventListener(type, (event) => {
+        const {elt, xhr} = event.detail;
+        if (xhr === filterRequest) finishFilter(xhr, true);
+        if (elt?.id === 'research-fetch-status') showPollError(elt);
         if (event.detail.xhr === pendingRequest) failNavigation();
     });
 }
+document.addEventListener('htmx:sendAbort', (event) => {
+    if (event.detail.xhr === filterRequest) {
+        filterRequest = null;
+        setFilterMessage(document, false);
+    }
+});
 document.addEventListener('htmx:afterSwap', (event) => {
-    if (restoringCached || (event.detail.elt.id !== 'app-content' && event.detail.elt.id !== 'feed')) return;
+    if (restoringCached || (event.detail.elt.id !== 'app-content' && event.detail.elt.id !== 'brief-state')) return;
     updateTabs();
     if (event.detail.elt.id === 'app-content') {
         clearPending();
         restoreDraft();
         restoreView();
         focusTitle();
+    } else {
+        restoreAppliedFilters();
+        setFilterMessage(document, false);
     }
     cacheScreen();
 });
 window.addEventListener('popstate', (event) => {
+    cancelFilter();
     if (pendingRequest) {
         const request = pendingRequest;
         pendingRequest = null;
@@ -265,15 +338,8 @@ document.addEventListener('htmx:historyRestore', () => {
     updateTabs();
     restoreDraft();
     focusTitle();
-    // A filter control may change before HTMX caches the previous feed.
-    const form = document.querySelector('#filing-filters');
-    if (form) {
-        const params = new URLSearchParams(location.search);
-        for (const name of ['window', 'company', 'priority', 'q']) {
-            if (form.elements[name]) form.elements[name].value = params.get(name) ?? (name === 'window' ? '7' : '');
-        }
-        if (form.elements.evidence) form.elements.evidence.checked = ['1', 'true', 'on', 'yes'].includes(params.get('evidence'));
-    }
+    restoreAppliedFilters();
+    setFilterMessage(document, false);
 });
 window.addEventListener('pageshow', (event) => {
     if (event.persisted && screenMarker().dataset.screen === 'research' && !screenMarker().hasAttribute('data-cacheable')) location.reload();
