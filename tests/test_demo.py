@@ -41,7 +41,7 @@ class DemoTests(unittest.TestCase):
                 full = client.get('/?view=all').text
                 self.assertIn('View all filings', feed)
                 first_card = feed.split('<ul class="priority-list">', 1)[1].split('</a>', 1)[0]
-                self.assertIn('RBI approves reappointment', first_card)
+                self.assertIn('Change in Director(s)', first_card)
                 self.assertIn('data-carousel aria-label="Featured stories"', feed)
                 self.assertEqual(feed.split('<ul class="priority-list">', 1)[1].split('</ul>', 1)[0].count('<li>'), 2)
                 self.assertEqual(feed.count('data-slide role='), 6)
@@ -98,6 +98,8 @@ class DemoTests(unittest.TestCase):
                 self.assertIn('View all filings', latest)
                 self.assertNotIn('Angan Guha', latest)
                 self.assertEqual(latest.count('data-slide role='), 1)
+                self.assertEqual(latest.count('HDFC Bank director'), 1)
+                self.assertRegex(latest, r'View all filings\s*<span>11\s')
                 self.assertNotIn('See capacity research', latest)
                 self.assertIn('name="window" id="filter-window"', latest)
                 self.assertIn('15/15 succeeded', latest)
@@ -105,6 +107,11 @@ class DemoTests(unittest.TestCase):
                 self.assertIn('Angan Guha', client.get('/', params={'window': 'all'}).text)
                 search = client.get('/research', params={'symbol': 'CUMMINSIND', 'question': 'Exports?'}).text
                 self.assertIn('Fetch documents', search)
+                self.assertIn('data-screen="research" data-brief-url="" hx-history="false"', search)
+                ordinary_research = client.get('/research', params={
+                    'symbol': 'MARUTI', 'question': 'What did Maruti report about capacity?'
+                }).text
+                self.assertIn('data-screen="research" data-brief-url="" data-cacheable', ordinary_research)
 
     def test_reseeding_adds_page_three_to_existing_demo(self):
         with tempfile.TemporaryDirectory() as temp, patch.dict(

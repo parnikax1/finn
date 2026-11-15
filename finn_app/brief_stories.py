@@ -49,7 +49,7 @@ def featured_stories(events, wipro, walkthrough, maruti_url, highlights, window_
                             title=wipro['title'], description=wipro['context'],
                             visual_date=wipro['effective_date'], visual_label='Appointment takes effect',
                             source='Exchange filing · PDF pp. 2–3', source_date=wipro['filed_at'][:10],
-                            action='Read brief',
+                            action='Read brief', event_id=wipro['id'],
                             href=event_url(wipro['id'], back)))
     by_id = {event['id']: event for event in events}
     maruti = by_id.get(MARUTI_WINDOW_FILING)
@@ -79,5 +79,5 @@ def featured_stories(events, wipro, walkthrough, maruti_url, highlights, window_
             stories.append(dict(kind='date', tone=tone, label=f"{event['symbol']} · EXCHANGE FILING",
                                 title=title, description=description, visual_date=event['filed_at'][:10],
                                 iso_date=True, visual_label='Filing date', source='Exchange filing',
-                                action='Read filing', href=event_url(event_id, back)))
+                                action='Read filing', event_id=event_id, href=event_url(event_id, back)))
     return stories

@@ -1,19 +1,19 @@
 const navigation = document.getElementById('app-nav');
 const navStatus = document.getElementById('navigation-status');
 const statusText = navStatus.querySelector('[role="status"]');
-const retryButton = navStatus.querySelector('button');
 const screenCache = new Map();
-const cacheKey = 'finn:recent-screens-v4';
+const cacheKey = 'finn:recent-screens-v5';
 const freshForMs = 90_000;
+const liveResearch = new Map();
 try {
     for (const [url, entry] of JSON.parse(sessionStorage.getItem(cacheKey) ?? '[]')) {
         if (Date.now() - entry.at < freshForMs) screenCache.set(url, entry);
     }
 } catch {}
 try {
-    if (!localStorage.getItem('finn:brief-history-v4')) {
+    if (!localStorage.getItem('finn:brief-history-v5')) {
         localStorage.removeItem('htmx-history-cache');
-        localStorage.setItem('finn:brief-history-v4', '1');
+        localStorage.setItem('finn:brief-history-v5', '1');
     }
 } catch {}
 let retryTab = null;
@@ -31,6 +31,7 @@ const views = sessionMap('finn:tab-views');
 let pendingTab = null;
 let pendingRequest = null;
 let filterRequest = null;
+let pollRequest = null;
 
 function screenMarker() {
     return document.querySelector('#app-content [data-screen]');
@@ -152,6 +153,7 @@ function restoreAppliedFilters(root = document) {
         if (form.elements[name]) form.elements[name].value = params.get(name) ?? '';
     }
     if (form.elements.evidence) form.elements.evidence.checked = params.get('evidence') === '1';
+    document.dispatchEvent(new Event('finn:filters'));
 }
 
 function finishFilter(xhr, failed) {
@@ -168,25 +170,64 @@ function cancelFilter() {
     xhr.abort();
 }
 
-function cacheScreen() {
-    const tab = screenMarker().dataset.screen;
-    if (location.pathname !== destinations[tab] || !screenMarker().hasAttribute('data-cacheable')) return;
+function screenSnapshot() {
     const main = document.getElementById('app-content').cloneNode(true);
     main.removeAttribute('aria-busy');
     setFilterMessage(main, false);
+    const menu = main.querySelector('[data-window-menu]');
+    if (menu) {
+        menu.hidden = true;
+        main.querySelector('[data-window-trigger]').setAttribute('aria-expanded', 'false');
+    }
     const html = main.outerHTML;
-    if (html.length > 160_000) return;
+    return html.length <= 160_000 ? {at: Date.now(), html} : null;
+}
+
+function cacheScreen() {
+    const tab = screenMarker().dataset.screen;
+    if (location.pathname !== destinations[tab]) return;
     const key = viewKey();
+    if (tab === 'research') liveResearch.delete(key);
+    if (!screenMarker().hasAttribute('data-cacheable')) return;
+    const entry = screenSnapshot();
+    if (!entry) return;
     screenCache.delete(key);
-    screenCache.set(key, {at: Date.now(), html});
+    screenCache.set(key, entry);
     if (screenCache.size > 6) screenCache.delete(screenCache.keys().next().value);
     try { sessionStorage.setItem(cacheKey, JSON.stringify([...screenCache])); } catch {}
 }
 
+function rememberLiveResearch() {
+    if (!document.querySelector('#research-fetch-status[hx-get]')) return;
+    const snapshot = screenSnapshot();
+    if (!snapshot) return;
+    liveResearch.clear();
+    liveResearch.set(viewKey(), snapshot);
+}
+
+function stopResearchPoll() {
+    if (!pollRequest) return;
+    const request = pollRequest;
+    pollRequest = null;
+    request.abort();
+}
+
+function resumeResearchPoll() {
+    requestAnimationFrame(() => {
+        const panel = document.querySelector('#research-fetch-status[hx-get]');
+        if (panel && !pendingTab && !pollRequest) htmx.trigger(panel, 'finn:poll-now');
+    });
+}
+
 function restoreCached(key, push) {
-    const entry = screenCache.get(viewKey(key));
+    const lookup = viewKey(key);
+    const live = liveResearch.get(lookup);
+    const entry = live || screenCache.get(lookup);
     if (!entry || Date.now() - entry.at >= freshForMs) return false;
-    if (push) history.pushState({htmx: true}, '', key);
+    if (push) {
+        history.replaceState({...history.state, htmx: true}, '');
+        history.pushState({htmx: true}, '', key);
+    }
     restoringCached = true;
     try {
         htmx.swap('#app-content', entry.html, {swapStyle: 'outerHTML', settleDelay: 0});
@@ -199,17 +240,17 @@ function restoreCached(key, push) {
     restoreDraft();
     restoreView();
     focusTitle();
+    if (live) resumeResearchPoll();
     return true;
 }
 
-function showStatus(message = '', failed = false) {
+function showStatus(message = '') {
     statusText.textContent = message;
-    navStatus.hidden = !message;
-    retryButton.hidden = !failed;
 }
 
 function clearPending() {
     pendingTab?.removeAttribute('data-pending');
+    retryTab?.removeAttribute('data-nav-retry');
     document.getElementById('app-content').removeAttribute('aria-busy');
     pendingTab = pendingRequest = null;
     retryTab = null;
@@ -221,10 +262,12 @@ function failNavigation() {
     clearPending();
     if (!link) return;
     retryTab = link;
-    showStatus('Could not open ' + tabNames[link.dataset.tab] + '.', true);
+    link.dataset.navRetry = 'true';
+    showStatus('Could not open ' + tabNames[link.dataset.tab] + '. Tap the tab to retry.');
+    resumeResearchPoll();
 }
 
-function openDestination(link, force = false) {
+function openDestination(link) {
     rememberDraft();
     rememberView();
     if (pendingRequest) {
@@ -235,9 +278,14 @@ function openDestination(link, force = false) {
     clearPending();
     const url = new URL(link.href);
     const key = url.pathname + url.search;
-    if (key === locationKey()) return;
+    if (key === locationKey()) {
+        resumeResearchPoll();
+        return;
+    }
+    rememberLiveResearch();
+    stopResearchPoll();
     cancelFilter();
-    if (!force && restoreCached(key, true)) return;
+    if (restoreCached(key, true)) return;
     pendingTab = link;
     link.dataset.pending = 'true';
     document.getElementById('app-content').setAttribute('aria-busy', 'true');
@@ -255,12 +303,12 @@ navigation.addEventListener('click', (event) => {
     event.preventDefault();
     openDestination(link);
 });
-retryButton.addEventListener('click', () => {
-    if (retryTab) openDestination(retryTab, true);
+document.addEventListener('htmx:beforeRequest', (event) => {
+    if (event.detail.elt.id === 'research-fetch-status' && (pendingTab || document.hidden)) event.preventDefault();
 });
-
 document.addEventListener('htmx:beforeSend', (event) => {
     if (event.detail.elt === navigation) pendingRequest = event.detail.xhr;
+    if (event.detail.elt.id === 'research-fetch-status') pollRequest = event.detail.xhr;
     if (event.detail.elt.id === 'filing-filters') {
         filterRequest = event.detail.xhr;
         setFilterMessage(document, true);
@@ -268,7 +316,9 @@ document.addEventListener('htmx:beforeSend', (event) => {
 });
 document.addEventListener('htmx:beforeOnLoad', (event) => {
     const {elt, xhr} = event.detail;
-    if (elt.id === 'research-fetch-status' && (pendingTab || !elt.isConnected)) {
+    if (elt === navigation && xhr !== pendingRequest) {
+        event.preventDefault();
+    } else if (elt.id === 'research-fetch-status' && (pendingTab || !elt.isConnected || xhr !== pollRequest)) {
         event.preventDefault();
     } else if (elt.id === 'filing-filters' && (xhr !== filterRequest || !elt.isConnected)) {
         event.preventDefault();
@@ -284,9 +334,11 @@ document.addEventListener('htmx:beforeOnLoad', (event) => {
 });
 document.addEventListener('htmx:afterRequest', (event) => {
     const {xhr, elt, failed} = event.detail;
+    const wasPoll = xhr === pollRequest;
+    if (wasPoll) pollRequest = null;
     // A replacement request can abort its predecessor after collecting new form values.
     if (xhr === filterRequest && xhr.status !== 0) finishFilter(xhr, failed);
-    if (elt?.id === 'research-fetch-status' && failed) showPollError(elt);
+    if (wasPoll && failed) showPollError(elt);
     if (event.detail.xhr === pendingRequest && (event.detail.failed || !event.detail.successful)) failNavigation();
 });
 function showPollError(panel) {
@@ -300,7 +352,10 @@ for (const type of ['htmx:sendError', 'htmx:timeout', 'htmx:swapError']) {
     document.addEventListener(type, (event) => {
         const {elt, xhr} = event.detail;
         if (xhr === filterRequest) finishFilter(xhr, true);
-        if (elt?.id === 'research-fetch-status') showPollError(elt);
+        if (xhr === pollRequest && elt?.id === 'research-fetch-status') {
+            pollRequest = null;
+            showPollError(elt);
+        }
         if (event.detail.xhr === pendingRequest) failNavigation();
     });
 }
@@ -326,6 +381,7 @@ document.addEventListener('htmx:afterSwap', (event) => {
 });
 window.addEventListener('popstate', (event) => {
     cancelFilter();
+    stopResearchPoll();
     if (pendingRequest) {
         const request = pendingRequest;
         pendingRequest = null;
@@ -352,7 +408,7 @@ document.addEventListener('input', (event) => {
     if (event.target.closest('[data-tab-draft]')) rememberDraft();
 });
 document.addEventListener('change', (event) => {
-    if (event.target.matches('[data-network-form] select[name="kind"]')) {
+    if (event.target.matches('[data-network-form] input[name="kind"]')) {
         const form = event.target.form;
         form.elements.term.value = '';
         updateLookup(form);

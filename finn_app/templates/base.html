@@ -9,8 +9,10 @@
   <link rel="stylesheet" href="/static/product.css">
   <link rel="stylesheet" href="/static/editorial.css">
   <link rel="stylesheet" href="/static/market-ui.css">
+  <link rel="stylesheet" href="/static/polish.css">
   <script src="/static/htmx.min.js" defer></script>
   <script src="/static/shell.js" defer></script>
+  <script src="/static/controls.js" defer></script>
   <script src="/static/carousel.js" defer></script>
   {% if brief %}<script src="/static/brief.js" defer></script>{% endif %}
 </head>
@@ -23,9 +25,7 @@
       {% endfor %}
     </nav>
   </header>
-  <div id="navigation-status" class="navigation-status" hidden>
-    <span role="status"></span><button type="button" class="apply" hidden>Retry</button>
-  </div>
+  <div id="navigation-status" class="screen-reader"><span role="status"></span></div>
 {% endif %}
   <main class="shell" id="app-content" hx-history-elt tabindex="-1" aria-label="{{ {'research': 'Research', 'network': 'Network'}.get(active, 'Brief') }}">
     <span hidden data-screen="{{ active }}" data-brief-url="{{ brief_url|default('') }}"{% if cacheable %} data-cacheable{% else %} hx-history="false"{% endif %}></span>

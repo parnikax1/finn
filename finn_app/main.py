@@ -132,8 +132,6 @@ def feed(request: Request, company: str = Query('', max_length=32, pattern=r'^[A
             related_release = next((event for event in main_events if event['id'] == demo['wipro_release']), None)
             if related_release:
                 main_events.remove(related_release)
-        if not full_list:
-            main_events = [event for event in main_events if event['priority'] >= 70][:2]
     def state(number):
         params = dict(company=company, priority=priority, q=q, evidence=int(evidence), window=window, page=number)
         if full_list:
@@ -145,6 +143,10 @@ def feed(request: Request, company: str = Query('', max_length=32, pattern=r'^[A
         events, featured, maruti_walkthrough, research_urls('MARUTI', MARUTI_QUESTION)['search'],
         highlights, window_start, latest_day, state(page), filings_only=bool(q or priority or evidence),
     ) if not full_list else []
+    if not full_list:
+        featured_ids = {story.get('event_id') for story in stories}
+        main_events = [event for event in main_events
+                       if event['priority'] >= 70 and event['id'] not in featured_ids][:2]
     partial = (request.headers.get('HX-Request') == 'true'
                and request.headers.get('X-FINN-Destination') != 'true'
                and not request.headers.get('HX-History-Restore-Request'))
@@ -225,7 +227,7 @@ def research(request: Request, symbol: str = Query('', max_length=35),
         urls=urls, status=status, missing=missing, busy=busy,
         has_evidence=bool(groups and evidence_from(groups)), answer_enabled=bool(api_key()),
         contacts=contacts, walkthrough=walkthrough, active='research',
-        cacheable=(not symbol or bool(walkthrough and not missing and not status and not busy))))
+        cacheable=(not symbol or bool(groups and not missing and not busy and status.get('state') in {None, 'done'}))))
 
 
 @app.post('/research/answer', response_class=HTMLResponse)
