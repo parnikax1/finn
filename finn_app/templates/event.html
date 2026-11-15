@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
 {% block title %}{{ event.symbol }} · {{ event|event_title }} · FINN{% endblock %}
 {% block content %}
+<div class="event-reading">
 <a class="back" href="{{ brief_url }}">← Back to brief</a>
-<section class="event-heading"><p class="eyebrow">{{ event.name }} / {{ event.symbol }}</p><h1>{{ event|event_title }}</h1><p class="date-line">Filed {{ event.filed_at|filing_date }}</p><span class="badge {% if event.priority>=70 %}flagged{% endif %}">{{ event.category }}</span></section>
+<section class="event-heading"><p class="editorial-kicker">{{ event.symbol }} <span>/</span> {{ event.category }}</p><h1>{{ event|event_title }}</h1><p class="date-line">Filed {{ event.filed_at|filing_date }}</p></section>
 {% if event.identity_note %}<aside class="validation-alert">{{ event.identity_note }}</aside>{% endif %}
 <nav class="event-jumps" aria-label="Filing sections"><a href="#source-evidence">Source evidence</a><a href="#related-contact">{{ "Contact question" if contacts and contacts[0].question else "Related contacts" }}</a><a href="#sources-export" data-open-sources>Sources and export</a></nav>
 <div class="detail-grid">
@@ -26,4 +27,5 @@
 </details>
 <details class="panel event-metadata"><summary>Exchange description and triage rule</summary><p><strong>Exchange title:</strong> {{ event.subject }}</p><p class="metadata-description">{{ event.description or 'No description supplied by the exchange.' }}</p><p class="annotation">Exchange-provided description. No model summary.</p><div class="rule-box"><span class="small-label">PRIORITY RULE {{ event.rule }} · {{ event.priority }}/100 TRIAGE SCORE</span><p>{{ event.reason }}</p><span class="annotation">This score is a rule weight, not a probability or financial-impact estimate.</span></div></details>
 
+</div>
 {% endblock %}

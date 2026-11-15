@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% macro cited_excerpt(group, hit, is_lead=false, text=none) %}
   <article{% if is_lead %} class="panel research-lead" id="top-cited-excerpt" aria-labelledby="lead-heading"{% endif %}>
-    {% if is_lead %}<h2 id="lead-heading">Top cited excerpt</h2>{% endif %}
+    {% if is_lead %}<h2 id="lead-heading" class="editorial-kicker">Top cited excerpt</h2>{% endif %}
     <div class="excerpt-citation">
       <p><strong>{{ group.title }}</strong> · {{ group.doc.date_label or group.unknown_date }} · <span class="pdf-page">PDF p. {{ hit.page }}</span></p>
       <a class="source-link" href="{{ group.doc.url }}#page={{ hit.page }}" target="_blank" rel="noopener noreferrer">Open original PDF · p. {{ hit.page }} ↗</a>
@@ -21,9 +21,10 @@
 {% block title %}Company research · FINN{% endblock %}
 {% block content %}
 {% set lead = (groups|selectattr('hits')|first|default(none)) if groups else none %}
+<div class="research-reading">
 <section class="event-heading">
   <h1>Company research</h1>
-  <p class="lede">Search annual reports and earnings calls.</p>
+  {% if not lead %}<p class="lede">Search annual reports and earnings calls.</p>{% endif %}
 </section>
 <div class="research-entry{% if lead %} has-cited-result{% endif %}">
 <form class="filters research-form" data-tab-draft method="get" action="/research">
@@ -121,4 +122,5 @@
 {% endfor %}
 </div>
 {% endif %}
+</div>
 {% endblock %}

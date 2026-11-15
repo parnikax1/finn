@@ -56,6 +56,7 @@ def fetch_time(value):
 
 
 templates.env.filters['fetch_time'] = fetch_time
+templates.env.filters['snapshot_day'] = lambda value: datetime.fromisoformat(value).strftime('%d %b %Y') + ' IST'
 templates.env.filters['filing_day'] = lambda value: datetime.fromisoformat(value).strftime('%d %b %Y') if value else 'Date unavailable'
 
 
@@ -127,7 +128,7 @@ def feed(request: Request, company: str = Query('', max_length=32, pattern=r'^[A
             if related_release:
                 main_events.remove(related_release)
         if not full_list:
-            main_events = [event for event in main_events if event['priority'] >= 70][:3]
+            main_events = [event for event in main_events if event['priority'] >= 70][:2]
     def state(number):
         params = dict(company=company, priority=priority, q=q, evidence=int(evidence), window=window, page=number)
         if full_list:

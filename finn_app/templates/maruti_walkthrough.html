@@ -1,32 +1,36 @@
 <section class="panel capacity-walkthrough" aria-labelledby="capacity-heading">
-  <span class="small-label">Prepared walkthrough · MARUTI</span>
+  <span class="editorial-kicker">Prepared walkthrough · MARUTI</span>
   <h2 id="capacity-heading">Capacity added vs. the medium-term target</h2>
-  <div class="capacity-comparison">
-    <div>
-      <div class="capacity-stat"><h3>Reported addition</h3><strong>500,000 units/year</strong></div>
-      <p>Capacity added in H1 FY 2026–27. Management reported two additions of 250,000 units/year at Kharkhoda and Hansalpur.</p>
-      <p class="date-line">27 Oct 2026 earnings call</p>
-      {% if walkthrough.transcript.excerpt %}
-      <details class="walkthrough-excerpt">
-        <summary>Read excerpt · PDF p. {{ walkthrough.transcript.page }}</summary>
-        <blockquote>{{ walkthrough.transcript.excerpt }}</blockquote>
-      </details>
-      {% endif %}
-      <a class="source-link" href="{{ walkthrough.transcript.url }}#page={{ walkthrough.transcript.page }}" target="_blank" rel="noopener noreferrer">Open original PDF ↗</a>
+  <div class="capacity-benchmark">
+    <p class="capacity-unit">Annual production capacity · units/year</p>
+    <div class="capacity-values">
+      <div><span>Reported capacity</span><strong>2.9m</strong></div>
+      <div><span>Medium-term target</span><strong>4m</strong></div>
     </div>
-    <div>
-      <div class="capacity-stat"><h3>Reported capacity</h3><strong>≈2.9 million units/year</strong></div>
-      <div class="capacity-stat"><h3>Medium-term target</h3><strong>4 million units/year</strong></div>
-      <p class="date-line">FY 2025–26 annual report</p>
+    <meter class="capacity-meter" min="0" max="4" value="2.9" aria-label="Reported annual capacity: 2.9 million units of a 4 million target">2.9 out of 4 million</meter>
+    <p class="capacity-gap">≈ 1.1 million units/year to the target</p>
+    <div class="capacity-cites">
       {% if walkthrough.annual.excerpt %}
       <details class="walkthrough-excerpt">
         <summary>Read excerpt · PDF p. {{ walkthrough.annual.page }}</summary>
         <blockquote>{{ walkthrough.annual.excerpt }}</blockquote>
       </details>
       {% endif %}
-      <a class="source-link" href="{{ walkthrough.annual.url }}#page={{ walkthrough.annual.page }}" target="_blank" rel="noopener noreferrer">Open original PDF ↗</a>
+      <a class="source-link" href="{{ walkthrough.annual.url }}#page={{ walkthrough.annual.page }}" target="_blank" rel="noopener noreferrer">FY 2025–26 annual report ↗</a>
+    </div>
+    <div class="capacity-addition">
+      <p><strong>500,000 units/year</strong> <span>added in H1 FY 2026–27</span></p>
+      <p>Two additions of 250,000 units/year at Kharkhoda and Hansalpur.</p>
+      <div class="capacity-cites">
+        {% if walkthrough.transcript.excerpt %}
+        <details class="walkthrough-excerpt">
+          <summary>Read excerpt · PDF p. {{ walkthrough.transcript.page }}</summary>
+          <blockquote>{{ walkthrough.transcript.excerpt }}</blockquote>
+        </details>
+        {% endif %}
+        <a class="source-link" href="{{ walkthrough.transcript.url }}#page={{ walkthrough.transcript.page }}" target="_blank" rel="noopener noreferrer">27 Oct 2026 earnings call ↗</a>
+      </div>
     </div>
   </div>
-  <p><strong>Remaining gap:</strong> about 1.1 million units/year from the approximately 2.9 million reported capacity to the target. The two sources distinguish additions already made from a future objective.</p>
   <p><strong>Follow-up question</strong> Which plants could close the remaining capacity gap, and what commissioning or production ramp-up milestones would show they are on track?</p>
 </section>

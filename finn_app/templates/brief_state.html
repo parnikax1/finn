@@ -1,20 +1,5 @@
-<div id="brief-state" data-applied="{{ back }}">
-{% include 'featured_wipro.html' %}
-{% if full_list %}{% include 'list_back.html' %}{% endif %}
-<form id="filing-filters" class="filters{% if not full_list %} brief-window{% endif %}" hx-sync="#app-nav:replace" method="get" action="/" hx-get="/" hx-target="#brief-state" hx-swap="outerHTML focus-scroll:false" hx-request='{"timeout":15000}' hx-push-url="true" hx-trigger="submit, change from:select[name='window'], change from:select[name='company'], change from:select[name='priority'], change from:input[type='checkbox']">
-  {% if not full_list and request.query_params.get("view") %}<input type="hidden" name="view" value="brief">{% endif %}
-  <label>Filing window<select name="window" id="filter-window">{% for value, title in [('1','Latest day'),('7','Last 7 days'),('30','Last 30 days'),('all','All dates')] %}<option value="{{ value }}" {% if window==value %}selected{% endif %}>{{ title }}</option>{% endfor %}</select></label>
-  {% if full_list %}<input type="hidden" name="view" value="all">
-  <details class="filing-filters" {% if company or priority or evidence or q %}open{% endif %}><summary>More filters</summary><div class="filing-filter-fields">
-  <label>Company<select name="company" id="filter-company" aria-label="Company"><option value="">All portfolio companies</option>{% for c in companies %}<option value="{{ c.symbol }}" {% if company==c.symbol %}selected{% endif %}>{{ c.symbol }} · {{ c.events }} filings</option>{% endfor %}</select></label>
-  <label>Priority<select name="priority" id="filter-priority" aria-label="Priority"><option value="">All priorities</option><option value="important" {% if priority=='important' %}selected{% endif %}>Flagged for review</option><option value="routine" {% if priority=='routine' %}selected{% endif %}>Routine</option></select></label>
-  <label class="search">Find a filing<input name="q" id="filter-q" value="{{ q }}" placeholder="Search exchange descriptions" maxlength="200"></label>
-  <label class="check"><input type="checkbox" name="evidence" id="filter-evidence" value="1" {% if evidence %}checked{% endif %}> Cached text only</label>
-  </div></details>
-  <button class="apply" type="submit">Apply</button><a class="reset" href="/?view=all&amp;window={{ window }}">Reset</a>
-  {% else %}<button class="window-apply" type="submit">Apply</button>{% endif %}
-</form>
-<p id="loading" class="filter-message" role="status" hidden>Updating feed…</p>
-<p id="filter-error" class="filter-message" role="status" hidden>Could not update the filings. The previous filters are still applied. Try again.</p>
+<div id="brief-state" data-applied="{{ back }}"{% if not full_list %} class="editorial-brief{{ ' has-lead' if featured else '' }}"{% endif %}>
+{% if not full_list %}{% include 'featured_wipro.html' %}{% endif %}
+{% if full_list %}{% include 'list_back.html' %}{% include 'filing_controls.html' %}{% endif %}
 {% include 'feed_items.html' %}
 </div>

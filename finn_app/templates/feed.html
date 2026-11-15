@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 {% block content %}
-<header class="feed-header">
+<header class="feed-header brief-masthead">
   <h1>{{ "All filings" if full_list else "Brief" }}</h1>
   {% if demo %}
-  <p class="date-line">Demo snapshot · {{ demo.date }} IST</p>
+  <p class="date-line">Demo snapshot <time datetime="{{ demo.date }}">{{ demo.date|snapshot_day }}</time></p>
   {% endif %}
 </header>
 {% include 'brief_state.html' %}

@@ -37,24 +37,25 @@ class DemoTests(unittest.TestCase):
                 ]
             with TestClient(app) as client, patch('socket.create_connection', side_effect=AssertionError):
                 feed = client.get('/').text
-                self.assertIn('Demo snapshot · 2026-11-12 IST', feed)
+                self.assertIn('12 Nov 2026 IST', feed)
                 full = client.get('/?view=all').text
-                self.assertIn('Browse all 32 filings', feed)
+                self.assertIn('View all filings', feed)
                 first_card = feed.split('<ul class="priority-list">', 1)[1].split('</a>', 1)[0]
                 self.assertIn('RBI approves reappointment', first_card)
-                self.assertIn('Featured walkthrough · WIPRO', feed)
+                self.assertIn('id="featured-heading"', feed)
+                self.assertEqual(feed.split('<ul class="priority-list">', 1)[1].split('</ul>', 1)[0].count('<li>'), 2)
                 for page in (2, 3):
                     self.assertRegex(feed, rf'{filing}\?page={page}&amp;back=[^"]+#source-evidence')
-                self.assertRegex(feed, rf'{filing}\?back=[^"]+">Open Wipro brief</a>')
+                self.assertRegex(feed, rf'{filing}\?back=[^"]+">Read brief')
                 cards = [urlsplit(unescape(href)).path
                          for href in re.findall(r'class="event-card"[^>]* href="([^"]+)"', full)]
                 self.assertEqual(cards, expected_cards)
                 self.assertIn('PressRelease06112026.pdf', client.get(release).text)
                 release_only = client.get('/', params={'q': 'press release dated'}).text
-                self.assertNotIn('Featured walkthrough · WIPRO', release_only)
+                self.assertNotIn('id="featured-heading"', release_only)
                 self.assertIn(f'class="event-card" href="{release}?back=', release_only)
                 evidence_only = client.get('/', params={'evidence': '1', 'view': 'brief'}).text
-                self.assertIn('Featured walkthrough · WIPRO', evidence_only)
+                self.assertIn('id="featured-heading"', evidence_only)
                 self.assertNotIn('Related press release', evidence_only)
                 event = client.get(filing).text
                 for expected in ('physical PDF page 2', 'Meera Rao', 'December 8, 2026', '#page=2'):
@@ -66,7 +67,7 @@ class DemoTests(unittest.TestCase):
                 self.assertIn('Sources and export', profile)
                 self.assertRegex(profile, rf'<a href="{release}">Press release filing</a>')
                 research = client.get('/research', params={'symbol': 'MARUTI', 'question': MARUTI_QUESTION}).text
-                for value in ('Prepared walkthrough', '500,000 units/year', '4 million units/year',
+                for value in ('Prepared walkthrough', '500,000 units/year', 'max="4" value="2.9"',
                               '1.1 million units/year', '#page=3', '#page=68', 'Who could add context'):
                     self.assertIn(value, research)
                 self.assertIn('#page=68', research)
@@ -92,7 +93,7 @@ class DemoTests(unittest.TestCase):
                 self.assertIn('<h3>October 2026 production, sales and export figures</h3>', full)
                 self.assertIn('<h3>Allotment of 52,771 equity shares</h3>', full)
                 latest = client.get('/', params={'window': '1'}, headers={'HX-Request': 'true'}).text
-                self.assertIn('Browse all 11 filings', latest)
+                self.assertIn('View all filings', latest)
                 self.assertNotIn('Angan Guha', latest)
                 self.assertIn('name="window" id="filter-window"', latest)
                 self.assertIn('15/15 succeeded', latest)

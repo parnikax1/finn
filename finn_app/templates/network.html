@@ -5,6 +5,24 @@
   <h1>Network</h1>
   <p class="lede">Find contacts by company or sector. All profiles are synthetic.</p>
 </section>
+<div class="network-layout{% if searched %} has-match{% endif %}">
+{% if searched %}
+<section class="panel network-results">
+  <h2>Matches for {{ lookup_label }}</h2>
+  {% for contact in contacts %}
+  <article class="network-contact">
+    <div class="network-identity">
+      <span class="network-initials" aria-hidden="true">{{ contact.name[0] }}</span>
+      <div><p class="editorial-kicker">Synthetic contact</p><h3>{{ contact.name }}</h3><p>{{ contact.role }}</p></div>
+    </div>
+    <p class="network-match"><strong>{{ contact.basis }}</strong> · {{ contact.reason }}</p>
+  </article>
+  {% else %}
+  <p>No synthetic contact matches this company or sector. Check the ticker or try one of the listed sectors.</p>
+  {% endfor %}
+</section>
+{% endif %}
+<div class="network-search">
 <form class="filters network-lookup" data-tab-draft data-network-form method="get" action="/network">
   <label>Find by<select name="kind" aria-label="Find by">
     <option value="company"{% if lookup_kind == 'company' %} selected{% endif %}>Company</option>
@@ -16,19 +34,6 @@
   <button class="apply" type="submit">Find contacts</button>
 </form>
 <p class="lookup-example"><a href="/network?kind=sector&amp;term=IT+services">Example · IT services</a></p>
-{% if searched %}
-<section class="panel contact-panel">
-  <h2>Matches for {{ lookup_label }}</h2>
-  {% for contact in contacts %}
-  <article class="network-contact">
-    <h3>{{ contact.name }}</h3>
-    <p><span class="badge">{{ contact.basis }}</span> · Synthetic contact</p>
-    <p>{{ contact.role }}</p>
-    <p>{{ contact.reason }}</p>
-  </article>
-  {% else %}
-  <p>No synthetic contact matches this company or sector. Check the ticker or try one of the listed sectors.</p>
-  {% endfor %}
-</section>
-{% endif %}
+</div>
+</div>
 {% endblock %}

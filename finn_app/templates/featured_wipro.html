@@ -1,14 +1,18 @@
-<div id="featured-brief">
 {% if featured %}
+<div id="featured-brief">
   <section class="featured-filing" aria-labelledby="featured-heading">
-    <p class="small-label">Featured walkthrough · WIPRO</p>
+    <p class="feature-kicker"><span></span> WIPRO <span class="feature-separator">/</span> Leadership</p>
     <h2 id="featured-heading">{{ featured.title }}</h2>
-    <p>{{ featured.appointment }} <a href="{{ event_url(featured.id, back, page=featured.pages[0].page, anchor='#source-evidence') }}">Read excerpt · PDF p. {{ featured.pages[0].page }}</a></p>
-    <p>{{ featured.context }} <a href="{{ event_url(featured.id, back, page=featured.pages[1].page, anchor='#source-evidence') }}">Read excerpt · PDF p. {{ featured.pages[1].page }}</a></p>
-    <nav class="featured-actions" aria-label="Wipro walkthrough actions">
-      <a class="button" href="{{ event_url(featured.id, back) }}">Open Wipro brief</a>
-
-    </nav>
+    <p class="feature-context">{{ featured.context }}</p>
+    <p class="feature-effective">Effective <time datetime="2026-12-08">{{ featured.effective_date }}</time></p>
+    <div class="featured-actions">
+      <a class="button" href="{{ event_url(featured.id, back) }}">Read brief <span aria-hidden="true">→</span></a>
+    </div>
+    <div class="feature-sources" aria-label="Evidence for the lead story">
+      {% for source in featured.pages %}
+      <a href="{{ event_url(featured.id, back, page=source.page, anchor='#source-evidence') }}" aria-label="{{ source.label }} · PDF p. {{ source.page }}">Read excerpt · PDF p. {{ source.page }}</a>
+      {% endfor %}
+    </div>
   </section>
-{% endif %}
 </div>
+{% endif %}
