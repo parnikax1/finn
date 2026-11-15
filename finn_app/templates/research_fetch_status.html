@@ -1,5 +1,5 @@
 <section id="research-fetch-status" class="panel research-source" aria-live="polite"
-  {% if status.state == 'running' %}hx-get="{{ urls.progress }}" hx-trigger="every 1s" hx-swap="outerHTML" hx-request='{"timeout":15000}'{% endif %}>
+  {% if status.state == 'running' %}hx-get="{{ urls.progress }}" hx-trigger="every 2s, finn:poll-now" hx-swap="outerHTML" hx-request='{"timeout":15000}'{% endif %}>
   <h2>{{ 'Fetching documents' if status.state == 'running' else 'Document fetch' }}</h2>
   <p>{{ status.message }}</p>
   {% if status.sources %}

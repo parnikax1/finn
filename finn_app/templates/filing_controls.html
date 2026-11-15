@@ -1,6 +1,17 @@
 <form id="filing-filters" class="filters{% if not full_list %} brief-window{% endif %}" hx-sync="#app-nav:replace" method="get" action="/" hx-get="/" hx-target="#brief-state" hx-swap="outerHTML focus-scroll:false" hx-request='{"timeout":15000}' hx-push-url="true" hx-trigger="submit, change from:select[name='window'], change from:select[name='company'], change from:select[name='priority'], change from:input[type='checkbox']">
   {% if not full_list and request.query_params.get("view") %}<input type="hidden" name="view" value="brief">{% endif %}
-  <label><span{% if not full_list %} class="screen-reader"{% endif %}>Filing window</span><select name="window" id="filter-window">{% for value, title in [('1','Latest day'),('7','Last 7 days'),('30','Last 30 days'),('all','All dates')] %}<option value="{{ value }}" {% if window==value %}selected{% endif %}>{{ title }}</option>{% endfor %}</select></label>
+  {% set filing_windows = [('1','Latest day'),('7','Last 7 days'),('30','Last 30 days'),('all','All dates')] %}
+  <div class="window-picker" data-window-picker>
+    <label class="window-native"><span{% if not full_list %} class="screen-reader"{% endif %}>Filing window</span><select name="window" id="filter-window">{% for value, title in filing_windows %}<option value="{{ value }}"{% if window==value %} selected{% endif %}>{{ title }}</option>{% endfor %}</select></label>
+    <button type="button" class="window-trigger" id="filter-window-trigger" data-window-trigger aria-haspopup="listbox" aria-expanded="false" aria-controls="filing-window-menu" aria-label="Filing window: {{ dict(filing_windows)[window] }}" hidden>
+      <span data-window-label>{{ dict(filing_windows)[window] }}</span><span aria-hidden="true">⌄</span>
+    </button>
+    <div class="window-menu" id="filing-window-menu" role="listbox" aria-label="Filing window" data-window-menu hidden>
+      {% for value, title in filing_windows %}
+      <button type="button" role="option" tabindex="-1" data-window-value="{{ value }}" aria-selected="{{ 'true' if window == value else 'false' }}">{{ title }}</button>
+      {% endfor %}
+    </div>
+  </div>
   {% if full_list %}<input type="hidden" name="view" value="all">
   <details class="filing-filters" {% if company or priority or evidence or q %}open{% endif %}><summary>More filters</summary><div class="filing-filter-fields">
   <label>Company<select name="company" id="filter-company" aria-label="Company"><option value="">All portfolio companies</option>{% for c in companies %}<option value="{{ c.symbol }}" {% if company==c.symbol %}selected{% endif %}>{{ c.symbol }} · {{ c.events }} filings</option>{% endfor %}</select></label>

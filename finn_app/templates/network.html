@@ -24,10 +24,14 @@
 {% endif %}
 <div class="network-search">
 <form class="filters network-lookup" data-tab-draft data-network-form method="get" action="/network">
-  <label>Find by<select name="kind" aria-label="Find by">
-    <option value="company"{% if lookup_kind == 'company' %} selected{% endif %}>Company</option>
-    <option value="sector"{% if lookup_kind == 'sector' %} selected{% endif %}>Sector</option>
-  </select></label>
+  <fieldset class="segmented-lookup">
+    <legend>Find by</legend>
+    <div>
+      {% for value, label in [('company', 'Company'), ('sector', 'Sector')] %}
+      <label><input type="radio" name="kind" value="{{ value }}"{% if lookup_kind == value %} checked{% endif %}><span>{{ label }}</span></label>
+      {% endfor %}
+    </div>
+  </fieldset>
   <label class="lookup-term">Company or sector<input name="term" value="{{ lookup_label }}" list="{{ 'network-sectors' if lookup_kind == 'sector' else 'network-companies' }}" maxlength="80" placeholder="{{ 'IT services' if lookup_kind == 'sector' else 'MARUTI' }}" required></label>
   <datalist id="network-companies">{% for row in companies %}<option value="{{ row.symbol }}">{{ row.name }}</option>{% endfor %}</datalist>
   <datalist id="network-sectors">{% for tag in sectors %}<option value="{{ tag }}">{% endfor %}</datalist>

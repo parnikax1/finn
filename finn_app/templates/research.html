@@ -24,17 +24,16 @@
 <div class="research-reading">
 <section class="event-heading">
   <h1>Company research</h1>
-  {% if not lead %}<p class="lede">Search annual reports and earnings calls.</p>{% endif %}
+  <p class="lede">Search annual reports and earnings calls.</p>
 </section>
-<div class="research-entry{% if lead %} has-cited-result{% endif %}">
+<div class="research-entry has-cited-result">
 <form class="filters research-form" data-tab-draft method="get" action="/research">
-  {% if lead %}{{ question_field(question) }}{% endif %}
+  {{ question_field(question) }}
   <label>Ticker<input type="text" name="symbol" value="{{ symbol }}" maxlength="35" placeholder="MARUTI" required></label>
-  {% if not lead %}{{ question_field(question) }}{% endif %}
   <button class="apply" type="submit">Search excerpts</button>
 </form>
-{% if not lead %}{{ starters() }}{% endif %}
 </div>
+{% if not lead %}{{ starters() }}{% endif %}
 {% if error %}<p class="validation-alert" role="alert">{{ error }}</p>{% endif %}
 {% if groups %}
 {% set indexed = groups|selectattr('doc')|list|length %}
