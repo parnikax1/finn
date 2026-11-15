@@ -3,7 +3,7 @@ const navStatus = document.getElementById('navigation-status');
 const statusText = navStatus.querySelector('[role="status"]');
 const retryButton = navStatus.querySelector('button');
 const screenCache = new Map();
-const cacheKey = 'finn:recent-screens-v3';
+const cacheKey = 'finn:recent-screens-v4';
 const freshForMs = 90_000;
 try {
     for (const [url, entry] of JSON.parse(sessionStorage.getItem(cacheKey) ?? '[]')) {
@@ -11,9 +11,9 @@ try {
     }
 } catch {}
 try {
-    if (!localStorage.getItem('finn:brief-history-v3')) {
+    if (!localStorage.getItem('finn:brief-history-v4')) {
         localStorage.removeItem('htmx-history-cache');
-        localStorage.setItem('finn:brief-history-v3', '1');
+        localStorage.setItem('finn:brief-history-v4', '1');
     }
 } catch {}
 let retryTab = null;

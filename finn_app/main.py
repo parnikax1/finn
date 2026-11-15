@@ -17,6 +17,7 @@ from .evidence import appointment_details, appointment_excerpt, event_title, sug
 from .navigation import brief_state, event_url
 from .rules import contact_profiles, matching_contacts
 from .market import read_market
+from .brief_stories import featured_stories, market_highlights
 from .research import lookup, ticker
 from .research_answer import AnswerUnavailable, answer_question, api_key, evidence_from
 from .research_fetch import missing_kinds, start_fetch, status_for, storage_for
@@ -104,6 +105,10 @@ def feed(request: Request, company: str = Query('', max_length=32, pattern=r'^[A
           SUM(EXISTS(SELECT 1 FROM pages p WHERE p.sha=events.document_sha)) AS evidence
           FROM events''').fetchone())
         market = read_market(db, company)
+        highlights = market_highlights(market)
+        maruti_walkthrough = capacity_walkthrough(db) if not full_list and any(
+            event['symbol'] == 'MARUTI' for event in events
+        ) else None
         run = db.execute('SELECT * FROM refresh_runs ORDER BY id DESC LIMIT 1').fetchone()
         last_fetch = db.execute('SELECT MAX(fetched_at) FROM refresh_results').fetchone()[0]
         results = list(db.execute('''
@@ -136,6 +141,10 @@ def feed(request: Request, company: str = Query('', max_length=32, pattern=r'^[A
         elif view == 'brief':
             params['view'] = 'brief'
         return urlencode(params)
+    stories = featured_stories(
+        events, featured, maruti_walkthrough, research_urls('MARUTI', MARUTI_QUESTION)['search'],
+        highlights, window_start, latest_day, state(page), filings_only=bool(q or priority or evidence),
+    ) if not full_list else []
     partial = (request.headers.get('HX-Request') == 'true'
                and request.headers.get('X-FINN-Destination') != 'true'
                and not request.headers.get('HX-History-Restore-Request'))
@@ -145,7 +154,7 @@ def feed(request: Request, company: str = Query('', max_length=32, pattern=r'^[A
     ]
     trading_dates = {date for _, date in alert_dates}
     context = dict(events=events, routine=[e for e in events if e['priority'] < 30],
-                   main_events=main_events, featured=featured, related_release=related_release,
+                   main_events=main_events, featured=featured, stories=stories, highlights=highlights,
                    total=total, full_list=full_list,
                    browse_url='/?' + urlencode(dict(view='all', window=window)),
                    short_url='/?' + urlencode(dict(window=window)),

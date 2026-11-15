@@ -1,0 +1,43 @@
+<section class="story-carousel" data-carousel aria-label="Featured stories" aria-roledescription="carousel">
+  <div class="carousel-viewport" data-track>
+    {% for story in stories %}
+    <article class="story-card tone-{{ story.tone }}" data-slide role="group" aria-roledescription="slide" aria-label="{{ loop.index }} of {{ loop.length }}">
+      <div class="story-copy">
+        <p class="story-kicker">{{ story.label }}</p>
+        <h2>{{ story.title }}</h2>
+        <p class="story-description">{{ story.description }}</p>
+        <a class="button story-action" href="{{ story.href }}">{{ story.action }} <span aria-hidden="true">→</span></a>
+      </div>
+      <div class="story-visual visual-{{ story.kind }}">
+        {% if story.kind == 'date' %}
+        {% set date = story.visual_date|filing_day if story.iso_date else story.visual_date %}
+        {% set pieces = date.split(' ', 1) %}
+        <span class="visual-label">{{ story.visual_label }}</span>
+        <div class="event-date" role="img" aria-label="{{ date }}"><strong>{{ pieces[0] }}</strong><span>{{ pieces[1] }}</span></div>
+        {% elif story.kind == 'capacity' %}
+        <span class="visual-label">Annual capacity · units/year</span>
+        <div class="story-compare"><span><strong>{{ story.reported }}m</strong>Reported</span><span><strong>{{ story.target }}m</strong>Target</span></div>
+        <meter min="0" max="{{ story.target }}" value="{{ story.reported }}" aria-label="{{ story.reported }} million out of {{ story.target }} million units"></meter>
+        {% else %}
+        <span class="visual-label">{{ story.visual_label }}</span>
+        <strong class="story-number">{{ story.visual_value }}</strong>
+        {% endif %}
+      </div>
+      <p class="story-source">{{ story.source }}{% if story.source_date %} · {{ story.source_date|filing_day }}{% endif %}</p>
+    </article>
+    {% endfor %}
+  </div>
+  {% if stories|length > 1 %}
+  <div class="carousel-controls" data-controls hidden>
+    <div class="carousel-position">
+      <span data-position>1 / {{ stories|length }}</span>
+      <span class="carousel-dots" aria-hidden="true">{% for story in stories %}<i{% if loop.first %} class="current"{% endif %}></i>{% endfor %}</span>
+    </div>
+    <div class="carousel-buttons">
+      <button type="button" data-prev aria-label="Previous story">‹</button>
+      <button type="button" data-pause aria-label="Pause rotation">Pause</button>
+      <button type="button" data-next aria-label="Next story">›</button>
+    </div>
+  </div>
+  {% endif %}
+</section>

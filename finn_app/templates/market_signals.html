@@ -1,7 +1,15 @@
 {% set alerts = namespace(count=0) %}
 <section class="market-signals" aria-labelledby="market-heading">
+  <div class="market-title"><h2 id="market-heading">Market signals</h2><span>{% if signal_count %}{{ signal_count }} {{ 'signal' if signal_count == 1 else 'signals' }} {% if mixed_signal_dates %}through{% else %}on{% endif %} {{ signal_date }}{% else %}{{ 'No triggered signals' if market else 'No refresh recorded' }}{% endif %}</span></div>
+    {% if highlights %}
+      <div class="market-highlights">
+        {% for highlight in highlights %}
+        <a class="market-highlight {{ highlight.kind }}" href="{{ highlight.href }}"><strong>{{ highlight.value }}</strong><span>{{ highlight.symbol }} · {{ 'price' if highlight.kind == 'price' else 'volume' }}</span></a>
+        {% endfor %}
+      </div>
+    {% endif %}
   <details class="market-summary">
-    <summary id="market-heading"><strong>Market signals</strong><span>{% if signal_count %}{{ signal_count }} {{ 'signal' if signal_count == 1 else 'signals' }} {% if mixed_signal_dates %}through{% else %}on{% endif %} {{ signal_date }}{% else %}{{ 'No triggered signals' if market else 'No refresh recorded' }}{% endif %}</span></summary>
+    <summary>All signals and baselines</summary>
     <p class="annotation">NSE cash market · EQ{% if mixed_signal_dates %} · Selected signals span multiple trading dates{% endif %}</p>
   {% for item in market %}
     {% set price = item.snapshot.get('price') %}
@@ -13,7 +21,7 @@
       {% set price_date = price.rows[0].date if price_alert else none %}
       {% set volume_date = volume.rows[0].date if volume_alert else none %}
       {% set split_dates = price_date and volume_date and price_date != volume_date %}
-      <details class="market-alert">
+      <details class="market-alert" id="signal-{{ item.symbol }}">
         <summary>
           <span class="market-ticker"><strong>{{ item.symbol }}</strong>
             {% if not split_dates %}<time datetime="{{ price_date or volume_date }}">{{ price_date or volume_date }}</time>{% endif %}

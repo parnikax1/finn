@@ -7,7 +7,7 @@
       <div><span>Reported capacity</span><strong>2.9m</strong></div>
       <div><span>Medium-term target</span><strong>4m</strong></div>
     </div>
-    <meter class="capacity-meter" min="0" max="4" value="2.9" aria-label="Reported annual capacity: 2.9 million units of a 4 million target">2.9 out of 4 million</meter>
+    <meter class="capacity-meter" min="0" max="{{ walkthrough.capacity_target }}" value="{{ walkthrough.reported_capacity }}" aria-label="Reported annual capacity: 2.9 million units of a 4 million target">2.9 out of 4 million</meter>
     <p class="capacity-gap">≈ 1.1 million units/year to the target</p>
     <div class="capacity-cites">
       {% if walkthrough.annual.excerpt %}

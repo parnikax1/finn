@@ -69,7 +69,7 @@ class ReviewerFlowTests(unittest.TestCase):
     def test_featured_excerpt_transfers_filters_and_page_selector_state(self):
         state = dict(view='brief', window='30', company='WIPRO', priority='important', q='Guha', evidence='1')
         feed = self.client.get('/', params=state).text
-        card_url = link(feed, 'Read excerpt · PDF p. 2')
+        card_url = unescape(re.search(r'<a[^>]+href="([^"]+)"[^>]*>Read brief ', feed)[1])
         event = self.client.get(card_url)
         token = parse_qs(urlsplit(card_url).query)['back'][0]
         self.assertEqual(parse_qs(token), {k: [v] for k, v in (state | {'page': '1'}).items()})

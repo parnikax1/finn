@@ -1,5 +1,5 @@
-<div id="brief-state" data-applied="{{ back }}"{% if not full_list %} class="editorial-brief{{ ' has-lead' if featured else '' }}"{% endif %}>
-{% if not full_list %}{% include 'featured_wipro.html' %}{% endif %}
+<div id="brief-state" data-applied="{{ back }}"{% if not full_list %} class="market-brief"{% endif %}>
+{% if stories %}{% include 'featured_carousel.html' %}{% endif %}
 {% if full_list %}{% include 'list_back.html' %}{% include 'filing_controls.html' %}{% endif %}
 {% include 'feed_items.html' %}
 </div>

@@ -194,3 +194,11 @@ restore the last applied filters. Returning to a cached Brief restores the
 applied filter values with the loading message cleared. If Research cannot
 reach the status endpoint, it shows this separately from a worker failure and
 offers a link to check status.
+
+The Brief spotlight combines published filings, the prepared Maruti capacity
+walkthrough and dated market signals. Filing eligibility follows the selected
+filing window. Maruti is shown as research context when the relevant 10 Nov
+filing is included. Market tiles show figures from the latest available signal
+date independently of that filing selector. Each tile links to its baseline and
+original CSV. The carousel respects reduced-motion preferences and pauses while
+offscreen, in an inactive tab, or while being interacted with.

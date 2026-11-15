@@ -42,20 +42,22 @@ class DemoTests(unittest.TestCase):
                 self.assertIn('View all filings', feed)
                 first_card = feed.split('<ul class="priority-list">', 1)[1].split('</a>', 1)[0]
                 self.assertIn('RBI approves reappointment', first_card)
-                self.assertIn('id="featured-heading"', feed)
+                self.assertIn('data-carousel aria-label="Featured stories"', feed)
                 self.assertEqual(feed.split('<ul class="priority-list">', 1)[1].split('</ul>', 1)[0].count('<li>'), 2)
-                for page in (2, 3):
-                    self.assertRegex(feed, rf'{filing}\?page={page}&amp;back=[^"]+#source-evidence')
+                self.assertEqual(feed.count('data-slide role='), 6)
                 self.assertRegex(feed, rf'{filing}\?back=[^"]+">Read brief')
+                self.assertIn('PDF pp. 2–3', feed)
+                self.assertIn('href="#signal-M&amp;M"', feed)
+                self.assertIn('href="#signal-PIDILITIND"', feed)
                 cards = [urlsplit(unescape(href)).path
                          for href in re.findall(r'class="event-card"[^>]* href="([^"]+)"', full)]
                 self.assertEqual(cards, expected_cards)
                 self.assertIn('PressRelease06112026.pdf', client.get(release).text)
                 release_only = client.get('/', params={'q': 'press release dated'}).text
-                self.assertNotIn('id="featured-heading"', release_only)
+                self.assertNotIn('data-carousel aria-label="Featured stories"', release_only)
                 self.assertIn(f'class="event-card" href="{release}?back=', release_only)
                 evidence_only = client.get('/', params={'evidence': '1', 'view': 'brief'}).text
-                self.assertIn('id="featured-heading"', evidence_only)
+                self.assertIn('data-carousel aria-label="Featured stories"', evidence_only)
                 self.assertNotIn('Related press release', evidence_only)
                 event = client.get(filing).text
                 for expected in ('physical PDF page 2', 'Meera Rao', 'December 8, 2026', '#page=2'):
@@ -78,7 +80,7 @@ class DemoTests(unittest.TestCase):
                 self.assertIn('+1.99%', market)
                 self.assertIn('1.88×', market)
                 self.assertIn('<time datetime="2026-11-11">2026-11-11</time>', market)
-                self.assertIn('<details class="market-alert">', market)
+                self.assertIn('<details class="market-alert" id="signal-MARUTI">', market)
                 self.assertIn('Previous-session CSV', market)
                 self.assertIn('2026-11-08 CSV', market)
                 self.assertIn('Financial results from Suzuki Motor Corporation', full)
@@ -95,6 +97,8 @@ class DemoTests(unittest.TestCase):
                 latest = client.get('/', params={'window': '1'}, headers={'HX-Request': 'true'}).text
                 self.assertIn('View all filings', latest)
                 self.assertNotIn('Angan Guha', latest)
+                self.assertEqual(latest.count('data-slide role='), 1)
+                self.assertNotIn('See capacity research', latest)
                 self.assertIn('name="window" id="filter-window"', latest)
                 self.assertIn('15/15 succeeded', latest)
                 self.assertIn('TMPV', latest)

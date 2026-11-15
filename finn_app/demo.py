@@ -122,7 +122,8 @@ def capacity_walkthrough(db):
             left = text.find(start)
             right = text.find(end, left) if left >= 0 else -1
             sources[kind].update(page=page, excerpt=text[left:right + len(end)] if right >= 0 else '')
-    return sources if {'annual', 'transcript'} <= sources.keys() else None
+    if {'annual', 'transcript'} <= sources.keys():
+        return dict(sources, reported_capacity=2.9, capacity_target=4)
 
 
 
