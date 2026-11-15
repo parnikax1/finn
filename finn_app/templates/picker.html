@@ -1,0 +1,19 @@
+{% macro picker(id, name, label, choices, selected, submit=false) %}
+<div class="control-picker" data-picker data-picker-label="{{ label }}"{% if submit %} data-picker-submit{% endif %}>
+  <label class="picker-native">
+    <span class="screen-reader">{{ label }}</span>
+    <select name="{{ name }}" id="{{ id }}" aria-label="{{ label }}">
+      {% for value, title in choices %}<option value="{{ value }}"{% if value == selected %} selected{% endif %}>{{ title }}</option>{% endfor %}
+    </select>
+  </label>
+  <button type="button" class="picker-trigger" id="{{ id }}-trigger" data-picker-trigger aria-haspopup="listbox"
+    aria-expanded="false" aria-controls="{{ id }}-menu" aria-label="{{ label }}" hidden>
+    <span data-picker-text>{{ dict(choices).get(selected, label) }}</span><span aria-hidden="true">⌄</span>
+  </button>
+  <div class="picker-menu" id="{{ id }}-menu" role="listbox" aria-label="{{ label }}" data-picker-menu hidden>
+    {% for value, title in choices %}
+    <button type="button" role="option" tabindex="-1" data-picker-value="{{ value }}" aria-selected="{{ 'true' if value == selected else 'false' }}">{{ title }}</button>
+    {% endfor %}
+  </div>
+</div>
+{% endmacro %}

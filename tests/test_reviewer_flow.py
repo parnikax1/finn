@@ -52,6 +52,16 @@ class ReviewerFlowTests(unittest.TestCase):
         self.assertIn('hx-history="false"', live.text)
         self.assertNotIn('data-cacheable', live.text)
 
+    def test_research_fetch_renders_one_progress_panel_and_no_empty_matches(self):
+        status = dict(state='running', message='Checking annual report candidates.')
+        with patch('finn_app.main.status_for', return_value=status):
+            page = self.client.get('/research', params={'symbol': 'CUMMINSIND', 'question': 'Sales?'}).text
+        self.assertEqual(page.count('id="research-fetch-status"'), 1)
+        self.assertIn('Indexing…', page)
+        self.assertEqual(page.count('Waiting to be indexed'), 2)
+        self.assertNotIn('No searchable document', page)
+        self.assertNotIn('More excerpts', page)
+
     def test_latest_day_return_and_validation(self):
         latest = self.client.get('/?view=all&window=1', headers={'HX-Request': 'true'}).text
         self.assertIn('11 matching filings', latest)
@@ -66,13 +76,15 @@ class ReviewerFlowTests(unittest.TestCase):
             self.assertEqual(link(event.text, 'Back to brief'), '/')
         self.assertEqual(link(self.client.get(self.wipro).text, 'Back to brief'), '/')
 
-    def test_featured_excerpt_transfers_filters_and_page_selector_state(self):
+    def test_featured_excerpt_transfers_filters_and_cited_page_state(self):
         state = dict(view='brief', window='30', company='WIPRO', priority='important', q='Guha', evidence='1')
         feed = self.client.get('/', params=state).text
         card_url = unescape(re.search(r'<a[^>]+href="([^"]+)"[^>]*>Read brief ', feed)[1])
         event = self.client.get(card_url)
         token = parse_qs(urlsplit(card_url).query)['back'][0]
         self.assertEqual(parse_qs(token), {k: [v] for k, v in (state | {'page': '1'}).items()})
+        self.assertRegex(event.text, r'<option value="2" selected>Page 2 · Appointment</option>')
+        self.assertRegex(event.text, r'<option value="3">Page 3 · Previous role</option>')
         self.assertIn(f'name="back" value="{token.replace("&", "&amp;")}"', event.text)
         page_three = self.client.get(self.wipro, params={'page': 3, 'back': token})
         self.assertIn('physical PDF page 3', page_three.text)

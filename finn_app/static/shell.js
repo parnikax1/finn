@@ -2,7 +2,7 @@ const navigation = document.getElementById('app-nav');
 const navStatus = document.getElementById('navigation-status');
 const statusText = navStatus.querySelector('[role="status"]');
 const screenCache = new Map();
-const cacheKey = 'finn:recent-screens-v5';
+const cacheKey = 'finn:recent-screens-v6';
 const freshForMs = 90_000;
 const liveResearch = new Map();
 try {
@@ -11,9 +11,9 @@ try {
     }
 } catch {}
 try {
-    if (!localStorage.getItem('finn:brief-history-v5')) {
+    if (!localStorage.getItem('finn:brief-history-v6')) {
         localStorage.removeItem('htmx-history-cache');
-        localStorage.setItem('finn:brief-history-v5', '1');
+        localStorage.setItem('finn:brief-history-v6', '1');
     }
 } catch {}
 let retryTab = null;
@@ -174,10 +174,10 @@ function screenSnapshot() {
     const main = document.getElementById('app-content').cloneNode(true);
     main.removeAttribute('aria-busy');
     setFilterMessage(main, false);
-    const menu = main.querySelector('[data-window-menu]');
+    const menu = main.querySelector('[data-picker-menu]');
     if (menu) {
         menu.hidden = true;
-        main.querySelector('[data-window-trigger]').setAttribute('aria-expanded', 'false');
+        main.querySelector('[data-picker-trigger]').setAttribute('aria-expanded', 'false');
     }
     const html = main.outerHTML;
     return html.length <= 160_000 ? {at: Date.now(), html} : null;

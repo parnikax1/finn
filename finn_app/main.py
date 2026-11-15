@@ -18,7 +18,7 @@ from .navigation import brief_state, event_url
 from .rules import contact_profiles, matching_contacts
 from .market import read_market
 from .brief_stories import featured_stories, market_highlights
-from .research import lookup, ticker
+from .research import excerpt_preview, lookup, ticker
 from .research_answer import AnswerUnavailable, answer_question, api_key, evidence_from
 from .research_fetch import missing_kinds, start_fetch, status_for, storage_for
 
@@ -26,6 +26,7 @@ app = FastAPI(title='FINN portfolio feed', docs_url=None, redoc_url=None)
 app.mount('/static', StaticFiles(directory=ROOT / 'finn_app' / 'static'), name='static')
 templates = Jinja2Templates(directory=ROOT / 'finn_app' / 'templates')
 templates.env.globals['event_url'] = event_url
+templates.env.globals['excerpt_preview'] = excerpt_preview
 
 
 def screen(request, name, context):
@@ -313,10 +314,10 @@ def event_detail(request: Request, event_id: str, page: int | None = Query(None,
         excerpt = None
         matched = False
         appointment = appointment_details(event)
-        if appointment and pages and page is None:
+        if appointment and pages and (page is None or page in pages):
             source_pages = db.execute(
-                'SELECT page, text FROM pages WHERE sha=? AND page>0 ORDER BY page',
-                (event['document_sha'],))
+                'SELECT page, text FROM pages WHERE sha=? AND page>0 AND (? IS NULL OR page=?) ORDER BY page',
+                (event['document_sha'], page, page))
             for source in source_pages:
                 passage = appointment_excerpt(source['text'], appointment)
                 if passage:

@@ -249,6 +249,42 @@ def passages(pages, terms, heads, phrases):
     return list(found.values())
 
 
+def excerpt_preview(passage, question, symbol, limit=42):
+    """Select a short contiguous quote from the ranked passage."""
+    text = passage.removeprefix('… ').removesuffix(' …')
+    text = ' '.join(text.split())
+    if len(text.split()) <= limit:
+        return passage
+
+    terms, _, _ = query_features(question, symbol)
+    sentence_starts = [0] + [m.end() for m in re.finditer(r'(?<=[.!?])\s+(?=[A-Z0-9])', text)]
+    sentence_starts.append(len(text))
+    candidates = []
+    for i, start in enumerate(sentence_starts[:-1]):
+        for end in sentence_starts[i + 1:]:
+            words = text[start:end].split()
+            if len(words) > limit:
+                break
+            matches = terms.intersection(search_words(text[start:end]))
+            if matches:
+                candidates.append((len(matches), -len(words), -start, end))
+    best = max(candidates, default=(0, 0, 0, 0))
+    if not candidates or best[0] < len(terms.intersection(search_words(text))):
+        word_starts = [m.start() for m in re.finditer(r'\S+', text)] + [len(text)]
+        protected = quantity_boundaries(text, word_starts)
+        for i in range(len(word_starts) - limit):
+            first = protected.get(i, (i, i))[0]
+            last = protected.get(i + limit, (i + limit, i + limit))[1]
+            start, end = word_starts[first], word_starts[last]
+            matches = terms.intersection(search_words(text[start:end]))
+            if not best[3] or len(matches) > best[0]:
+                best = (len(matches), -(last - first), -start, end)
+    _, _, negative_start, end = best
+    start = -negative_start
+    return (('… ' if start or passage.startswith('… ') else '') + text[start:end].strip()
+            + (' …' if end < len(text) or passage.endswith(' …') else ''))
+
+
 def lookup(db, symbol, question):
     terms, heads, phrases = query_features(question, symbol)
     groups = []

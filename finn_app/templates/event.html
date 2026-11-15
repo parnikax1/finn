@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% from 'picker.html' import picker %}
 {% block title %}{{ event.symbol }} · {{ event|event_title }} · FINN{% endblock %}
 {% block content %}
 <div class="event-reading">
@@ -9,7 +10,20 @@
 <div class="detail-grid">
 <section class="panel evidence-panel" id="source-evidence"><div class="panel-heading"><h2>Source evidence</h2></div>
 {% if default_view and appointment and not matched %}<div class="missing"><strong>Appointment details from exchange metadata</strong><p>A matching statement with the role and effective date was unavailable in the searchable cached PDF. See the exchange description below.</p></div>{% endif %}
-{% if excerpt %}<div class="evidence-controls"><span class="ready evidence-status">{{ "Appointment statement from source PDF" if matched else "Cached source excerpt" }}</span><form method="get" action="/events/{{ event.id }}#source-evidence">{% if back %}<input type="hidden" name="back" value="{{ back }}">{% endif %}<label>PDF page<select name="page" aria-label="PDF page">{% for p in pages %}<option value="{{ p }}" {% if p==selected %}selected{% endif %}>{{ p if p else 'Unavailable' }}</option>{% endfor %}</select></label><button class="apply" type="submit">Read excerpt</button></form></div><blockquote>{{ excerpt }}</blockquote><p class="annotation">Literal excerpt · {{ 'physical PDF page ' ~ selected if selected else 'page reference unavailable' }} · whitespace may reflect PDF layout.</p><p class="annotation">{{ doc.note }}</p>
+{% if excerpt %}<div class="evidence-controls"><span class="ready evidence-status">{{ "Appointment statement from source PDF" if matched else "Cached source excerpt" }}</span>
+    {% set options = namespace(pages=[]) %}
+    {% for number in pages %}
+      {% set title = 'Page ' ~ number if number else 'Page unavailable' %}
+      {% if brief and number == 2 %}{% set title = title ~ ' · Appointment' %}{% endif %}
+      {% if brief and number == 3 %}{% set title = title ~ ' · Previous role' %}{% endif %}
+      {% set options.pages = options.pages + [(number, title)] %}
+    {% endfor %}
+    <form class="evidence-picker" method="get" action="/events/{{ event.id }}#source-evidence">
+      {% if back %}<input type="hidden" name="back" value="{{ back }}">{% endif %}
+      {{ picker('evidence-page', 'page', 'PDF page', options.pages, selected, submit=true) }}
+      <button class="apply picker-fallback" type="submit">Read excerpt</button>
+    </form>
+</div><blockquote>{{ excerpt }}</blockquote><p class="annotation">Literal excerpt · {{ 'physical PDF page ' ~ selected if selected else 'page reference unavailable' }} · whitespace may reflect PDF layout.</p><p class="annotation">{{ doc.note }}</p>
 {% else %}<div class="missing"><strong>No cached document excerpt</strong><p>This event has exchange metadata, but no readable source text was matched by attachment URL. Open the original filing to inspect it. No evidence has been inferred.</p></div>{% endif %}
 <details class="source-info"><summary>Source URL and provenance</summary><p class="source-url">{{ event.source_url }}</p><p>Exchange filing timestamp: {{ event.raw_date }}.</p>{% if doc and doc.path %}<p class="source-url">Cached document SHA-256: {{ event.document_sha }}</p>{% endif %}<p>{% if event.origin.endswith('/demo/snapshot.json') %}Included in the dated demo snapshot.{% else %}Imported from a local check_data.py report.{% endif %} Dates shown here are filing dates; the underlying event may have happened earlier.</p></details>
 </section>

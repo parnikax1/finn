@@ -1,14 +1,9 @@
 {% extends 'base.html' %}
-{% macro cited_excerpt(group, hit, is_lead=false, text=none) %}
-  <article{% if is_lead %} class="panel research-lead" id="top-cited-excerpt" aria-labelledby="lead-heading"{% endif %}>
-    {% if is_lead %}<h2 id="lead-heading" class="editorial-kicker">Top cited excerpt</h2>{% endif %}
-    <div class="excerpt-citation">
-      <p><strong>{{ group.title }}</strong> · {{ group.doc.date_label or group.unknown_date }} · <span class="pdf-page">PDF p. {{ hit.page }}</span></p>
-      <a class="source-link" href="{{ group.doc.url }}#page={{ hit.page }}" target="_blank" rel="noopener noreferrer">Open original PDF · p. {{ hit.page }} ↗</a>
-    </div>
-    <blockquote>{{ text or hit.text }}</blockquote>
-    {% if not is_lead %}<p class="annotation">Matched terms: {{ hit.terms }}</p>{% endif %}
-  </article>
+{% macro citation(group, hit) %}
+  <div class="excerpt-citation">
+    <p><strong>{{ group.title }}</strong> · {{ group.doc.date_label or group.unknown_date }} · <span class="pdf-page">PDF p. {{ hit.page }}</span></p>
+    <a class="source-link" href="{{ group.doc.url }}#page={{ hit.page }}" target="_blank" rel="noopener noreferrer">Open original PDF · p. {{ hit.page }} ↗︎</a>
+  </div>
 {% endmacro %}
 {% macro question_field(question) %}
 <label class="search">Question<textarea name="question" rows="2" maxlength="300" required>{{ question }}</textarea></label>
@@ -41,7 +36,20 @@
 {% if lead %}
 {% set prepared = walkthrough.get(lead.kind) if walkthrough else none %}
 {% set same_page = prepared and prepared.sha == lead.doc.sha and prepared.page == lead.hits[0].page %}
-{{ cited_excerpt(lead, lead.hits[0], true, prepared.excerpt if same_page else none) }}
+{% set hit = lead.hits[0] %}
+{% set passage = prepared.excerpt if same_page else hit.text %}
+{% set preview = excerpt_preview(passage, question, symbol) %}
+<article class="panel research-lead" id="top-cited-excerpt" aria-labelledby="lead-heading">
+  <h2 id="lead-heading" class="editorial-kicker">Top cited excerpt</h2>
+  {{ citation(lead, hit) }}
+  <blockquote>{{ preview }}</blockquote>
+  {% if preview != passage %}
+  <details class="full-quote">
+    <summary>Full quote</summary>
+    <blockquote>{{ passage }}</blockquote>
+  </details>
+  {% endif %}
+</article>
 {% endif %}
 {% if show_status %}{% include 'research_fetch_status.html' %}{% endif %}
 {% if busy %}<p class="validation-alert" role="status">Another ticker is being fetched. Try again when it finishes.</p>{% endif %}
@@ -51,13 +59,32 @@
   <span class="annotation">Check NSE and Screener for missing PDFs.</span>
 </form>
 {% endif %}
+{% set other = namespace(count=0) %}
+{% for group in groups %}{% set other.count = other.count + group.hits|length %}{% endfor %}
+{% if lead and other.count > 1 %}
+<details class="panel more-excerpts">
+  <summary><strong>More excerpts</strong><span>{{ other.count - 1 }} matches</span></summary>
+  {% for group in groups %}
+    {% for hit in group.hits %}
+    {% if group.kind != lead.kind or not loop.first %}
+    <details class="excerpt-row">
+      <summary><strong>{{ group.title }}</strong><span>PDF p. {{ hit.page }}</span></summary>
+      {{ citation(group, hit) }}
+      <blockquote>{{ hit.text }}</blockquote>
+    </details>
+    {% endif %}
+    {% endfor %}
+  {% endfor %}
+</details>
+{% elif indexed and not lead %}
+<p class="annotation no-hits">No excerpt matched this question. Try a shorter question or different terms.</p>
+{% endif %}
 <details class="panel research-source-list">
-  <summary><strong>Sources searched</strong><span>{{ indexed }} {{ 'document' if indexed == 1 else 'documents' }} indexed</span></summary>
-  {% if status and not show_status %}{% include 'research_fetch_status.html' %}{% endif %}
-  <ul>
+  <summary><strong>Sources searched</strong><span>{% if status.state == 'running' %}Indexing…{% else %}{{ indexed }} {{ 'document' if indexed == 1 else 'documents' }} indexed{% endif %}</span></summary>
+  <ul class="source-rows">
     {% for group in groups %}
     <li>
-      <a href="{{ '#top-cited-excerpt' if lead and group.kind == lead.kind and group.hits|length == 1 else '#research-' ~ group.kind }}"><strong>{{ group.title }}</strong></a>
+      <strong>{{ group.title }}</strong>
       {% if group.doc %}
       <span>{{ group.doc.publisher or 'Publisher unverified' }} · {{ group.doc.date_label or group.unknown_date }}</span>
       {% if group.doc.provenance == 'Bundled demo snapshot' %}
@@ -70,15 +97,21 @@
       <span>{{ group.indexed_pages }} indexed PDF pages · Full coverage unverified</span>
       {% endif %}
       <span>{{ group.searched_pages }} pages searched{% if group.omitted_tables %} · {{ group.omitted_tables }} mixed table pages skipped{% endif %}</span>
-      <a class="source-link" href="{{ group.doc.url }}" target="_blank" rel="noopener noreferrer">Open original PDF ↗</a>
+      <a class="source-link" href="{{ group.doc.url }}" target="_blank" rel="noopener noreferrer">Open original PDF ↗︎</a>
       {% else %}
-      <span>No searchable document · {{ group.unknown_date }}</span>
+      <span>{{ 'Waiting to be indexed' if status.state == 'running' else 'No searchable document · ' ~ group.unknown_date }}</span>
       {% endif %}
       {% if group.omitted_tables %}<span>Table-like pages with mixed row labels and values were excluded from excerpt search.</span>{% endif %}
-      {% if group.status %}<span>{{ group.status }}</span>{% endif %}
+      {% if group.status and status.state != 'running' %}<span>{{ group.status }}</span>{% endif %}
     </li>
     {% endfor %}
   </ul>
+  {% if status and not show_status %}
+  <details class="fetch-diagnostics">
+    <summary>Fetch details</summary>
+    {% include 'research_fetch_status.html' %}
+  </details>
+  {% endif %}
 </details>
 {% if lead %}{{ starters() }}{% endif %}
 {% if walkthrough %}{% include 'maruti_walkthrough.html' %}{% endif %}
@@ -100,26 +133,6 @@
 </section>
 {% endif %}
 
-<div class="research-results">
-<p class="date-line">Excerpts for {{ symbol }} · Ranked by keyword and phrase matches</p>
-{% for group in groups %}
-{% if not lead or group.kind != lead.kind or group.hits|length > 1 %}
-<section class="panel research-source" id="research-{{ group.kind }}">
-  <h2>{{ group.title }}</h2>
-  {% if group.doc %}
-    {% for hit in group.hits %}
-    {% if not lead or group.kind != lead.kind or not loop.first %}{{ cited_excerpt(group, hit) }}{% endif %}
-    {% else %}
-    <p class="missing">This document is searchable. No excerpt matched the question keywords.</p>
-    <p class="source-actions"><a href="{{ group.doc.url }}" target="_blank" rel="noopener noreferrer">Open original PDF ↗</a></p>
-    {% endfor %}
-  {% else %}
-    <p class="missing">No searchable {{ group.title|lower }} is cached for {{ symbol }}.</p>
-  {% endif %}
-</section>
-{% endif %}
-{% endfor %}
-</div>
 {% endif %}
 </div>
 {% endblock %}

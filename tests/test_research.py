@@ -9,10 +9,19 @@ from fastapi.testclient import TestClient
 from finn_app.db import connect
 from finn_app.evidence import appointment_details, appointment_excerpt
 from finn_app.main import app
-from finn_app.research import date_from_pages, passages, query_features, revalidate_periods
+from finn_app.research import date_from_pages, excerpt_preview, passages, query_features, revalidate_periods
 
 
 class ResearchTests(unittest.TestCase):
+    def test_preview_keeps_adjacent_relevant_sentences_verbatim(self):
+        evidence = ('Domestic sales at INR2,854 crores are higher by 22%. '
+                    'Exports at INR521 crores are flat.')
+        context = ('The company presented its latest annual results to an audience '
+                   'of investors in the region. ' + evidence +
+                   ' The meeting continued with a long review of other information for the rest of the morning.')
+        self.assertEqual(excerpt_preview(context, 'How did domestic sales and exports change?', 'CUMMINSIND'),
+                         '… ' + evidence + ' …')
+
     def test_appointment_matches_dated_statement_instead_of_heading_or_old_role(self):
         event = dict(rule='R05', description='Appointment of Mr. Example Person as CEO for Americas 2 '
                                             'of the company w.e.f. December 08, 2026.')
