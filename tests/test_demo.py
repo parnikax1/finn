@@ -33,25 +33,27 @@ class DemoTests(unittest.TestCase):
                     f'/events/{row["id"]}' for row in db.execute(
                         'SELECT e.id FROM events e ORDER BY e.priority DESC, '
                         'EXISTS(SELECT 1 FROM pages p WHERE p.sha=e.document_sha) DESC, e.filed_at DESC, e.id'
-                    ) if f'/events/{row["id"]}' not in (filing, release)
+                    )
                 ]
             with TestClient(app) as client, patch('socket.create_connection', side_effect=AssertionError):
                 feed = client.get('/').text
                 self.assertIn('Demo snapshot · 2026-11-12 IST', feed)
-                first_card = feed.split('<a class="event-card"', 1)[1].split('</a>', 1)[0]
+                full = client.get('/?view=all').text
+                self.assertIn('Browse all 32 filings', feed)
+                first_card = feed.split('<ul class="priority-list">', 1)[1].split('</a>', 1)[0]
                 self.assertIn('RBI approves reappointment', first_card)
                 self.assertIn('Featured walkthrough · WIPRO', feed)
                 for page in (2, 3):
                     self.assertRegex(feed, rf'{filing}\?page={page}&amp;back=[^"]+#source-evidence')
                 self.assertRegex(feed, rf'{filing}\?back=[^"]+">Open Wipro brief</a>')
                 cards = [urlsplit(unescape(href)).path
-                         for href in re.findall(r'class="event-card"[^>]* href="([^"]+)"', feed)]
+                         for href in re.findall(r'class="event-card"[^>]* href="([^"]+)"', full)]
                 self.assertEqual(cards, expected_cards)
                 self.assertIn('PressRelease06112026.pdf', client.get(release).text)
                 release_only = client.get('/', params={'q': 'press release dated'}).text
                 self.assertNotIn('Featured walkthrough · WIPRO', release_only)
                 self.assertIn(f'class="event-card" href="{release}?back=', release_only)
-                evidence_only = client.get('/', params={'evidence': '1'}).text
+                evidence_only = client.get('/', params={'evidence': '1', 'view': 'brief'}).text
                 self.assertIn('Featured walkthrough · WIPRO', evidence_only)
                 self.assertNotIn('Related press release', evidence_only)
                 event = client.get(filing).text
@@ -71,14 +73,14 @@ class DemoTests(unittest.TestCase):
                 self.assertIn('Asha Sen', research)
                 self.assertIn('Which plants could close the remaining capacity gap', research)
                 self.assertNotIn('Answer from excerpts', research)
-                market = client.get('/', params={'company': 'MARUTI'}).text
+                market = client.get('/', params={'company': 'MARUTI', 'view': 'brief'}).text
                 self.assertIn('+1.99%', market)
                 self.assertIn('1.88×', market)
                 self.assertIn('<time datetime="2026-11-11">2026-11-11</time>', market)
                 self.assertIn('<details class="market-alert">', market)
                 self.assertIn('Previous-session CSV', market)
                 self.assertIn('2026-11-08 CSV', market)
-                self.assertIn('Financial results from Suzuki Motor Corporation', market)
+                self.assertIn('Financial results from Suzuki Motor Corporation', full)
                 with closing(connect()) as db:
                     maruti_event = db.execute(
                         "SELECT id, description FROM events WHERE symbol='MARUTI' AND subject='General Updates'"
@@ -86,11 +88,11 @@ class DemoTests(unittest.TestCase):
                 maruti_detail = client.get('/events/' + maruti_event['id']).text
                 self.assertIn(maruti_event['description'], maruti_detail)
                 self.assertIn('Exchange title:</strong> General Updates', maruti_detail)
-                self.assertIn('<h3>Acquisition</h3>', feed)
-                self.assertIn('<h3>October 2026 production, sales and export figures</h3>', feed)
-                self.assertIn('<h3>Allotment of 52,771 equity shares</h3>', feed)
+                self.assertIn('<h3>Acquisition</h3>', full)
+                self.assertIn('<h3>October 2026 production, sales and export figures</h3>', full)
+                self.assertIn('<h3>Allotment of 52,771 equity shares</h3>', full)
                 latest = client.get('/', params={'window': '1'}, headers={'HX-Request': 'true'}).text
-                self.assertIn('2026-11-12 to 2026-11-12 IST', latest)
+                self.assertIn('Browse all 11 filings', latest)
                 self.assertNotIn('Angan Guha', latest)
                 self.assertIn('id="featured-brief" hx-swap-oob="true"', latest)
                 self.assertIn('15/15 succeeded', latest)

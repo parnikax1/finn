@@ -74,7 +74,7 @@ class MarketTests(unittest.TestCase):
                 after = json.loads(db.execute('SELECT payload FROM market_snapshots').fetchone()['payload'])
                 self.assertEqual(after, cached)
             with patch('finn_app.market.fetch') as network:
-                response = TestClient(app).get('/', params={'company': 'MARUTI'}, headers={'HX-Request': 'true'})
+                response = TestClient(app).get('/', params={'company': 'MARUTI', 'view': 'brief'}, headers={'HX-Request': 'true'})
                 self.assertEqual(response.status_code, 200)
                 self.assertIn('Move <strong>-9.52%</strong>', response.text)
                 self.assertIn('<time datetime="2026-11-12">2026-11-12</time>', response.text)

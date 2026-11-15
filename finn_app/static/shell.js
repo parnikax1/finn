@@ -1,11 +1,30 @@
 const navigation = document.getElementById('app-nav');
 const navStatus = document.getElementById('navigation-status');
+const statusText = navStatus.querySelector('[role="status"]');
+const retryButton = navStatus.querySelector('button');
+const screenCache = new Map();
+const cacheKey = 'finn:recent-screens-v1';
+const freshForMs = 90_000;
+try {
+    for (const [url, entry] of JSON.parse(sessionStorage.getItem(cacheKey) ?? '[]')) {
+        if (Date.now() - entry.at < freshForMs) screenCache.set(url, entry);
+    }
+} catch {}
+let retryTab = null;
+let restoringCached = false;
 const destinations = {brief: '/', research: '/research', network: '/network'};
+const tabNames = {brief: 'Brief', research: 'Research', network: 'Network'};
 const tabLinks = [...navigation.querySelectorAll('[data-tab]')];
-const drafts = new Map();
-const views = new Map();
+function sessionMap(key) {
+    try { return new Map(JSON.parse(sessionStorage.getItem(key) ?? '[]')); }
+    catch { return new Map(); }
+}
+
+const drafts = sessionMap('finn:tab-drafts');
+const views = sessionMap('finn:tab-views');
 let pendingTab = null;
 let pendingRequest = null;
+let filterRequest = null;
 
 function screenMarker() {
     return document.querySelector('#app-content [data-screen]');
@@ -13,6 +32,19 @@ function screenMarker() {
 
 function locationKey() {
     return location.pathname + location.search;
+}
+
+function viewKey(path = locationKey()) {
+    const url = new URL(path, location.origin);
+    if (url.pathname !== '/') return path;
+    const params = url.searchParams;
+    const company = params.get('company') || '';
+    const priority = params.get('priority') || '';
+    const q = params.get('q') || '';
+    const page = Number(params.get('page') || 1);
+    const evidence = Number(['1', 'true', 'on', 'yes'].includes(params.get('evidence')));
+    const view = params.get('view') || (company || priority || q || evidence || page > 1 ? 'all' : 'brief');
+    return '/?' + new URLSearchParams({view, window: params.get('window') || '7', company, priority, q, page, evidence});
 }
 
 function savedUrl(tab) {
@@ -37,30 +69,33 @@ function updateTabs() {
         if (id === tab) link.setAttribute('aria-current', 'page');
         else link.removeAttribute('aria-current');
     }
-    const name = {brief: 'Brief', research: 'Research', network: 'Network'}[tab];
+    const name = tabNames[tab];
     document.getElementById('app-content').setAttribute('aria-label', name);
     document.title = name + ' · FINN';
+}
+
+function rememberSession(map, storageKey, value) {
+    const key = viewKey();
+    map.delete(key);
+    map.set(key, value);
+    if (map.size > 20) map.delete(map.keys().next().value);
+    try { sessionStorage.setItem(storageKey, JSON.stringify([...map])); } catch {}
 }
 
 function rememberDraft() {
     const form = document.querySelector('[data-tab-draft]');
     if (!form) return;
-    const draft = Object.fromEntries(new FormData(form));
-    drafts.delete(locationKey());
-    drafts.set(locationKey(), draft);
-    if (drafts.size > 20) drafts.delete(drafts.keys().next().value);
+    rememberSession(drafts, 'finn:tab-drafts', Object.fromEntries(new FormData(form)));
 }
 
 function rememberView() {
-    const key = locationKey();
+    if (location.pathname.startsWith('/events/')) return;
     const disclosures = [...document.querySelectorAll('#app-content details')];
-    views.delete(key);
-    views.set(key, {scroll: window.scrollY, disclosures: disclosures.map(el => el.open)});
-    if (views.size > 20) views.delete(views.keys().next().value);
+    rememberSession(views, 'finn:tab-views', {scroll: window.scrollY, disclosures: disclosures.map(el => el.open)});
 }
 
 function restoreView() {
-    const view = views.get(locationKey());
+    const view = views.get(viewKey());
     if (view) {
         const disclosures = [...document.querySelectorAll('#app-content details')];
         if (disclosures.length === view.disclosures.length) {
@@ -72,7 +107,7 @@ function restoreView() {
 
 function restoreDraft() {
     const form = document.querySelector('[data-tab-draft]');
-    const values = drafts.get(locationKey());
+    const values = drafts.get(viewKey());
     if (!form || !values) return;
     for (const [name, value] of Object.entries(values)) {
         if (form.elements[name]) form.elements[name].value = value;
@@ -95,11 +130,81 @@ function focusTitle() {
     }
 }
 
+function cacheScreen() {
+    const tab = screenMarker().dataset.screen;
+    if (location.pathname !== destinations[tab] || !screenMarker().hasAttribute('data-cacheable')) return;
+    const main = document.getElementById('app-content').cloneNode(true);
+    main.removeAttribute('aria-busy');
+    const html = main.outerHTML;
+    if (html.length > 160_000) return;
+    const key = viewKey();
+    screenCache.delete(key);
+    screenCache.set(key, {at: Date.now(), html});
+    if (screenCache.size > 6) screenCache.delete(screenCache.keys().next().value);
+    try { sessionStorage.setItem(cacheKey, JSON.stringify([...screenCache])); } catch {}
+}
+
+function restoreCached(key, push) {
+    const entry = screenCache.get(viewKey(key));
+    if (!entry || Date.now() - entry.at >= freshForMs) return false;
+    if (push) history.pushState({htmx: true}, '', key);
+    restoringCached = true;
+    try {
+        htmx.swap('#app-content', entry.html, {swapStyle: 'outerHTML', settleDelay: 0});
+    } finally {
+        restoringCached = false;
+    }
+    updateTabs();
+    restoreDraft();
+    restoreView();
+    focusTitle();
+    return true;
+}
+
+function showStatus(message = '', failed = false) {
+    statusText.textContent = message;
+    navStatus.hidden = !message;
+    retryButton.hidden = !failed;
+}
+
 function clearPending() {
     pendingTab?.removeAttribute('data-pending');
     document.getElementById('app-content').removeAttribute('aria-busy');
     pendingTab = pendingRequest = null;
-    navStatus.textContent = '';
+    retryTab = null;
+    showStatus();
+}
+
+function failNavigation() {
+    const link = pendingTab;
+    clearPending();
+    if (!link) return;
+    retryTab = link;
+    showStatus('Could not open ' + tabNames[link.dataset.tab] + '.', true);
+}
+
+function openDestination(link, force = false) {
+    rememberDraft();
+    rememberView();
+    if (pendingRequest) {
+        const request = pendingRequest;
+        pendingRequest = null;
+        request.abort();
+    }
+    clearPending();
+    const url = new URL(link.href);
+    const key = url.pathname + url.search;
+    if (key === locationKey()) return;
+    if (filterRequest) filterRequest.abort();
+    if (!force && restoreCached(key, true)) return;
+    pendingTab = link;
+    link.dataset.pending = 'true';
+    document.getElementById('app-content').setAttribute('aria-busy', 'true');
+    showStatus('Opening ' + tabNames[link.dataset.tab] + '…');
+    htmx.ajax('GET', key, {
+        source: navigation, target: '#app-content', swap: 'outerHTML show:none',
+        headers: {'X-FINN-Destination': 'true'},
+    }).catch(() => {});
 }
 
 navigation.addEventListener('click', (event) => {
@@ -107,37 +212,37 @@ navigation.addEventListener('click', (event) => {
     if (!link || !window.htmx || event.defaultPrevented || event.button !== 0 ||
         event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     event.preventDefault();
-    rememberDraft();
-    rememberView();
-    if (pendingRequest) pendingRequest.abort();
-    clearPending();
-    if (new URL(link.href).pathname + new URL(link.href).search === locationKey()) return;
-    pendingTab = link;
-    link.dataset.pending = 'true';
-    document.getElementById('app-content').setAttribute('aria-busy', 'true');
-    navStatus.textContent = 'Loading ' + link.dataset.tab;
-    htmx.ajax('GET', link.getAttribute('href'), {
-        source: navigation, target: '#app-content', swap: 'outerHTML show:none',
-        headers: {'X-FINN-Destination': 'true'},
-    }).catch(() => {});
+    openDestination(link);
+});
+retryButton.addEventListener('click', () => {
+    if (retryTab) openDestination(retryTab, true);
 });
 
 document.addEventListener('htmx:beforeSend', (event) => {
     if (event.detail.elt === navigation) pendingRequest = event.detail.xhr;
+    if (event.detail.elt.id === 'filing-filters') filterRequest = event.detail.xhr;
+});
+document.addEventListener('htmx:beforeOnLoad', (event) => {
+    const {elt, xhr} = event.detail;
+    if (elt.id === 'research-fetch-status' && (pendingTab || !elt.isConnected)) {
+        event.preventDefault();
+    } else if (xhr === pendingRequest && xhr.status >= 200 && xhr.status < 300 &&
+        !xhr.responseText.includes('data-screen="' + pendingTab.dataset.tab + '"')) {
+        event.preventDefault();
+        failNavigation();
+    }
 });
 document.addEventListener('htmx:afterRequest', (event) => {
-    if (event.detail.xhr !== pendingRequest || event.detail.successful) return;
-    const aborted = event.detail.xhr.status === 0;
-    clearPending();
-    if (!aborted) navStatus.textContent = 'Could not open that destination. Tap again to retry.';
+    if (event.detail.xhr === filterRequest) filterRequest = null;
+    if (event.detail.xhr === pendingRequest && (event.detail.failed || !event.detail.successful)) failNavigation();
 });
-document.addEventListener('htmx:sendError', (event) => {
-    if (event.detail.xhr !== pendingRequest) return;
-    clearPending();
-    navStatus.textContent = 'Could not open that destination. Tap again to retry.';
-});
+for (const type of ['htmx:sendError', 'htmx:timeout', 'htmx:swapError']) {
+    document.addEventListener(type, (event) => {
+        if (event.detail.xhr === pendingRequest) failNavigation();
+    });
+}
 document.addEventListener('htmx:afterSwap', (event) => {
-    if (event.detail.elt.id !== 'app-content' && event.detail.elt.id !== 'feed') return;
+    if (restoringCached || (event.detail.elt.id !== 'app-content' && event.detail.elt.id !== 'feed')) return;
     updateTabs();
     if (event.detail.elt.id === 'app-content') {
         clearPending();
@@ -145,24 +250,37 @@ document.addEventListener('htmx:afterSwap', (event) => {
         restoreView();
         focusTitle();
     }
+    cacheScreen();
 });
-window.addEventListener('popstate', () => {
-    if (pendingRequest) pendingRequest.abort();
+window.addEventListener('popstate', (event) => {
+    if (pendingRequest) {
+        const request = pendingRequest;
+        pendingRequest = null;
+        request.abort();
+    }
     clearPending();
+    if (event.state?.htmx && restoreCached(locationKey(), false)) event.stopImmediatePropagation();
 }, {capture: true});
 document.addEventListener('htmx:historyRestore', () => {
     updateTabs();
     restoreDraft();
     focusTitle();
-    // The filter control may have changed just before HTMX cached the previous feed.
+    // A filter control may change before HTMX caches the previous feed.
     const form = document.querySelector('#filing-filters');
     if (form) {
         const params = new URLSearchParams(location.search);
         for (const name of ['window', 'company', 'priority', 'q']) {
-            form.elements[name].value = params.get(name) ?? (name === 'window' ? '7' : '');
+            if (form.elements[name]) form.elements[name].value = params.get(name) ?? (name === 'window' ? '7' : '');
         }
-        form.elements.evidence.checked = ['1', 'true', 'on', 'yes'].includes(params.get('evidence'));
+        if (form.elements.evidence) form.elements.evidence.checked = ['1', 'true', 'on', 'yes'].includes(params.get('evidence'));
     }
+});
+window.addEventListener('pageshow', (event) => {
+    if (event.persisted && screenMarker().dataset.screen === 'research' && !screenMarker().hasAttribute('data-cacheable')) location.reload();
+});
+window.addEventListener('pagehide', () => {
+    rememberDraft();
+    rememberView();
 });
 document.addEventListener('input', (event) => {
     if (event.target.closest('[data-tab-draft]')) rememberDraft();
@@ -176,6 +294,9 @@ document.addEventListener('change', (event) => {
     }
 });
 updateTabs();
+cacheScreen();
+if (window.htmx) document.documentElement.classList.add("has-shell");
+if (location.pathname === '/' && document.referrer.startsWith(location.origin + '/events/')) restoreView();
 
 document.addEventListener('click', (event) => {
     if (event.target.closest('[data-open-sources]')) document.getElementById('sources-export').open = true;

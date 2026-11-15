@@ -34,7 +34,7 @@ def wipro_brief(db, event_id, demo):
         id=event_id, title='Angan Guha returns to lead Wipro’s Americas 2',
         company=event['name'], filed_at=event['filed_at'], effective_date=effective_date,
         appointment=f'President and CEO of Americas 2 from {effective_date}.',
-        context='He previously led the unit. That makes continuity in client delivery a useful question for the first quarter.',
+        context='Returning to a unit he led makes client-delivery continuity worth watching.',
         pages=[dict(page=2, label='Appointment and effective date'), dict(page=3, label='Previous Americas 2 role')],
         contact=contact, source_url=event['source_url'], release_id=demo['wipro_release'], release_url=release['source_url'] if release else None,
     )

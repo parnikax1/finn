@@ -7,14 +7,15 @@ def brief_state(value):
     if len(value) > 3000:
         return ''
     try:
-        fields = parse_qs(value, keep_blank_values=True, max_num_fields=6,
+        fields = parse_qs(value, keep_blank_values=True, max_num_fields=7,
                           strict_parsing=True, errors='strict')
     except (ValueError, UnicodeError):
         return ''
     if any(len(items) != 1 for items in fields.values()):
         return ''
     state = {key: items[0] for key, items in fields.items()}
-    if (state.keys() - {'window', 'company', 'priority', 'q', 'evidence', 'page'}
+    if (state.keys() - {'window', 'company', 'priority', 'q', 'evidence', 'page', 'view'}
+            or state.get('view', 'brief') not in {'brief', 'all'}
             or state.get('window', '7') not in {'1', '7', '30', 'all'}
             or not re.fullmatch(r'[A-Z0-9&_.-]{0,32}', state.get('company', ''))
             or state.get('priority', '') not in {'', 'important', 'routine'}

@@ -7,7 +7,7 @@
     <p>{{ featured.context }} <a href="{{ event_url(featured.id, back, page=featured.pages[1].page, anchor='#source-evidence') }}">Read excerpt · PDF p. {{ featured.pages[1].page }}</a></p>
     <nav class="featured-actions" aria-label="Wipro walkthrough actions">
       <a class="button" href="{{ event_url(featured.id, back) }}">Open Wipro brief</a>
-      {% if main_events and main_events[0].priority >= 70 %}<a href="#next-priority">Next priority filing ↓</a>{% endif %}
+
     </nav>
   </section>
 {% endif %}

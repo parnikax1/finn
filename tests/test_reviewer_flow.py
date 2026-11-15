@@ -42,9 +42,13 @@ class ReviewerFlowTests(unittest.TestCase):
         self.assertTrue(filtered.text.lstrip().startswith('<section id="feed"'))
         restored = self.client.get('/?window=1', headers=hx | {'HX-History-Restore-Request': 'true'})
         self.assertIn('id="app-nav"', restored.text)
+        live = self.client.get('/research?symbol=CUMMINSIND&question=Sales', headers=tab)
+        self.assertEqual(live.headers['Cache-Control'], 'no-store')
+        self.assertIn('hx-history="false"', live.text)
+        self.assertNotIn('data-cacheable', live.text)
 
     def test_latest_day_return_and_validation(self):
-        latest = self.client.get('/?window=1', headers={'HX-Request': 'true'}).text
+        latest = self.client.get('/?view=all&window=1', headers={'HX-Request': 'true'}).text
         self.assertIn('11 matching filings', latest)
         card = re.search(r'<a class="event-card"[^>]*href="([^"]+)"[^>]*>\s*'
                          r'<div class="card-top"><span class="ticker">HDFCBANK</span>', latest)
@@ -58,7 +62,7 @@ class ReviewerFlowTests(unittest.TestCase):
         self.assertEqual(link(self.client.get(self.wipro).text, 'Back to brief'), '/')
 
     def test_featured_excerpt_transfers_filters_and_page_selector_state(self):
-        state = dict(window='30', company='WIPRO', priority='important', q='Guha', evidence='1')
+        state = dict(view='brief', window='30', company='WIPRO', priority='important', q='Guha', evidence='1')
         feed = self.client.get('/', params=state).text
         card_url = link(feed, 'Read excerpt · PDF p. 2')
         event = self.client.get(card_url)
@@ -77,12 +81,12 @@ class ReviewerFlowTests(unittest.TestCase):
                 values = dict(event) | {'id': f'nav-test-{i}', 'source_url': f'https://example.org/{i}.pdf'}
                 db.execute(f'INSERT INTO events ({columns}) VALUES ({",".join("?" for _ in values)})',
                            tuple(values.values()))
-        second = self.client.get('/', params=state | {'page': 2}).text
+        second = self.client.get('/', params=state | {'view': 'all', 'page': 2}).text
         self.assertIn('61 matching filings · page 2', second)
         card = re.search(r'<a class="event-card"[^>]*href="([^"]+)"', second)
         result = self.client.get(unescape(card[1]))
         back = link(result.text, 'Back to brief')
-        self.assertEqual(parse_qs(urlsplit(back).query), {k: [v] for k, v in (state | {'page': '2'}).items()})
+        self.assertEqual(parse_qs(urlsplit(back).query), {k: [v] for k, v in (state | {'view': 'all', 'page': '2'}).items()})
         self.assertIn('61 matching filings · page 2', self.client.get(back).text)
 
     def test_download_uses_walkthrough_content_without_network(self):
@@ -96,7 +100,7 @@ class ReviewerFlowTests(unittest.TestCase):
                          'attachment; filename="FINN-WIPRO-Americas-2-appointment-2026-11-06.md"')
         question = re.search(r'id="contact-question"[^>]*>([^<]+)', event)[1]
         for text in ('Angan Guha returns to lead Wipro’s Americas 2', '8 December 2026',
-                     'He previously led the unit.', 'continuity in client delivery'):
+                     'Returning to a unit he led', 'client-delivery continuity'):
             self.assertIn(text, feed)
             self.assertIn(text, response.text)
         for text in ('FINN brief', '06 Nov 2026', 'Meera Rao · Synthetic contact', '#page=2', '#page=3',

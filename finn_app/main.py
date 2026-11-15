@@ -29,6 +29,8 @@ templates.env.globals['event_url'] = event_url
 
 def screen(request, name, context):
     headers = {'Vary': 'HX-Request, HX-History-Restore-Request, X-FINN-Destination'}
+    if context.get('active') == 'research' and not context.get('cacheable'):
+        headers['Cache-Control'] = 'no-store'
     destination = (request.headers.get('HX-Request') == 'true'
                    and request.headers.get('X-FINN-Destination') == 'true'
                    and not request.headers.get('HX-History-Restore-Request'))
@@ -54,13 +56,15 @@ def fetch_time(value):
 
 
 templates.env.filters['fetch_time'] = fetch_time
+templates.env.filters['filing_day'] = lambda value: datetime.fromisoformat(value).strftime('%d %b %Y') if value else 'Date unavailable'
 
 
 @app.get('/', response_class=HTMLResponse)
 def feed(request: Request, company: str = Query('', max_length=32, pattern=r'^[A-Z0-9&_.-]*$'),
          priority: Literal['', 'important', 'routine'] = '', q: str = Query('', max_length=200),
          evidence: bool = False, window: Literal['1', '7', '30', 'all'] = '7',
-         page: int = Query(1, ge=1, le=999_999_999)):
+         page: int = Query(1, ge=1, le=999_999_999), view: Literal['brief', 'all'] | None = None):
+    full_list = view == 'all' or (view is None and bool(company or priority or q or evidence or page > 1))
     with closing(connect()) as db:
         demo = demo_links(db)
         latest = db.execute('SELECT MAX(filed_at) FROM events').fetchone()[0]
@@ -114,16 +118,23 @@ def feed(request: Request, company: str = Query('', max_length=32, pattern=r'^[A
             WHERE current.run_id=? ORDER BY current.symbol
         ''', (run['id'],))) if run else []
         main_events = [event for event in events if event['priority'] >= 30]
-        featured = wipro_brief(db, main_events[0]['id'], demo) if main_events else None
+        appointment = next((event for event in main_events if demo and event['id'] == demo['wipro']), None)
+        featured = wipro_brief(db, appointment['id'], demo) if appointment and not full_list else None
         related_release = None
         if featured:
-            main_events.pop(0)
+            main_events.remove(appointment)
             related_release = next((event for event in main_events if event['id'] == demo['wipro_release']), None)
             if related_release:
                 main_events.remove(related_release)
+        if not full_list:
+            main_events = [event for event in main_events if event['priority'] >= 70][:3]
     def state(number):
-        return urlencode(dict(company=company, priority=priority, q=q,
-                              evidence=int(evidence), window=window, page=number))
+        params = dict(company=company, priority=priority, q=q, evidence=int(evidence), window=window, page=number)
+        if full_list:
+            params['view'] = 'all'
+        elif view == 'brief':
+            params['view'] = 'brief'
+        return urlencode(params)
     partial = (request.headers.get('HX-Request') == 'true'
                and request.headers.get('X-FINN-Destination') != 'true'
                and not request.headers.get('HX-History-Restore-Request'))
@@ -134,7 +145,10 @@ def feed(request: Request, company: str = Query('', max_length=32, pattern=r'^[A
     trading_dates = {date for _, date in alert_dates}
     context = dict(events=events, routine=[e for e in events if e['priority'] < 30],
                    main_events=main_events, featured=featured, related_release=related_release,
-                   partial=partial, total=total, signal_count=len({symbol for symbol, _ in alert_dates}),
+                   partial=partial, total=total, full_list=full_list,
+                   browse_url='/?' + urlencode(dict(view='all', window=window)),
+                   short_url='/?' + urlencode(dict(window=window)),
+                   cacheable=True, signal_count=len({symbol for symbol, _ in alert_dates}),
                    signal_date=datetime.fromisoformat(max(trading_dates)).strftime('%d %b').lstrip('0') if trading_dates else '',
                    mixed_signal_dates=len(trading_dates) > 1,
                    companies=companies, stats=stats, company=company, priority=priority,
@@ -200,7 +214,8 @@ def research(request: Request, symbol: str = Query('', max_length=35),
         symbol=normalized or symbol, question=question, groups=groups, error=error,
         urls=urls, status=status, missing=missing, busy=busy,
         has_evidence=bool(groups and evidence_from(groups)), answer_enabled=bool(api_key()),
-        contacts=contacts, walkthrough=walkthrough, active='research'))
+        contacts=contacts, walkthrough=walkthrough, active='research',
+        cacheable=(not symbol or bool(walkthrough and not missing and not status and not busy))))
 
 
 @app.post('/research/answer', response_class=HTMLResponse)
@@ -346,7 +361,7 @@ def network(request: Request, company: str = Query('', max_length=80), sector: s
     contacts = matching_contacts(row['symbol'], row['sector']) if company and row else (
         matching_contacts('', known_sector) if not company and known_sector else [])
     return screen(request, 'network.html', dict(
-        active='network', companies=companies, sectors=sectors, lookup_kind='sector' if sector else kind,
+        active='network', cacheable=True, companies=companies, sectors=sectors, lookup_kind='sector' if sector else kind,
         contacts=contacts, searched=bool(company or sector), lookup_label=company or sector))
 
 

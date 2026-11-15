@@ -14,16 +14,18 @@
 <body>
   <header class="topbar">
     <a href="{{ brief_url|default('/') }}" class="brand"><span class="brand-mark" aria-hidden="true">f</span> FINN</a>
-    <nav id="app-nav" class="site-nav" aria-label="Main navigation" hx-sync="this:replace">
+    <nav id="app-nav" class="site-nav" aria-label="Main navigation" hx-sync="this:replace" hx-request='{"timeout":15000}'>
       {% for key, label, url, icon in [('brief', 'Brief', brief_url|default('/'), '▤'), ('research', 'Research', '/research', '⌕'), ('network', 'Network', '/network', '◎')] %}
       <a data-tab="{{ key }}" href="{{ url }}"{% if active == key %} aria-current="page"{% endif %}><span class="tab-icon" aria-hidden="true">{{ icon }}</span>{{ label }}</a>
       {% endfor %}
     </nav>
   </header>
-  <div id="navigation-status" class="screen-reader" role="status"></div>
+  <div id="navigation-status" class="navigation-status" hidden>
+    <span role="status"></span><button type="button" class="apply" hidden>Retry</button>
+  </div>
 {% endif %}
   <main class="shell" id="app-content" hx-history-elt tabindex="-1" aria-label="{{ {'research': 'Research', 'network': 'Network'}.get(active, 'Brief') }}">
-    <span hidden data-screen="{{ active }}" data-brief-url="{{ brief_url|default('') }}"></span>
+    <span hidden data-screen="{{ active }}" data-brief-url="{{ brief_url|default('') }}"{% if cacheable %} data-cacheable{% else %} hx-history="false"{% endif %}></span>
     {% block content %}{% endblock %}
   </main>
 {% if not destination_fragment %}

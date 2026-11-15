@@ -1,15 +1,22 @@
 <section id="feed" aria-live="polite">
+{% if full_list %}
 <div class="result-line"><span>{{ total }} matching filings{% if total %} · page {{ page }}{% endif %}</span><span>{{ window_start ~ ' to ' ~ latest_day ~ ' IST' if window_start else 'All cached filing dates' }}</span></div>
-
-{% if not events %}
-<div class="empty"><h3>No cached filings match.</h3><p>Clear the filters, or import an existing check_data.py cache. Nothing is generated to fill this view.</p><a href="/">Clear filters</a></div>
-{% endif %}
-{% if main_events %}{% with event=main_events[0], next_priority=featured and main_events[0].priority >= 70 %}{% include 'event_card.html' %}{% endwith %}{% endif %}
+{% if not events %}<p class="empty">No filings match these filters. <a href="{{ browse_url }}">Clear filters</a></p>{% endif %}
+{% for event in main_events %}{% include 'event_card.html' %}{% endfor %}
+{% if routine %}<details id="routine-disclosures" class="routine" {% if priority=='routine' %}open{% endif %}><summary>Routine disclosures <b>{{ routine|length }}</b></summary><div class="routine-items">{% for event in routine %}{% include 'event_card.html' %}{% endfor %}</div></details>{% endif %}
+{% if previous or next %}<nav class="pagination" aria-label="Feed pages">{% if previous %}<a href="{{ previous }}">← Previous</a>{% else %}<span></span>{% endif %}{% if next %}<a href="{{ next }}">Next →</a>{% endif %}</nav>{% endif %}
+{% else %}
+{% if main_events %}
+<h2 class="priority-heading">Flagged filings</h2>
+<ul class="priority-list">
+{% for event in main_events %}
+  <li><a href="{{ event_url(event.id, back) }}"><span class="ticker">{{ event.symbol }}</span><strong>{{ event|event_title }}</strong><time datetime="{{ event.filed_at or '' }}">{{ event.filed_at|filing_day }}</time></a></li>
+{% endfor %}
+</ul>
+{% elif not events %}<p class="empty">No filings in this window.</p>
+{% elif not featured %}<p class="date-line">No flagged filings in this window.</p>{% endif %}
 {% include 'market_signals.html' %}
-{% for event in main_events[1:] %}{% include 'event_card.html' %}{% endfor %}
-<details id="routine-disclosures" class="routine" {% if priority=='routine' %}open{% endif %}><summary><span>Routine disclosures <b>{{ routine|length }}</b></span><span class="muted">On this page · expand to inspect</span></summary><div class="routine-items">{% for event in routine %}{% include 'event_card.html' %}{% else %}<p class="annotation">No routine disclosures match this page.</p>{% endfor %}</div></details>
-
-
-{% if events %}<nav class="pagination" aria-label="Feed pages">{% if previous %}<a href="{{ previous }}">← Previous</a>{% else %}<span></span>{% endif %}{% if next %}<a href="{{ next }}">Next →</a>{% endif %}</nav>{% endif %}
+<a class="browse-filings" href="{{ browse_url }}">{{ 'Browse all ' ~ total ~ ' filings' if total != 1 else 'Browse 1 filing' }} <span aria-hidden="true">→</span></a>
+{% endif %}
 </section>
-{% if partial %}{% include 'featured_wipro.html' %}{% endif %}
+{% if partial %}{% if full_list %}{% include 'list_back.html' %}{% else %}{% include 'featured_wipro.html' %}{% endif %}{% endif %}

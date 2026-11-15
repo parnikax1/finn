@@ -177,3 +177,14 @@ shell, returning to a tab also restores its draft fields and scroll position.
 Direct URLs and ordinary links work without HTMX. On Brief, expand Market
 signals for rows and CSVs. On WIPRO detail, expand Sources and export for
 the exchange PDFs and the FINN Markdown brief.
+
+### Short Brief and repeat navigation
+
+Brief shows the WIPRO walkthrough when it matches the window, then up to three
+flagged filings in priority order. Browse all filings carries the selected window
+into the searchable list. Both WIPRO source filings have their own entries there.
+
+Recently loaded Brief, Network, and static research screens can be reused for
+90 seconds in the same browser session. Live research status and generated answers
+request fresh content. If a tab request fails, the current screen remains readable
+and Retry requests the destination again.
