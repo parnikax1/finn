@@ -127,3 +127,10 @@ class ReviewerFlowTests(unittest.TestCase):
                      'Maruti Suzuki India Limited', 'Reporting period 2025–2026', 'Call held 2026-10-27',
                      'Read excerpt · PDF p. 3', 'Read excerpt · PDF p. 68'):
             self.assertIn(text, research)
+        lead = research.index('id="top-cited-excerpt"')
+        sources = research.index('<details class="panel research-source-list">')
+        self.assertLess(research.index('</form>'), lead)
+        self.assertLess(lead, sources)
+        self.assertIn('PDF p. 68', research[lead:sources])
+        self.assertIn('#page=68', research[lead:sources])
+        self.assertIn('2 documents indexed', research[sources:])
