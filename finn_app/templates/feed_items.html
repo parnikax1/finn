@@ -23,8 +23,7 @@
     {% endfor %}
   </ul>
   {% elif not events %}<p class="empty">No filings in this window.</p>
-  {% elif stories %}<p class="date-line">No other priority filings in this window.</p>
-  {% else %}<p class="date-line">No flagged filings in this window.</p>{% endif %}
+  {% elif not featured %}<p class="date-line">No flagged filings in this window.</p>{% endif %}
   <a class="browse-filings" href="{{ browse_url }}">View all filings <span>{{ total }} <span aria-hidden="true">→</span></span></a>
 </section>
 {% endif %}
