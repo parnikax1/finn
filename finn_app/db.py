@@ -54,10 +54,12 @@ def connect():
       PRIMARY KEY (run_id, symbol));
     CREATE INDEX IF NOT EXISTS refresh_results_symbol ON refresh_results(symbol, run_id DESC);
     ''')
-    for company in portfolio():
-        db.execute('INSERT OR IGNORE INTO companies VALUES (?, ?, ?)',
-                   (company['symbol'], company['name'], company['sector']))
-    db.commit()
+    registered = {row['symbol'] for row in db.execute('SELECT symbol FROM companies')}
+    missing = [(company['symbol'], company['name'], company['sector'])
+               for company in portfolio() if company['symbol'] not in registered]
+    if missing:
+        with db:
+            db.executemany('INSERT OR IGNORE INTO companies VALUES (?, ?, ?)', missing)
     return db
 
 

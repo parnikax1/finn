@@ -4,6 +4,8 @@ FINN is a mobile-first FastAPI prototype for reviewing portfolio filings, findin
 relevant primary-source excerpts, and identifying a synthetic contact who could
 help an investor interpret a filing.
 
+[Open the hosted demo](https://finn-08qn.onrender.com/).
+
 ## Run a clean checkout
 
 Use Python 3.12 on macOS or Linux.
@@ -29,10 +31,13 @@ after dependencies are installed. Original PDFs and CSVs are linked at their sou
 
 | Time | What to try |
 | --- | --- |
-| 0–20s | Open the feed and read the featured WIPRO walkthrough. Tap **Next priority filing** to skip to the next ranked card. Switch to **Latest day**, then back to **Last 7 days**. Both windows end on the latest cached filing date in IST. |
-| 20–45s | Use **Read excerpt** for WIPRO PDF pages 2 and 3. Open the original PDF separately. Tap **Synthetic contact question** to copy the suggested question or download the FINN brief. |
-| 45–70s | Tap **MARUTI research**. The prepared walkthrough puts the H1 FY 2026–27 addition of 500,000 units/year beside the 4 million unit/year medium-term objective, with their respective PDF pages. The lookup below also shows synthetic contacts and source excerpts. |
-| 70–90s | Open **End-of-day market signals** on the unfiltered feed. Expand **Market refresh status** to see all 15 results, including companies with no threshold crossing. |
+| 0–20s | Open **Brief**. Under **Priority filings**, switch from **Last 7 days** to **Latest day**. **View all filings** changes from 32 to 11. In the archive, open HDFC Bank and use **Open original filing** beside the missing-excerpt message. |
+| 20–45s | Return to **Last 7 days** and open Wipro. Switch from **Page 2 · Appointment** to **Page 3 · Previous role**. Open **Contact question** for the synthetic match. **Sources and export** contains the original PDF and downloadable brief. |
+| 45–70s | In **Research**, select **MARUTI capacity**. The prepared walkthrough compares reported capacity of about 2.9 million units/year with a 4 million target and identifies the 500,000 units/year added in H1 FY 2026–27. **Sources searched** shows PDF links and page coverage. |
+| 70–90s | In **Network**, find contacts for **MARUTI** to see an explained synthetic company match. In **Brief**, expand **All signals and baselines** under **Market signals** for the dated NSE metrics and source CSVs. |
+
+Brief defaults to the last seven snapshot days so the Wipro filing is visible.
+**Latest day** shows the latest available IST calendar day in the data.
 
 After the walkthrough, try `CUMMINSIND` with **How did domestic sales and exports change?**
 Select **Search excerpts**, then **Fetch documents** if needed. The transcript is shown
@@ -109,16 +114,18 @@ export OPENAI_API_KEY="$(python -c 'import getpass; print(getpass.getpass("OpenA
 sh start.sh
 ```
 
-The optional answer route calls OpenAI from the server with the ticker, question
-and retrieved excerpts. It checks that returned quotes match their cited
+The optional answer route uses `gpt-5-mini` for a bounded synthesis task. It
+sends the ticker, question and retrieved excerpts from the server. It checks
+that returned quotes match their cited
 excerpts and shows unanswered question parts. The answer button was tested with
 **simulated model responses against real PDF excerpts**. No live model request
 was used in release verification.
 
 ## Data and deployment notes
 
-- **Push:** exchange metadata is prioritised by explicit rules. The refresh
-  command imports filings and page-linked evidence. A flag is a review cue.
+- **Push:** `finn_app.refresh` fetches NSE filings and imports metadata and
+  available, page-linked evidence into SQLite. Explicit rules prioritise filings
+  for review. `finn_app.market` refreshes end-of-day signals separately.
 - **Market signals:** dated NSE EQ rows feed the previous-close price change
   and the mean of prior session volumes. The sample uses 1.5% and 1.5× thresholds
   and three prior sessions, including the 8 November Muhurat session. The market
@@ -126,15 +133,18 @@ was used in release verification.
 - **Pull:** SQLite stores page text for keyword and phrase search. The MARUTI comparison is a prepared walkthrough. The bundled
   MARUTI sample is limited to selected pages; extracted tables can lose layout.
   Browser discovery validates each symbol and uses bounded fetch and extraction.
-- **Network:** contact profiles are fictional. Company or sector tags explain
-  matches. A real private network would require authentication, access control
-  and consent before storing any contacts.
+- **Network:** the demo ships fictional contact profiles and collects no real
+  contact records. Matches use exact company tags first, followed by sector tags.
+  A private deployment would use per-investor authentication and access controls,
+  collect only consented career fields, retain them while consent or account access
+  is active, and delete them on withdrawal or account closure.
 - **Storage:** `demo/snapshot.json` contains curated public filing fields, selected
   source excerpts. `demo/market-verification.json` contains curated market observations. The repository omits original PDFs,
   raw responses, local databases, runtime logs and credentials. Local app state
   defaults to `.finn/`. Startup reconstructs the packaged snapshot
   from the bundled JSON.
-- **Operations:** `python -m finn_app.refresh --help` and
+- **Operations:** Render runs FastAPI, Jinja and HTMX against an instance-local
+  SQLite database seeded from the checked-in snapshot. `python -m finn_app.refresh --help` and
   `python -m finn_app.market --help` describe the separate refresh commands.
   Browser requests read the local index for cached searches. No scheduled refresh,
   trading execution, or autonomous agent is included.
@@ -180,13 +190,13 @@ the exchange PDFs and the FINN Markdown brief.
 
 ### Short Brief and repeat navigation
 
-Brief shows the WIPRO walkthrough when it matches the window, then up to three
-flagged filings in priority order. Browse all filings carries the selected window
+Brief shows the WIPRO walkthrough when it matches the window, then up to two
+additional flagged filings in priority order. View all filings carries the selected window
 into the searchable list. Both WIPRO source filings have their own entries there.
 
-Recently loaded Brief, Network, and static research screens can be reused for
-90 seconds in the same browser session. Live research status and generated answers
-request fresh content. If a tab request fails, the current screen remains readable
+Recently loaded tab screens can be reused in the same browser session. Research
+can show a restored screen immediately while requesting the current fetch status
+in the background. If a tab request fails, the current screen remains readable
 and Retry requests the destination again.
 
 The filing controls and results update as one fragment. Failed filing requests

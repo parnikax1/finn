@@ -2,8 +2,10 @@
 import hashlib
 import json
 import os
+import sqlite3
 import tempfile
 import unittest
+from contextlib import closing
 from pathlib import Path
 from unittest.mock import patch
 
@@ -74,6 +76,20 @@ class SliceTests(unittest.TestCase):
         self.assertEqual(before['id'], after['id'])
         self.assertEqual(after['filed_at'], '2026-11-10T11:56:00+05:30')
         self.assertEqual(after['source_url'], 'https://example.com/filing.pdf')
+
+    def test_brief_reads_while_an_index_writer_holds_the_database(self):
+        sqlite_connect = sqlite3.connect
+
+        def connect_without_retry(path, *, timeout):
+            return sqlite_connect(path, timeout=0)
+
+        with closing(connect()) as writer:
+            writer.execute('BEGIN IMMEDIATE')
+            with patch('finn_app.db.sqlite3.connect', side_effect=connect_without_retry):
+                response = self.client.get('/')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('View all filings', response.text)
 
     def test_evidence_preserves_physical_page_and_contact_reason(self):
         response = self.client.get('/events/' + self.event('1')['id'] + '?page=2')
