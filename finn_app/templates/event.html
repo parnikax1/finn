@@ -24,7 +24,15 @@
       <button class="apply picker-fallback" type="submit">Read excerpt</button>
     </form>
 </div><blockquote>{{ excerpt }}</blockquote><p class="annotation">Literal excerpt · {{ 'physical PDF page ' ~ selected if selected else 'page reference unavailable' }} · whitespace may reflect PDF layout.</p><p class="annotation">{{ doc.note }}</p>
-{% else %}<div class="missing"><strong>No cached document excerpt</strong><p>This event has exchange metadata, but no readable source text was matched by attachment URL. Open the original filing to inspect it. No evidence has been inferred.</p></div>{% endif %}
+{% else %}
+<div class="missing">
+  <div class="missing-evidence-heading">
+    <strong>No cached document excerpt</strong>
+    {% if event.source_url %}<a class="source-link" href="{{ event.source_url }}" target="_blank" rel="noopener noreferrer">Open original filing</a>{% endif %}
+  </div>
+  <p>This event has exchange metadata, but no readable source text was matched by attachment URL. No evidence has been inferred.</p>
+</div>
+{% endif %}
 <details class="source-info"><summary>Source URL and provenance</summary><p class="source-url">{{ event.source_url }}</p><p>Exchange filing timestamp: {{ event.raw_date }}.</p>{% if doc and doc.path %}<p class="source-url">Cached document SHA-256: {{ event.document_sha }}</p>{% endif %}<p>{% if event.origin.endswith('/demo/snapshot.json') %}Included in the dated demo snapshot.{% else %}Imported from a local check_data.py report.{% endif %} Dates shown here are filing dates; the underlying event may have happened earlier.</p></details>
 </section>
 <aside><section class="panel contact-panel" id="related-contact"><div class="panel-heading"><h2>Who could add context</h2></div><p class="annotation">Synthetic network demo. These are fictional people and employment histories.</p>

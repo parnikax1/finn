@@ -243,3 +243,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-
 .research-reading > #research-fetch-status { margin-bottom: 10px; padding: 12px 13px; }
 .research-reading > #research-fetch-status p { margin: 7px 0; }
 .research-reading > #research-fetch-status ul { margin: 8px 0; padding-left: 18px; font-size: var(--type-control); }
+
+
+.missing-evidence-heading { display: flex; flex-wrap: wrap; align-items: center; column-gap: 12px; }
+.missing-evidence-heading .source-link { display: inline-flex; align-items: center; min-height: 44px; }

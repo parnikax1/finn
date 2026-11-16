@@ -88,6 +88,19 @@ class SliceTests(unittest.TestCase):
         response = self.client.get('/events/' + self.event('2')['id'])
         self.assertIn('No cached document excerpt', response.text)
         self.assertNotIn('<blockquote>', response.text)
+        missing = response.text.split('class="missing-evidence-heading"', 1)[1].split('</div>', 1)[0]
+        self.assertIn('href="https://example.com/appointment.pdf"', missing)
+        self.assertIn('>Open original filing</a>', missing)
+
+    def test_missing_evidence_skips_link_without_source_url(self):
+        event_id = self.event('2')['id']
+        db = connect()
+        with db:
+            db.execute("UPDATE events SET source_url='' WHERE id=?", (event_id,))
+        db.close()
+        response = self.client.get('/events/' + event_id)
+        self.assertIn('No cached document excerpt', response.text)
+        self.assertNotIn('Open original filing', response.text)
 
     def test_routine_stays_collapsed_and_html_escaped(self):
         response = self.client.get('/?priority=routine')
